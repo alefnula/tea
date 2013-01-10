@@ -1,0 +1,5 @@
+recursive-include tea *.py
+include CONTRIBUTING.md
+include LICENSE
+include README.rst
+include setup.py
