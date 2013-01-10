@@ -110,7 +110,7 @@ def create_parser(options, description='', defaults=None, app_config=None, parse
         if os.path.isfile(app_config):
             try:
                 with open(app_config, 'rb') as app_config_file:
-                    data = json.loads(app_config_file)
+                    data = json.load(app_config_file)
                     for key, value in data.get('options', {}).items():
                         parser.set_defaults(**{key.replace('-', '_'): value})
             except:
