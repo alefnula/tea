@@ -59,7 +59,7 @@ class __platform(object):
                 break 
 
     def is_a(self, platforms):
-        return (self.__platform & platforms) > 0
+        return (self.__platforms & platforms) > 0
 
     def is_only(self, platform):
         return (self.__platforms & platform) == self.__platforms
@@ -87,3 +87,12 @@ class __platform(object):
 
 platform = __platform()
 
+
+if platform.is_a(platform.POSIX):
+    from .posix_system import *
+elif platform.is_a(platform.DOTNET):
+    from .dotnet_system import *
+elif platform.is_a(platform.WINDOWS):
+    from .win_system import *
+else:
+    raise platform.not_supported('tea.system')

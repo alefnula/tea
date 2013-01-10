@@ -24,7 +24,7 @@ def get_object(path='', obj=None):
                 try:
                     __import__('%s.%s' % (obj.__name__, item))
                 except: pass
-            obj = getattr(object, item)
+            obj = getattr(obj, item)
     return obj
 
 
