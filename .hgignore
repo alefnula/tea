@@ -1,4 +1,5 @@
 syntax: glob
+.settings
 .project
 .pydevproject
 *.pyc
