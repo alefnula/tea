@@ -19,7 +19,7 @@ setup(name='tea',
       license='GPLv3',
       packages=[
           'tea',
-          'tea.commander'
+          'tea.commander',
           'tea.console',
           'tea.logger',
           'tea.process',
