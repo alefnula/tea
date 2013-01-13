@@ -156,3 +156,47 @@ def cprint(text, fg=Color.normal, bg=Color.normal, fg_dark=False, bg_dark=False,
         set_color(fg, bg, fg_dark, bg_dark, underlined)
         sys.stdout.write(text)
         set_color()
+        
+
+def colorize_output(output, colors, indent=0):
+    ''' Prints output to console using provided color mappings. 
+        
+    Color mapping is dict with regular expressions as key and tuple of two as
+    values. Key is used to match if line should be colorized and tuple conains
+    color to be used and boolean value that indicates if dark foregraound
+    is used.
+    For example:
+    >>> CLS = {
+    >>>     ... re.compile(r'^(--- .*)$') : (Color.red, False)
+    >>> }
+    will colorize lines that start with '---' to red.
+    '''
+    for line in output.split('\n'):
+        cprint(' ' * indent)
+        if line == '':
+            cprint('\n')
+            continue
+        for regexp, (color, dark) in colors.items():
+            if regexp.match(line) is not None:
+                _colorize_single_line(line, regexp, color, dark)
+                break
+        else:
+            cprint('%s\n' % line)
+            
+def _colorize_single_line(line, regexp, color, dark):
+    ''' Prints single line to console with ability to colorize only parts of line. '''
+    match = regexp.match(line)
+    groupdict = match.groupdict()
+    if not groupdict: 
+        # no named groups, just colorize whole line
+        cprint('%s\n' % line, color, fg_dark=dark)
+    else:
+        groups = match.groups() # group dict has no order, but groups does
+        for part in groups:
+            if part == groupdict['colorize']:
+                cprint(part, color, fg_dark=dark)
+            else:
+                cprint(part)
+        else:
+            cprint('\n')
+
