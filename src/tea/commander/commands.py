@@ -9,7 +9,6 @@ import re
 import sys
 import json
 import time
-import shlex
 import collections
 from optparse import OptionParser
 
@@ -475,7 +474,7 @@ class ManagementUtility(object):
             
         # First search in aliases
         if subcommand in config.get('alias', {}):
-            args = [args[0]] + shlex.split(config.get('alias.%s' % subcommand)) + args[2:]
+            args = [args[0]] + shutil.split(config.get('alias.%s' % subcommand).encode('utf-8')) + args[2:]
             subcommand = args[1]
         
         if subcommand == 'help':

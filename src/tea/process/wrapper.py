@@ -3,10 +3,10 @@ __date__      = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
-import shlex
 
 # tea
 from tea.logger import *
+from tea import shutil
 from tea.system import platform
 
 if platform.is_a(platform.POSIX):
@@ -96,7 +96,7 @@ def execute_free(command, *args):
     arguments = command
     for arg in args:
         arguments += ' %s' % arg
-    arguments = shlex.split(arguments)
+    arguments = shutil.split(arguments)
     return execute(*arguments)
 
 
@@ -114,7 +114,7 @@ def execute_nowait_free(command, *args):
     arguments = command
     for arg in args:
         arguments += ' %s' % arg
-    arguments = shlex.split(arguments)
+    arguments = shutil.split(arguments)
     return execute_nowait(*arguments)
 
 

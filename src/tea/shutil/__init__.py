@@ -10,9 +10,17 @@ Also, it adds a few useful additional functions to the module.
 '''
 
 import os
+import shlex
 import shutil
 import fnmatch
 from tea.logger import *
+
+
+def split(s, posix=True):
+    '''Split the string s using shell-like syntax'''
+    if isinstance(s, unicode):
+        s = s.encode('utf-8')
+    return shlex.split(s, posix=posix)
 
 
 def search(path, matcher='*', dirs=False, files=True):
