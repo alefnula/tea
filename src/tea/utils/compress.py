@@ -6,6 +6,8 @@ import os
 import zipfile
 
 from tea.logger import * #@UnusedWildImport
+from tea.system import platform
+from tea.process import execute_and_report as er
 
 
 def _extract_file(archive, destination, filename):
@@ -122,3 +124,25 @@ def mkzip(archive, items, mode='w', save_full_paths=False):
         return False
     finally:
         if close: archive.close()
+
+
+
+_SZ_EXECUTABLE = None
+
+def _get_sz():
+    global _SZ_EXECUTABLE
+    if _SZ_EXECUTABLE is None:
+        _SZ_EXECUTABLE = '7z'
+        if platform.is_a(platform.WINDOWS):
+            for pf in ('ProgramFiles', 'ProgramFiles(x86)', 'ProgramW6432'):
+                executable = os.path.join(os.environ.get(pf, ''), '7-Zip', '7z.exe')
+                if os.path.exists(executable):
+                    _SZ_EXECUTABLE = executable
+                    break
+    return _SZ_EXECUTABLE
+
+def seven_zip(archive, items, self_extracting=False):
+    if self_extracting:
+        return er(_get_sz(), 'a', '-sfx', archive, *items)
+    else:
+        return er(_get_sz(), 'a', archive, *items)
