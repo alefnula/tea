@@ -5,78 +5,73 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 import os
 import sys
 import glob
+import optparse
 
 from tea import shutil
-from tea.logger import * #@UnusedWildImport
 from tea.utils import compress
 from tea.process import execute_and_report as er
 
 
-def setup(module, output_type='egg'):
-    if output_type == 'egg':
-        result = er('setup.py', 'install', '--no-compile',
-                    '--install-lib', os.path.join('INSTALL'))
-        if result:
-            result = compress.mkzip('%s.egg' % module, glob.glob('INSTALL/*')) 
-    elif output_type == 'exe':
-        result = er('setup.py', 'install', '--no-compile',
-                    '--install-lib', os.path.join('INSTALL', 'lib', 'python'),
-                    '--install-scripts', os.path.join('INSTALL', 'scripts'))
-        if result:
-            archiver = '7z'
-            for pf in ('ProgramFiles', 'ProgramFiles(x86)', 'ProgramW6432'):
-                executable = os.path.join(os.environ.get(pf, ''), '7-Zip', '7z.exe')
-                if os.path.exists(executable):
-                    archiver = executable
-            os.chdir('INSTALL')
-            modules = filter(os.path.exists, ['lib', 'scripts'])
-            result = er(archiver, 'a', '-sfx', '../%s.exe' % module, *modules)
-            os.chdir('..')
-    # Cleanup
-    if os.path.isdir('INSTALL'): shutil.remove('INSTALL')
-    if os.path.isdir('build'):   shutil.remove('build')
-    return result
+def setup(module, target='egg', output_path=None, data_dir=None):
+    dist = os.path.abspath('dist')
+    try:
+        if target == 'egg':
+            assert er('setup.py', 'install', '--no-compile',
+                      '--install-lib',     os.path.join(dist, 'lib'),
+                      '--install-scripts', os.path.join(dist),
+                   *(['--install-data',    os.path.join(dist, data_dir)] if data_dir is not None else []))
+            with shutil.goto(dist) as ok:
+                assert ok
+                assert compress.mkzip('%s.egg' % module, glob.glob(os.path.join('lib', '*')))
+                assert shutil.remove('lib')
+        elif target == 'exe':
+            assert er('setup.py', 'install', '--no-compile',
+                      '--install-lib',     os.path.join(dist, 'lib', 'python'),
+                      '--install-scripts', os.path.join(dist, 'scripts'),
+                   *(['--install-data',    os.path.join(dist, data_dir)] if data_dir is not None else []))
+            with shutil.goto(dist) as ok:
+                assert ok
+                modules = filter(os.path.exists, ['lib', 'scripts'] + ([data_dir] if data_dir is not None else []))
+                assert compress.seven_zip('%s.exe' % module, modules, self_extracting=True)
+                # Cleanup
+                for module in modules:
+                    assert shutil.remove(module)
+        if output_path is not None:
+            output_path = os.path.abspath(output_path)
+            if not os.path.isdir(output_path):
+                assert shutil.mkdir(output_path)
+            for filename in glob.glob(os.path.join(dist, '*')):
+                assert shutil.move(filename, os.path.join(output_path, os.path.basename(filename)))
+        return 0
+    except AssertionError, e:
+        print e
+        return 1
+    finally:
+        # Cleanup            
+        if output_path != dist:
+            shutil.remove(dist)
+        if os.path.isdir('build'):
+            shutil.remove('build')
 
 
-
-def _usage(self):
-    print '''
-Usage: python -m tea.utils.setup MODULE_NAME [TYPE]
-
-MODULE_NAME: Name of the output file with appropriate extension
-TYPE:        Type of the generated output
-             Available types:
-                - exe: Self extracting executable
-                - egg: Importable python egg [default]
-'''
-    return 1
+def create_parser():
+    parser = optparse.OptionParser(usage='python -m tea.utils.setup [options] MODULE_NAME')
+    parser.add_option('-e', '--egg', action='store_const', dest='target', const='egg', help='build egg file and scripts',       default='egg')
+    parser.add_option('-x', '--exe', action='store_const', dest='target', const='exe', help='build self extracting executable', default='egg')
+    parser.add_option('-o', '--output-path', action='store', type='string', dest='output_path', help='destination directory for files', default=None)
+    parser.add_option('-d', '--data-dir', action='store', type='string', dest='data_dir', help='data dir relative path', default=None)
+    return parser
 
 
 def main(args):
-    l = len(args)
-    if l == 0:
-        return _usage()
-    elif l == 1:
-        module      = args[0]
-        output_type = 'egg'
-    elif l == 2:
-        module      = args[0]
-        output_type = args[0].lower()
-        if output_type not in ('exe', 'egg'):
-            return _usage()
+    parser = create_parser()
+    options, args = parser.parse_args(args)
+    if len(args) != 1:
+        parser.print_help()
+        return 1
     else:
-        return _usage()
-    if setup(module, output_type):
-        output_path = os.environ.get('OutputPath', None)
-        if output_path:
-            name = '%s.%s' % (module, output_type)
-            outfile = os.path.join(output_path, name)
-            if os.path.isfile(outfile):
-                shutil.remove(outfile)
-            if not shutil.move(name, outfile):
-                return 1
-        return 0
-    return 1
+        module = args[0]
+        return setup(module, options.target, options.output_path, options.data_dir)
 
 
 if __name__ == '__main__':
