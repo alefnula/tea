@@ -167,36 +167,51 @@ def colorize_output(output, colors, indent=0):
     is used.
     For example:
     >>> CLS = {
-    >>>     ... re.compile(r'^(--- .*)$') : (Color.red, False)
+    >>>     re.compile(r'^(--- .*)$') : (Color.red, False)
     >>> }
     will colorize lines that start with '---' to red.
+    
+    If different parts of line needs to be in different color then dict must be
+    suplied in colors with keys that are named group from regular expression and
+    values that are tuples of color and boolean that indicates if dark foreground
+    is used.
+    For example:
+    >>> CLS {
+    >>>>    re.compile(r'^(?P<key>user:\s+)(?P<user>.*)$') : 
+    >>>                                    {'key': (Color.yellow, True), 
+    >>>                                     'user': (Color.cyan,   False) },
+    >>> }
+    will colorize line 'user: Some user' so that 'user:' part is yellow with
+    dark foreground and 'Some user' part is cyan without dark foreground.
     '''
     for line in output.split('\n'):
         cprint(' ' * indent)
         if line == '':
             cprint('\n')
             continue
-        for regexp, (color, dark) in colors.items():
+        for regexp, color_def in colors.items():
             if regexp.match(line) is not None:
-                _colorize_single_line(line, regexp, color, dark)
+                _colorize_single_line(line, regexp, color_def)
                 break
         else:
             cprint('%s\n' % line)
             
-def _colorize_single_line(line, regexp, color, dark):
+def _colorize_single_line(line, regexp, color_def):
     ''' Prints single line to console with ability to colorize only parts of line. '''
     match = regexp.match(line)
     groupdict = match.groupdict()
+    groups = match.groups()
     if not groupdict: 
         # no named groups, just colorize whole line
+        color = color_def[0]
+        dark = color_def[1]
         cprint('%s\n' % line, color, fg_dark=dark)
     else:
-        groups = match.groups() # group dict has no order, but groups does
+        rev_groups = {v:k for k, v in groupdict.items()}
         for part in groups:
-            if part == groupdict['colorize']:
-                cprint(part, color, fg_dark=dark)
+            if rev_groups.has_key(part) and color_def.has_key(rev_groups[part]):
+                group_name = rev_groups[part]
+                cprint(part, color_def[group_name][0], fg_dark=color_def[group_name][1])
             else:
                 cprint(part)
-        else:
-            cprint('\n')
-
+        cprint('\n')
