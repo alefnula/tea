@@ -8,7 +8,7 @@ from signal import SIGTERM
 from tea.system import platform
 
 if platform.is_a(platform.POSIX):
-    class Daemon:
+    class Daemon(object):
         '''A generic daemon class.
         
         Usage: subclass the Daemon class and override the run() method
