@@ -75,7 +75,12 @@ class Hg(object):
     def fetch(self, message='Automated merge.'):
         '''Fetches the repository'''
         if os.path.isdir(self.repository.path):
-            status, output, error = self._hg('fetch', '--repository', '%(path)s', '%(uri)s', '--message', message)
+            args = [
+                '--repository', '%(path)s',
+                '--config', 'extensions.hgext.fetch=',
+                '--message', message, '%(uri)s',
+            ]
+            status, output, error = self._hg('fetch', *args)
             if 'no changes found' in output:
                 status = 1
             elif 'outstanding uncommitted changes' in error:
