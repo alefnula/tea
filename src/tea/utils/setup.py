@@ -12,17 +12,17 @@ from tea.utils import compress
 from tea.process import execute_and_report as er
 
 
-def setup(module, target='egg', output_path=None, data_dir=None):
+def setup(module, target='zip', output_path=None, data_dir=None):
     dist = os.path.abspath('dist')
     try:
-        if target == 'egg':
+        if target == 'zip':
             assert er('setup.py', 'install', '--no-compile',
                       '--install-lib',     os.path.join(dist, 'lib'),
                       '--install-scripts', os.path.join(dist),
                    *(['--install-data',    os.path.join(dist, data_dir)] if data_dir is not None else []))
             with shutil.goto(dist) as ok:
                 assert ok
-                assert compress.mkzip('%s.egg' % module, glob.glob(os.path.join('lib', '*')))
+                assert compress.mkzip('%s.zip' % module, glob.glob(os.path.join('lib', '*')))
                 assert shutil.remove('lib')
         elif target == 'exe':
             assert er('setup.py', 'install', '--no-compile',
@@ -56,8 +56,8 @@ def setup(module, target='egg', output_path=None, data_dir=None):
 
 def create_parser():
     parser = optparse.OptionParser(usage='python -m tea.utils.setup [options] MODULE_NAME')
-    parser.add_option('-e', '--egg', action='store_const', dest='target', const='egg', help='build egg file and scripts',       default='egg')
-    parser.add_option('-x', '--exe', action='store_const', dest='target', const='exe', help='build self extracting executable', default='egg')
+    parser.add_option('-e', '--zip', action='store_const', dest='target', const='zip', help='build egg file and scripts',       default='zip')
+    parser.add_option('-x', '--exe', action='store_const', dest='target', const='exe', help='build self extracting executable', default='zip')
     parser.add_option('-o', '--output-path', action='store', type='string', dest='output_path', help='destination directory for files', default=None)
     parser.add_option('-d', '--data-dir', action='store', type='string', dest='data_dir', help='data dir relative path', default=None)
     return parser
