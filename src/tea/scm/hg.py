@@ -177,3 +177,12 @@ class Hg(object):
     def heads(self):
         ''' Perform hg heads'''
         return self._hg('heads', '--repository', '%(path)s')
+
+    def churn(self, sort=False, changesets=False, diffstat=False):
+        args = ['--repository', '%(path)s'] + (
+               # churn is extension, this will enable it if it is not enabled in mercurial.ini
+               ['--config', 'extensions.hgext.churn=']) + (
+               ['--sort'] if sort else []) + (
+               ['--changesets'] if changesets else []) + (
+               ['--diffstat'] if diffstat else [])
+        return self._hg('churn', *args)
