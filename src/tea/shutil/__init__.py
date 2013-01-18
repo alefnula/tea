@@ -10,6 +10,7 @@ Also, it adds a few useful additional functions to the module.
 '''
 
 import os
+import glob
 import shlex
 import shutil
 import fnmatch
@@ -188,10 +189,18 @@ def copytree(source, destination, symlinks=False):
 def copy(source, destination):
     '''Copy file or directory'''
     if os.path.isdir(source):
-        copytree(source, destination)
+        return copytree(source, destination)
     else:
-        copyfile2(source, destination)
-    
+        return copyfile2(source, destination)
+
+
+def gcopy(pattern, destination):
+    '''Copy all file found by glob.glob(pattern) to destination directory'''
+    for item in glob.glob(pattern):
+        if not copy(item, destination):
+            return False
+    return True
+
 
 def move(source, destination):
     '''Recursively move a file or directory to another location.
@@ -214,6 +223,14 @@ def move(source, destination):
     except:
         LOG_EXCEPTION('Failed to Move: %s -> %s' % (source, destination))
         return False
+
+
+def gmove(pattern, destination):
+    '''Move all file found by glob.glob(pattern) to destination directory'''
+    for item in glob.glob(pattern):
+        if not move(item, destination):
+            return False
+    return True
 
 
 def rmfile(path):
