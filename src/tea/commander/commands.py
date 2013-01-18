@@ -9,6 +9,7 @@ import re
 import sys
 import json
 import time
+import pkgutil
 import collections
 from optparse import OptionParser
 
@@ -414,19 +415,16 @@ class ManagementUtility(object):
                     'klass' : ConfigCommand,
                 },
             }
-            commands = get_object(self._commands_path) 
-            commands_dir = os.path.dirname(commands.__file__)
-            for filename in (f for f in shutil.search(commands_dir, '*.py') if not os.path.basename(f).startswith('__')):
-                LOG_DEBUG('Loading filename: %s' % filename)
-                try:
-                    app, name = os.path.splitext(filename)[0].replace(commands_dir, '').strip(os.sep).split(os.sep)
+            package = get_object(self._commands_path)
+            for loader, module_name, is_pkg in  pkgutil.walk_packages(package.__path__):
+                loader.find_module(module_name).load_module(module_name)
+            for command in BaseCommand.__subclasses__():
+                if not command.__module__.startswith('tea.commander.commands'):
+                    app, name = command.__module__.split('.')
                     self._commands[name] = {
                         'app'   : app,
-                        'klass' : get_object('%s.%s.Command' % (app, name), commands),
+                        'klass' : command,
                     }
-                    LOG_DEBUG('Loading filename succeeded: %s' % filename)
-                except:
-                    LOG_ERROR('Loading filename failed: %s' % filename)
         return self._commands
 
     def main_help_text(self, commands_only=False):
