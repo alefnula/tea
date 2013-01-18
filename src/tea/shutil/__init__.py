@@ -115,6 +115,12 @@ def mkdir(path, mode=0777, delete=False):
         LOG_EXCEPTION('Failed to mkdir: %s' % path)
         return False
 
+def __create_destdir(destination):
+    destdir = os.path.dirname(destination)
+    if not os.path.isdir(destdir):
+        if not mkdir(destdir):
+            raise Exception('Failed to create "%s"' % destdir)
+
 
 def copyfile(source, destination):
     '''Copy data and mode bits ("cp source destination").
@@ -130,6 +136,7 @@ def copyfile(source, destination):
     '''
     LOG_INFO('copyfile: %s -> %s' % (source, destination))
     try:
+        __create_destdir(destination)
         shutil.copy(source, destination)
         return True
     except Exception, e:
@@ -151,6 +158,7 @@ def copyfile2(source, destination):
     '''
     LOG_INFO('copyfile2: %s -> %s' % (source, destination))
     try:
+        __create_destdir(destination)
         shutil.copy2(source, destination)
         return True
     except Exception, e:
@@ -179,6 +187,7 @@ def copytree(source, destination, symlinks=False):
     '''
     LOG_INFO('copytree: %s -> %s' % (source, destination))
     try:
+        __create_destdir(destination)
         shutil.copytree(source, destination, symlinks)
         return True
     except Exception, e:
@@ -218,6 +227,7 @@ def move(source, destination):
     '''
     LOG_INFO('Move: %s -> %s' % (source, destination))
     try:
+        __create_destdir(destination)
         shutil.move(source, destination)
         return True
     except:
