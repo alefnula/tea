@@ -38,10 +38,11 @@ def setup(module, target='zip', output_path=None, data_dir=None):
                     assert shutil.remove(module)
         if output_path is not None:
             output_path = os.path.abspath(output_path)
-            if not os.path.isdir(output_path):
-                assert shutil.mkdir(output_path)
-            for filename in glob.glob(os.path.join(dist, '*')):
-                assert shutil.move(filename, os.path.join(output_path, os.path.basename(filename)))
+            if output_path != dist:
+                if not os.path.isdir(output_path):
+                    assert shutil.mkdir(output_path)
+                for filename in shutil.search(dist, '*'):
+                    assert shutil.move(filename, os.path.join(output_path, filename.replace(dist, '', 1).strip('\\/')))
         return 0
     except AssertionError, e:
         print e
