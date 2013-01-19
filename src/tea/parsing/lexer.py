@@ -83,25 +83,26 @@ class RegexLexer(Lexer):
     # Dict of {'state': [(regex, token, new_state), ...], ...}
     # The initial state is 'root'.
     config = {}
-
-    def __init__(self):
-        # FIXME: Not using push and pop config properly
-        self._tokens = {}
+    
+    def _get_tokens(self):
+        tokens = {}
         for state, items in self.config.items():
-            current_state = self._tokens[state] = []
+            current_state = tokens[state] = []
             for regex, token, new_state in items:
                 current_state.append((
                     re.compile(regex, self.flags).match,
                     token,
                     new_state
                 ))
+        return tokens
 
     def lex(self, text):
         '''Do the lexical analisys'''
+        tokens = self._get_tokens()
         state = 'root'
         pos = 0
         l   = len(text)
-        statetokens = self._tokens[state]
+        statetokens = tokens[state]
         while pos < l:
             for matcher, t, new_state in statetokens:
                 m = matcher(text, pos)
@@ -110,10 +111,10 @@ class RegexLexer(Lexer):
                     pos = m.end()
                     if new_state is not None:
                         state = new_state
-                        statetokens = self._tokens[state]
+                        statetokens = tokens[state]
                     break
             else:
                 state = 'root'
-                statetokens = self._tokens['root']
+                statetokens = tokens['root']
                 yield Token.Text, text[pos]
                 pos += 1
