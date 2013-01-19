@@ -2,7 +2,7 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '11 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
-import random
+import os, random
 from tea.system import platform
 
 __all__ = ['CryptError', 'encrypt', 'decrypt']
@@ -125,7 +125,7 @@ if platform.is_only(platform.WINDOWS):
             credential = dict(Type=win32cred.CRED_TYPE_GENERIC, 
                               TargetName=target, 
                               UserName=ident, 
-                              CredentialBlob=secret, 
+                              CredentialBlob=secret,
                               Comment='Stored using tea-crypt', 
                               Persist=win32cred.CRED_PERSIST_ENTERPRISE)
             win32cred.CredWrite(credential, 0)
@@ -146,6 +146,9 @@ if platform.is_only(platform.WINDOWS):
             win32cred.CredDelete(Type=win32cred.CRED_TYPE_GENERIC, 
                                  TargetName=target)
             
+        # TODO: There is a bug with saving and getting key from vault
+        #       probably something with encoding. Sometimes _vault_retrieve
+        #       returns numbers higher then 255 (even if they were not stored)
         def get_key():
             key = _vault_retrieve('tea', 'tea-crypt')
             if key:
@@ -160,10 +163,13 @@ if platform.is_only(platform.WINDOWS):
 elif platform.is_a(platform.DOTNET):
     # ironpython - .net implementation of AES can be used 
     # ironpython can be used on mono so check what options are for key storage
+    import clr
+    clr.AddReference('System.Security')
     from System import Array, Byte
     from System.Text import UTF8Encoding
     from System.IO import MemoryStream
-    from System.Security.Cryptography import RijndaelManaged, CryptoStream, CryptoStreamMode
+    from System.Security.Cryptography import (RijndaelManaged, CryptoStream, CryptoStreamMode,
+                                              ProtectedData, DataProtectionScope)
     
     @encrypter('dotnet')
     def _encrypt(text, key):
@@ -217,10 +223,29 @@ elif platform.is_a(platform.DOTNET):
         cs.Close()
         utfEncoder = UTF8Encoding()
         return utfEncoder.GetString(decrypted)
-    
+
     # Can't find a way to invoke win32api from ironpython witout wrapping it 
-    # to C# dll and using pInvoke. So, for now using windows credentials
-    # storage for storing key can not be easely done. 
+    # to C# dll and using pInvoke. So, instead of using windows credentials to 
+    # store a key, key will be stored in file, encrypted with 
+    # ProtedtedData.Protect.      
+    def get_key():
+        from tea.system import get_appdata
+        from tea.shutil import mkdir
+        dir_path = os.path.join(get_appdata(), 'Tea')
+        key_path = os.path.join(dir_path, 'key.bin')
+        if os.path.exists(dir_path) and os.path.exists(key_path):
+            with open(key_path, 'rb') as f:
+                cr_key = Array[Byte](map(ord, f.read()))
+                key = ProtectedData.Unprotect(cr_key, None, DataProtectionScope.CurrentUser)
+                return map(int, key)
+        else:
+            mkdir(dir_path)
+            key = generate_key()
+            arr_key = Array[Byte](key)
+            cr_key = ProtectedData.Protect(arr_key, None, DataProtectionScope.CurrentUser)
+            with open(key_path, 'wb') as f:
+                f.write(cr_key)
+            return key
     
 elif platform.is_a(platform.POSIX):
     # some kind of posix OS - more detail check is needed
@@ -288,6 +313,8 @@ def main():
 #    print platform.get_all_names()
 #    print get_best_algorithm()
 #    print implementations
+    
+    print get_key()
     print get_key()
     print encrypt('password koji ce biti encryptovan')
     print decrypt(encrypt('password koji ce biti encryptovan'))
