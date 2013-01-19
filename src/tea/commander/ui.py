@@ -9,6 +9,7 @@ from tea.console.color import cprint, Color
 from tea.parsing import ConsoleFormatter
 
 
+
 class UserInterface(object):
     '''Abstract class representing user interface object for commander.
     
@@ -21,18 +22,17 @@ class UserInterface(object):
     '''
     
     __metaclass__ = abc.ABCMeta
+    
+    def __init__(self):
+        '''Initialization method'''
+        self._formatter = None
+    
+    def get_formatter(self):
+        return self._formatter
+    def set_formatter(self, value):
+        self._formatter = value
+    formatter = abc.abstractproperty(get_formatter, set_formatter)
 
-    @abc.abstractproperty
-    def formatter(self):
-        '''Returns the currently set formatter'''
-    
-    @formatter.setter
-    def formater(self, value):
-        '''Setter for the formatter'''
-    
-    @abc.abstractmethod
-    def __init__(self, config):
-        '''Initialization method will receive a BaseConfig object'''
     
     def ask(self, message=None, password=False):
         '''Ask for user input
@@ -75,37 +75,30 @@ class ConsoleUserInterface(UserInterface):
     If no other UserInterface implementation is proveded to commander
     it will use this user interface
     '''
+    def __init__(self):
+        self._report = []
+        self._formatter = ConsoleFormatter()
     
-    
-    def __init__(self, config):
-        self.config = config
-        self.report = []
-    
-    @property
-    def formatter(self):
-        if not hasattr(self, '__formatter'):
-            self.__formatter = ConsoleFormatter()
-        return self.__formatter
-
-    @formatter.setter
-    def formatter(self, value):
-        self.__formatter = value
-    
+    def get_formatter(self):
+        return self._formatter
+    def set_formatter(self, value):
+        self._formatter = value
+    formatter = property(get_formatter, set_formatter)
+        
     def ask(self, message=None, password=False):
         message = message or ''
         if password:
             return getpass.getpass(message)
         return raw_input(message)
 
-    
     def error(self, message):
-        cprint('ERROR: %s\n', Color.red)
+        cprint('%s\n' % message, Color.red)
     
     def report(self, obj, status=0, data=None):
-        self.report.append({
+        data = {
             'object' : obj,
             'status' : status,
             'data'   : data,
-        })
-        for line, color in self.formatter(obj, status, data):
-            cprint(line, color)
+        }
+        self._report.append(data)
+        self.formatter.format(data)

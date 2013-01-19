@@ -7,15 +7,16 @@ import sys
 import pkgutil
 import collections
 
-from .base import BaseCommand
-from .config import BaseConfig
-from .argparse import LaxOptionParser, create_parser
-from .exceptions import CommandError
-from .commands import AliasCommand, ConfigCommand
-
 from tea import shutil
 from tea.utils import get_object
 
+
+from .base import BaseCommand
+from .config import BaseConfig
+from .exceptions import CommandError
+from .ui import ConsoleUserInterface
+from .commands import AliasCommand, ConfigCommand
+from .argparse import LaxOptionParser, create_parser
 
 
 class Application(object):
@@ -24,7 +25,7 @@ class Application(object):
     A ManagementUtility has a number of commands, which can be manipulated
     by editing the self.commands dictionary.
     '''
-    def __init__(self, argv, command_modules, preparser=None, app_config=None, config=None):
+    def __init__(self, argv, command_modules, preparser=None, app_config=None, config=None, ui=None):
         '''commands: python module path to commands module'''
         self.argv = argv
         self.prog_name = os.path.basename(argv[0])
@@ -35,6 +36,7 @@ class Application(object):
         self._preparser = self._add_options(preparser)
         self._app_config = app_config
         self._config = config or BaseConfig
+        self._ui = ui or ConsoleUserInterface()
 
     def _add_options(self, preparser):
         options = preparser['options']
@@ -173,9 +175,9 @@ class Application(object):
             elif args[2] == '--commands':
                 sys.stdout.write(self.main_help_text(commands_only=True) + '\n')
             else:
-                self.fetch_command_klass(args[2])(config).print_help(self.prog_name, args[2])
+                self.fetch_command_klass(args[2])(config, self._ui).print_help(self.prog_name, args[2])
         elif args[1:] in (['--help'], ['-h']):
             parser.print_lax_help()
             sys.stdout.write(self.main_help_text() + '\n')
         else:
-            self.fetch_command_klass(subcommand)(config).run_from_argv(args)
+            self.fetch_command_klass(subcommand)(config, self._ui).run_from_argv(args)

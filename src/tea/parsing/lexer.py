@@ -11,20 +11,57 @@ from .token import Token
 class Lexer(object):
     __metaclass__ = abc.ABCMeta
     
+    config = None
+    
     def __init__(self):
-        pass
+        self._config_stack = []
+    
+    def push_config(self, config):
+        self._config_stack.append(self.config)
+        self.config = config
+    
+    def pop_config(self):
+        config = self.config
+        self.config = self._config_stack.pop()
+        return config
 
-    def preprocess(self, text):
-        return text
+    def preprocess(self, data):
+        return data
 
-    def tokenize(self, text):
-        '''Return an iterable of (token, text) pairs generated from text'''
-        text = self.preprocess(text)
-        for t, v in self.lex(text):
+    def tokenize(self, data):
+        '''This methods receives an arbitrary data and returns an iterable
+        of (token, text) pairs generated from data.
+        
+        For example it can receive text:
+        
+        >>> lexer = MyTextLexer()
+        >>> text = 'Name: John Doe\nAge: 33'
+        >>> for token, text in lexer.tokenize(text):
+                print '%-7s %s' % (token, repr(text))
+        
+        Header  'Name: '
+        Text    'John Doe'
+        Header  'Age: '
+        Text    '33'
+        >>>
+        
+        Or it can receive an arbitrary data
+        
+        >>> lexer = MyStatusLexer()
+        >>> data = [{'status': 0, 'text': 'My OK data'}, {'status': 1, 'text': 'My not OK data'}]
+        >>> for token, text in lexer.tokenize(data):
+                print '%-7s %s' % (token, repr(text))
+        
+        Ok      'My OK data'
+        Fail    'My not OK data'
+        >>> 
+        '''
+        data = self.preprocess(data)
+        for t, v in self.lex(data):
             yield t, v
 
     @abc.abstractmethod
-    def lex(self, text):
+    def lex(self, data):
         '''
         Return an iterable of (token, text) pairs.
         In subclasses, implement this method as a generator to
@@ -45,11 +82,12 @@ class RegexLexer(Lexer):
 
     # Dict of {'state': [(regex, token, new_state), ...], ...}
     # The initial state is 'root'.
-    tokens = {}
+    config = {}
 
     def __init__(self):
+        # FIXME: Not using push and pop config properly
         self._tokens = {}
-        for state, items in self.tokens.items():
+        for state, items in self.config.items():
             current_state = self._tokens[state] = []
             for regex, token, new_state in items:
                 current_state.append((

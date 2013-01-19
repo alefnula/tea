@@ -48,18 +48,17 @@ class Formatter(object):
     style  = property(get_style,  set_style)
     stream = property(get_stream, set_stream)
     
-    def format(self, text):
-        '''Use this method for formatting text'''
+    def format(self, data):
+        '''Use this method for formatting data'''
         if self.lexer is None:
-            self.format_text(self.style.get(Token.Text), text)
+            self.format_text(self.style.get(Token.Text), unicode(data))
         else:
-            for token, text in self.lexer.tokenize(text):
+            for token, text in self.lexer.tokenize(data):
                 self.format_text(self.style.get(token), text)
 
     def format_text(self, style, text):
         '''Format a single peace of a text useing the provided style'''
         raise NotImplementedError()
-
 
 
 class ConsoleFormatter(Formatter):
@@ -77,7 +76,6 @@ class ConsoleFormatter(Formatter):
     
     # Properties
     style = property(get_style, set_style)
-
 
     def format_text(self, style, text):
         fg, fg_dark = style['fg']

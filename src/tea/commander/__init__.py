@@ -6,3 +6,4 @@ from .base import BaseCommand
 from .config import BaseConfig
 from .exceptions import CommandError
 from .application import Application
+from .ui import UserInterface, ConsoleUserInterface
