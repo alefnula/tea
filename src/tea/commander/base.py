@@ -10,7 +10,6 @@ import time
 import optparse
 
 from tea.logger import *
-from tea.console.color import Color, cprint
 
 from .exceptions import CommandError
 
@@ -66,49 +65,10 @@ class BaseCommand(object):
     option_list = tuple()
     args        = ''
     
-    # Statuses is a mapping between a result status and its
-    # representation. Report will search for a perticular status
-    # number, and if it doesnt find it, it will use the None, as
-    # default. The tuple is in a format:
-    # (short message, successfull status, console color) 
-    statuses = {
-          0 : ('ok',     True,  Color.green),
-       None : ('failed', False, Color.red),
-    }
-    
     def __init__(self, config, ui):
         self.id       = str(self).split('.')[-1]
         self.config   = config
         self.ui       = ui
-        # Reporting
-        self._start_time = None
-        self._report     = {
-            'id'         : self.id,
-            'operations' : [], 
-        }
-
-    def add_result(self, target, status=0, output='', error=''):
-        if not isinstance(target, dict):
-            if hasattr(target, '__serialize__'):
-                target = target.__serialize__()
-            else:
-                target = {'name' : str(target)}
-        status_data = self.statuses.get(status, self.statuses.get(None))
-        operation = {
-            'target'     : target,
-            'start_time' : self._start_time,
-            'end_time'   : time.time(),
-            'status'     : status,
-            'output'     : output,
-            'error'      : error,
-            'message'    : status_data[0],
-            'succeeded'  : status_data[1],
-            'color'      : status_data[2],
-        }
-        self._report['operations'].append(operation)
-        if self.config.report_format is None:
-            self.present(operation)
-        self._start_time = time.time()
 
     def __str__(self):
         return self.__class__.__module__
@@ -192,14 +152,7 @@ class BaseCommand(object):
     def handle(self, *args, **options):
         '''The actual logic of the command. Subclasses must implement this method.'''
         raise NotImplementedError()
-    
-    def present(self, operation):
-        '''This is a method for presenting an operation to user
-        
-        Default implementation just prints out the target name in
-        operation default color and user can override this method
-        ''' 
-        cprint('%s\n' % operation['target']['name'], operation['color'])
+
 
 
 

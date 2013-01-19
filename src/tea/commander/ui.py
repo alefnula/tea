@@ -33,14 +33,22 @@ class UserInterface(object):
         self._formatter = value
     formatter = abc.abstractproperty(get_formatter, set_formatter)
 
-    
+    @abc.abstractmethod
     def ask(self, message=None, password=False):
         '''Ask for user input
         
         This method should ask the user for input, presenting to user
         a message and returning a string. Also if password is set to
         True, user should not be able to see what he types
-        ''' 
+        '''
+    
+    @abc.abstractmethod
+    def info(self, message):
+        '''Present an information message to the user'''
+    
+    @abc.abstractmethod
+    def warn(self, message):
+        '''Present a warning message to the user'''
     
     @abc.abstractmethod
     def error(self, message):
@@ -90,6 +98,12 @@ class ConsoleUserInterface(UserInterface):
         if password:
             return getpass.getpass(message)
         return raw_input(message)
+
+    def info(self, message):
+        cprint('%s\n' % message, Color.blue)
+    
+    def warn(self, message):
+        cprint('%s\n' % message, Color.yellow)
 
     def error(self, message):
         cprint('%s\n' % message, Color.red)
