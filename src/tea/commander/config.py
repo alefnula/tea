@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class BaseConfig(object):
     '''Base class for application configuration'''
     def __init__(self, options, app_config=None):
-        self.__options       = options
+        self.options         = options
         self.__app_config    = app_config
         self.__configuration = None
 
@@ -100,8 +100,3 @@ class BaseConfig(object):
                 current[parts[-1]].pop(int(index))
             except: pass
         self.__write_config()
-
-    def __getattr__(self, attr):
-        if hasattr(self.__options, attr):
-            return getattr(self.__options, attr)
-        raise AttributeError(attr)

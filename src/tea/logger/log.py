@@ -28,12 +28,12 @@ logging._levelNames.update({
 
 # method for custom levels
 def verbose(self, msg, *args, **kwargs):
-    if self.isEnabledFor(logging.VERBOSE):
-        self._log(logging.VERBOSE, msg, args, **kwargs)
+    if self.isEnabledFor(logging.VERBOSE): # @UndefinedVariable
+        self._log(logging.VERBOSE, msg, args, **kwargs) # @UndefinedVariable
 logging.Logger.verbose = verbose
 def fatal(self, msg, *args, **kwargs):
-    if self.isEnabledFor(logging.ERROR_FATAL):
-        self._log(logging.ERROR_FATAL, msg, args, **kwargs)
+    if self.isEnabledFor(logging.ERROR_FATAL): # @UndefinedVariable
+        self._log(logging.ERROR_FATAL, msg, args, **kwargs) # @UndefinedVariable
 logging.Logger.fatal = fatal
 
 
@@ -46,9 +46,6 @@ FORMAT_SHORT = '%(asctime)s %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'
 
 logging.basicConfig(stream=sys.stderr, format=FORMAT_SHORT,
                     datefmt=DATE_FORMAT, level=logging.DEBUG)
-
-logger = logging.getLogger()
-logger.level = logging.NOTSET
 
 
 def configure_logging(filename=None, filemode='a', datefmt=DATE_FORMAT,
@@ -85,7 +82,8 @@ def configure_logging(filename=None, filemode='a', datefmt=DATE_FORMAT,
     @param remove_handlers: Remove all existing handlers
     @rtype: None
     '''
-    global logger
+    logger = logging.getLogger()
+    logger.level = logging.NOTSET
     # Remove all handlers
     if remove_handlers:
         while len(logger.handlers) > 0:

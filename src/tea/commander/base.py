@@ -137,7 +137,7 @@ class BaseCommand(object):
             if hasattr(self, 'Lexer'):
                 self.ui.formatter.lexer = lexer
 
-            if self.config.report_format == 'json':
+            if self.config.options.report_format == 'json':
                 self.stdout.write(json.dumps(self._report, indent=4))
             if output:
                 self.stdout.write(output)
