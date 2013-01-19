@@ -9,6 +9,7 @@ import string
 import logging
 import optparse
 
+logger = logging.getLogger(__name__)
 
 
 class LaxOptionParser(optparse.OptionParser):
@@ -112,7 +113,7 @@ def create_parser(options, description='', defaults=None, app_config=None, parse
                     for key, value in data.get('options', {}).items():
                         parser.set_defaults(**{key.replace('-', '_'): value})
             except:
-                logging.error('Error while parsing: %s' % app_config)
+                logger.error('Error while parsing: %s' % app_config)
     return parser
 
 

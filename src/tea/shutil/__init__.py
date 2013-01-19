@@ -16,6 +16,9 @@ import shutil
 import fnmatch
 import logging
 
+logger = logging.getLogger(__name__)
+
+
 
 def split(s, posix=True):
     '''Split the string s using shell-like syntax'''
@@ -46,15 +49,15 @@ def search(path, matcher='*', dirs=False, files=True):
 def chdir(directory):
     '''Change the current working directory'''
     directory = os.path.abspath(directory)
-    logging.info('chdir -> %s' % directory)
+    logger.info('chdir -> %s' % directory)
     try:
         if not os.path.isdir(directory):
-            logging.error('chdir -> %s failed! Directory does not exist!' % directory)
+            logger.error('chdir -> %s failed! Directory does not exist!' % directory)
             return False
         os.chdir(directory)
         return True
     except Exception, e:
-        logging.error('chdir -> %s failed! %s' % (directory, e))
+        logger.error('chdir -> %s failed! %s' % (directory, e))
         return False
 
 
@@ -76,19 +79,19 @@ class goto(object):
     def __enter__(self):
         if not os.path.isdir(self.directory):
             if self.create:
-                logging.info('goto(%s) Directory does not exist, creating.' % self.directory)
+                logger.info('goto(%s) Directory does not exist, creating.' % self.directory)
                 if not mkdir(self.directory):
-                    logging.error('goto(%s) Could not create directory.' % self.directory)
+                    logger.error('goto(%s) Could not create directory.' % self.directory)
                     return False
             else:
-                logging.error('goto(%s) failed! Directory does not exist!' % self.directory)
+                logger.error('goto(%s) failed! Directory does not exist!' % self.directory)
                 return False
-        logging.info('goto -> %s' % self.directory)
+        logger.info('goto -> %s' % self.directory)
         os.chdir(self.directory)
         return True
 
     def __exit__(self, exc_type, exc_value, traceback):
-        logging.info('goto <- %s' % self.directory)
+        logger.info('goto <- %s' % self.directory)
         os.chdir(self.current)
 
 
@@ -104,7 +107,7 @@ def mkdir(path, mode=0777, delete=False):
     @param mode:   directory mode
     @param delete: delete directory/file if exists
     '''
-    logging.info('mkdir: %s' % path)
+    logger.info('mkdir: %s' % path)
     if os.path.isdir(path):
         if not delete: return True
         if not remove(path): return False
@@ -112,7 +115,7 @@ def mkdir(path, mode=0777, delete=False):
         os.makedirs(path, mode)
         return True
     except:
-        logging.exception('Failed to mkdir: %s' % path)
+        logger.exception('Failed to mkdir: %s' % path)
         return False
 
 def __create_destdir(destination):
@@ -134,13 +137,13 @@ def copyfile(source, destination):
     @rtype:  boolean
     @return: True if the operation is successful, False otherwise. 
     '''
-    logging.info('copyfile: %s -> %s' % (source, destination))
+    logger.info('copyfile: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copy(source, destination)
         return True
     except Exception, e:
-        logging.error('copyfile: %s -> %s failed! Error: %s' % (source, destination, e))
+        logger.error('copyfile: %s -> %s failed! Error: %s' % (source, destination, e))
         return False
 
 
@@ -156,13 +159,13 @@ def copyfile2(source, destination):
     @rtype:  boolean
     @return: True if the operation is successful, False otherwise. 
     '''
-    logging.info('copyfile2: %s -> %s' % (source, destination))
+    logger.info('copyfile2: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copy2(source, destination)
         return True
     except Exception, e:
-        logging.error('copyfile2: %s -> %s failed! Error: %s' % (source, destination, e))
+        logger.error('copyfile2: %s -> %s failed! Error: %s' % (source, destination, e))
         return False
     
 
@@ -185,13 +188,13 @@ def copytree(source, destination, symlinks=False):
     @rtype:  boolean
     @return: True if the operation is successful, False otherwise.
     '''
-    logging.info('copytree: %s -> %s' % (source, destination))
+    logger.info('copytree: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copytree(source, destination, symlinks)
         return True
     except Exception, e:
-        logging.exception('copytree: %s -> %s failed! Error: %s' % (source, destination, e))
+        logger.exception('copytree: %s -> %s failed! Error: %s' % (source, destination, e))
         return False
 
 
@@ -225,13 +228,13 @@ def move(source, destination):
     @rtype:  boolean
     @return: True if the operation is successful, False otherwise.
     '''
-    logging.info('Move: %s -> %s' % (source, destination))
+    logger.info('Move: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
         shutil.move(source, destination)
         return True
     except:
-        logging.exception('Failed to Move: %s -> %s' % (source, destination))
+        logger.exception('Failed to Move: %s -> %s' % (source, destination))
         return False
 
 
@@ -251,12 +254,12 @@ def rmfile(path):
     @rtype:  boolean
     @return: True if the operation is successful, False otherwise.
     '''
-    logging.info('rmfile: %s' % path)
+    logger.info('rmfile: %s' % path)
     try:
         os.remove(path)
         return True
     except Exception, e:
-        logging.error('rmfile: %s failed! Error: %s' % (path, e))
+        logger.error('rmfile: %s failed! Error: %s' % (path, e))
         return False
 
 
@@ -268,12 +271,12 @@ def rmtree(path):
     @rtype:  boolean
     @return: True if the operation is successful, False otherwise.
     '''
-    logging.info('rmtree: %s' % path)
+    logger.info('rmtree: %s' % path)
     try:
         shutil.rmtree(path)
         return True
     except Exception, e:
-        logging.error('rmtree: %s failed! Error: %s' % (path, e))
+        logger.error('rmtree: %s failed! Error: %s' % (path, e))
         return False
 
 

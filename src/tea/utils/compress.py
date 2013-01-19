@@ -5,11 +5,11 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 import os
 import zipfile
 import logging
-
+# tea imports
 from tea.system import platform
 from tea.process import execute_and_report as er
 
-LOG = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def _extract_file(archive, destination, filename):
@@ -29,7 +29,7 @@ def _extract_file(archive, destination, filename):
             else: break
         return True
     except:
-        logging.exception('Error while unzipping filename %s from archive %s' % (filename, archive.filename))
+        logger.exception('Error while unzipping filename %s from archive %s' % (filename, archive.filename))
         return False
 
 
@@ -63,7 +63,7 @@ def unzip(archive, destination, filenames=None):
         if not isinstance(archive, zipfile.ZipFile):
             archive = zipfile.ZipFile(archive, 'r', allowZip64=True)
             close = True        
-        logging.info('Extracting: %s -> %s' % (archive.filename, destination))
+        logger.info('Extracting: %s -> %s' % (archive.filename, destination))
         if isinstance(filenames, basestring):
             filenames = [filenames]
         if filenames is None: # extract all
@@ -74,10 +74,10 @@ def unzip(archive, destination, filenames=None):
             else:
                 if not _extract_file(archive, destination, filename):
                     raise Exception()
-        logging.info('Extracting zip archive "%s" succeeded' % archive.filename)
+        logger.info('Extracting zip archive "%s" succeeded' % archive.filename)
         return True
     except:
-        logging.exception('Error while unzipping archive %s' % archive.filename)
+        logger.exception('Error while unzipping archive %s' % archive.filename)
         return False
     finally:
         if close: archive.close()
@@ -100,7 +100,7 @@ def mkzip(archive, items, mode='w', save_full_paths=False):
         if not isinstance(archive, zipfile.ZipFile):
             archive = zipfile.ZipFile(archive, mode, allowZip64=True)
             close = True
-        logging.info('mkdzip: Creating %s, from: %s' % (archive.filename, items))
+        logger.info('mkdzip: Creating %s, from: %s' % (archive.filename, items))
         if isinstance(items, basestring): items = [items]
         for item in items:
             item = os.path.abspath(item)
@@ -122,7 +122,7 @@ def mkzip(archive, items, mode='w', save_full_paths=False):
                 archive.write(item, archive_name) #, zipfile.ZIP_DEFLATED)
         return True
     except Exception, e:
-        logging.error('Error occurred during mkzip: %s' % e)
+        logger.error('Error occurred during mkzip: %s' % e)
         return False
     finally:
         if close: archive.close()

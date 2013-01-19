@@ -4,11 +4,10 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import logging
-
 # tea
 from tea import shutil
 from tea.system import platform
-
+# process imports
 if platform.is_a(platform.POSIX):
     from .posix_process import Process
 elif platform.is_a(platform.DOTNET):
@@ -19,7 +18,10 @@ else:
     raise platform.not_supported('tea.process')
 
 
-    
+logger = logging.getLogger(__name__)
+
+
+
 def execute(command, *args):
     '''Execute a command with arguments and wait for output.
     Arguments should not be quoted!

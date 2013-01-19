@@ -5,12 +5,11 @@ __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 import json
 import logging
 from collections import defaultdict
-
 # tornado imports
 from tornado import web
 
-# tea imports
-from tea.logger import * #@UnusedWildImport
+logger = logging.getLogger(__name__)
+
 
 
 STATUS_MESSAGES = defaultdict(lambda: 'UNKNOWN', **{
@@ -37,7 +36,7 @@ class JsonHandler(web.RequestHandler):
 
     def send_error(self, status_code=500, **kwargs):
         if self._headers_written:
-            logging.error('Cannot send error response after headers written')
+            logger.error('Cannot send error response after headers written')
             if not self._finished:
                 self.finish()
             return
@@ -45,7 +44,7 @@ class JsonHandler(web.RequestHandler):
         message = kwargs.get('message', 'Error')
         if status_code == 500:
             message = 'Server error'
-        logging.warning('[%s] %s' % (status_code, message))
+        logger.warning('[%s] %s' % (status_code, message))
         self.respond(message, status_code)
 
     def respond(self, obj, status_code=200):

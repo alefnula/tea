@@ -9,12 +9,14 @@ import json
 import time
 import logging
 import optparse
-
+# commander imports
 from .exceptions import CommandError
+
+logger = logging.getLogger(__name__)
+
 
 
 LEADING_WHITESPACE_REMOVER_RE = re.compile('^    ', re.MULTILINE)
-
 
 
 class BaseCommand(object):
@@ -140,7 +142,7 @@ class BaseCommand(object):
             if output:
                 self.stdout.write(output)
         except CommandError, e:
-            logging.exception('Command %s failed' % self)
+            logger.exception('Command %s failed' % self)
             self.stderr.write('Error: %s\n' % e)
             sys.exit(1)
 

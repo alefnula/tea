@@ -40,9 +40,9 @@ logging.Logger.fatal = fatal
 
 # Constants
 DATE_FORMAT = '%Y.%m.%d %H:%M:%S'
-FORMAT = '%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s [%(module)s:%(lineno)d]'
-FORMAT_STDOUT = '%(levelname)-11s - %(message)s [%(module)s:%(lineno)d]'
-FORMAT_SHORT = '%(asctime)s %(levelname)11s: %(message)s [%(module)s:%(lineno)d]'
+FORMAT = '%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'
+FORMAT_STDOUT = '%(levelname)-11s - %(message)s [%(name)s:%(lineno)d]'
+FORMAT_SHORT = '%(asctime)s %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'
 
 logging.basicConfig(stream=sys.stderr, format=FORMAT_SHORT,
                     datefmt=DATE_FORMAT, level=logging.DEBUG)
@@ -51,10 +51,10 @@ logger = logging.getLogger()
 logger.level = logging.NOTSET
 
 
-def LOG_CONFIGURE(filename=None, filemode='a', datefmt=DATE_FORMAT,
-                  format=FORMAT, stdout_format=FORMAT_STDOUT, level='DEBUG',
-                  stdout_level='WARNING', initial_file_message='',
-                  max_size=1048576, rotations_number=5, remove_handlers=True):
+def configure_logging(filename=None, filemode='a', datefmt=DATE_FORMAT,
+                     format=FORMAT, stdout_format=FORMAT_STDOUT, level='DEBUG',
+                     stdout_level='WARNING', initial_file_message='',
+                     max_size=1048576, rotations_number=5, remove_handlers=True):
     '''Configure logging module
     
     @type  filename: string

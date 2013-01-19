@@ -5,10 +5,10 @@ __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 import os
 import json
 import logging
-
 # tea imports
 from tea import shutil
 
+logger = logging.getLogger(__name__)
 
 
 class BaseConfig(object):
@@ -26,7 +26,7 @@ class BaseConfig(object):
                     with open(self.__app_config, 'rb') as app_config_file:
                         self.__configuration = json.load(app_config_file, encoding='utf-8')
                 except:
-                    logging.exception('Error reading: %s' % self.__app_config)
+                    logger.exception('Error reading: %s' % self.__app_config)
                     self.__configuration = {}
             else:
                 self.__configuration = {}
