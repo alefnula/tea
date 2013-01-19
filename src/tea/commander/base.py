@@ -158,23 +158,23 @@ class BaseCommand(object):
             # Setup lexer and style
             lexer = self.ui.formatter.lexer
             style = self.ui.formatter.style
-            if hasattr(self, 'lexer'):
-                self.ui.formatter.lexer = self.lexer()
-            if hasattr(self, 'style'):
-                self.ui.formatter.style = self.style
-            if hasattr(self, 'lexer_config'):
-                self.ui.formatter.lexer.push_config(self.lexer_config)
+            if hasattr(self, 'Lexer'):
+                self.ui.formatter.lexer = self.Lexer()
+            if hasattr(self, 'Style'):
+                self.ui.formatter.style = self.Style
+            if hasattr(self, 'LexerConfig'):
+                self.ui.formatter.lexer.push_config(self.LexerConfig)
             
             self._start_time = time.time() # Start report timer
             output = self.handle(*args, **options)
             
             # Teardown lexer and style
-            if hasattr(self, 'lexer'):
-                self.ui.formatter.lexer = lexer
-            if hasattr(self, 'style'):
-                self.ui.formatter.style = style
-            if hasattr(self, 'lexer_config'):
+            if hasattr(self, 'LexerConfig'):
                 self.ui.formatter.lexer.pop_config()
+            if hasattr(self, 'Style'):
+                self.ui.formatter.style = style
+            if hasattr(self, 'Lexer'):
+                self.ui.formatter.lexer = lexer
 
             if self.config.report_format == 'json':
                 self.stdout.write(json.dumps(self._report, indent=4))
