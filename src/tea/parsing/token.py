@@ -3,18 +3,11 @@ __date__      = '19 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 
-Text    = 'text'
-Debug   = 'debug'
-Info    = 'info'
-Warn    = 'warn'
-Error   = 'error'
-Other   = 'other'
+class _TokenClass(str):
+    def __init__(self, name=None):
+        super(_TokenClass, self).__init__(name)
+        
+    def __getattr__(self, value):
+        return _TokenClass(value)
 
-STANDARD_TOKENS = [
-    Text,
-    Debug,
-    Info,
-    Warn,
-    Error,
-    Other,
-]
+Token = _TokenClass()

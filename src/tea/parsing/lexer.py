@@ -3,33 +3,33 @@ __date__      = '19 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import re
+import abc
 
-from . import token
+from .token import Token
 
 
 class Lexer(object):
+    __metaclass__ = abc.ABCMeta
+    
     def __init__(self):
         pass
 
     def preprocess(self, text):
         return text
 
-    def get_tokens(self, text):
-        '''Return an iterable of (tokentype, value) pairs generated from
-        `text`.
-        '''
+    def tokenize(self, text):
+        '''Return an iterable of (token, text) pairs generated from text'''
         text = self.preprocess(text)
         for t, v in self.lex(text):
             yield t, v
 
+    @abc.abstractmethod
     def lex(self, text):
         '''
-        Return an iterable of (tokentype, value) pairs.
+        Return an iterable of (token, text) pairs.
         In subclasses, implement this method as a generator to
         maximize effectiveness.
         '''
-        raise NotImplementedError()
-
 
 
 class RegexLexer(Lexer):
@@ -43,8 +43,7 @@ class RegexLexer(Lexer):
     # Defaults to MULTILINE.
     flags = re.MULTILINE
 
-    # Dict of {'state': [(regex, tokentype, new_state), ...], ...}
-    #
+    # Dict of {'state': [(regex, token, new_state), ...], ...}
     # The initial state is 'root'.
     tokens = {}
 
@@ -78,5 +77,5 @@ class RegexLexer(Lexer):
             else:
                 state = 'root'
                 statetokens = self._tokens['root']
-                yield token.Text, text[pos]
+                yield Token.Text, text[pos]
                 pos += 1
