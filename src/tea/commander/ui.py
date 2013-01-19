@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import abc
 import getpass
+import collections
 
 from tea.console.color import cprint, Color
 
@@ -20,6 +21,14 @@ class UserInterface(object):
     '''
     
     __metaclass__ = abc.ABCMeta
+
+    @abc.abstractproperty
+    def formatter(self):
+        '''Returns the currently set formatter'''
+    
+    @formatter.setter
+    def formater(self, value):
+        '''Setter for the formatter'''
     
     @abc.abstractmethod
     def __init__(self, config):
@@ -58,6 +67,20 @@ class UserInterface(object):
 
 
 
+class StatusConsoleFormatter(object):
+    def __init__(self, status_colors=None):
+        if status_colors is None:
+            self.status_colors    = collections.defaultdict(lambda: Color.red)
+            self.status_colors[0] = Color.green
+        else:
+            self.status_colors = status_colors
+    
+    def __call__(self, obj, status, data):
+        return [
+            ('%s\n' % str(obj), self.status_colors[status])
+        ]
+
+
 class ConsoleUserInterface(UserInterface):
     '''Simple implemntation of the user interface inteted for usage in
     console applications.
@@ -69,7 +92,17 @@ class ConsoleUserInterface(UserInterface):
     
     def __init__(self, config):
         self.config = config
+        self.report = []
     
+    @property
+    def formatter(self):
+        if not hasattr(self, '__formatter'):
+            self.__formatter = StatusConsoleFormatter()
+        return self.__formatter
+
+    @formatter.setter
+    def formatter(self, value):
+        self.__formatter = value
     
     def ask(self, message=None, password=False):
         message = message or ''
@@ -82,4 +115,10 @@ class ConsoleUserInterface(UserInterface):
         cprint('ERROR: %s\n', Color.red)
     
     def report(self, obj, status=0, data=None):
-        pass
+        self.report.append({
+            'object' : obj,
+            'status' : status,
+            'data'   : data,
+        })
+        for line, color in self.formatter(obj, status, data):
+            cprint(line, color)
