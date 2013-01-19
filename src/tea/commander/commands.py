@@ -2,10 +2,6 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '07 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 
-'''Base classes for writing management commands.'''
-
-from tea.logger import * #@UnusedWildImport
-
 from .base import BaseCommand
 
 

@@ -238,10 +238,10 @@ class Process(object):
                             type, val = win32pdh.GetFormattedCounterValue(counter_handle, win32pdh.PDH_FMT_LONG)
                             processes.append((instance, val))
                         except win32pdh.error, e:
-                            LOG_EXCEPTION('Error retreaving process list')
+                            logging.exception('Error retreaving process list')
                         win32pdh.RemoveCounter(counter_handle)
                     except win32pdh.error, e:
-                        LOG_EXCEPTION('Error retreaving process list')
+                        logging.exception('Error retreaving process list')
                     win32pdh.CloseQuery(hq)
         '''
         processes = []

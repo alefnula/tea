@@ -3,6 +3,7 @@ __date__      = '02 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 
 import json
+import logging
 from collections import defaultdict
 
 # tornado imports
@@ -36,7 +37,7 @@ class JsonHandler(web.RequestHandler):
 
     def send_error(self, status_code=500, **kwargs):
         if self._headers_written:
-            LOG_ERROR('Cannot send error response after headers written')
+            logging.error('Cannot send error response after headers written')
             if not self._finished:
                 self.finish()
             return
@@ -44,7 +45,7 @@ class JsonHandler(web.RequestHandler):
         message = kwargs.get('message', 'Error')
         if status_code == 500:
             message = 'Server error'
-        LOG_WARNING('[%s] %s' % (status_code, message))
+        logging.warning('[%s] %s' % (status_code, message))
         self.respond(message, status_code)
 
     def respond(self, obj, status_code=200):

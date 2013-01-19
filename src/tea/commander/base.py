@@ -7,9 +7,8 @@ import re
 import sys
 import json
 import time
+import logging
 import optparse
-
-from tea.logger import *
 
 from .exceptions import CommandError
 
@@ -141,7 +140,7 @@ class BaseCommand(object):
             if output:
                 self.stdout.write(output)
         except CommandError, e:
-            LOG_EXCEPTION('Command %s failed' % self)
+            logging.exception('Command %s failed' % self)
             self.stderr.write('Error: %s\n' % e)
             sys.exit(1)
 

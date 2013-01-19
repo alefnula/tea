@@ -3,9 +3,9 @@ __date__      = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
+import logging
 
 # tea imports
-from tea.logger import * #@UnusedWildImport
 from tea.process import execute
 
 
@@ -21,15 +21,15 @@ class Hg(object):
         }
         pargs = map(lambda a: a % data, args)
         largs = map(lambda a: a.replace('%(uri)s', '%(muri)s') % data, args)
-        LOG_INFO('Execute: hg %s %s' % (operation, ' '.join(largs)))
+        logging.info('Execute: hg %s %s' % (operation, ' '.join(largs)))
         status = 1
         output = ''
         error  = ''
         try:
             status, output, error = execute('hg', operation, *pargs)
-            LOG_INFO('Exit Code %s: hg %s %s' % (status, operation, ' '.join(largs)))
+            logging.info('Exit Code %s: hg %s %s' % (status, operation, ' '.join(largs)))
         except:
-            LOG_EXCEPTION('hg failed! Exception thrown!')
+            logging.exception('hg failed! Exception thrown!')
         return status, output, error
 
     def identify(self):

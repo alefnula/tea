@@ -6,10 +6,8 @@ __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 import os
 import json
 import string
+import logging
 import optparse
-
-# tea imports
-from tea.logger import * #@UnusedWildImport
 
 
 
@@ -114,7 +112,7 @@ def create_parser(options, description='', defaults=None, app_config=None, parse
                     for key, value in data.get('options', {}).items():
                         parser.set_defaults(**{key.replace('-', '_'): value})
             except:
-                LOG_ERROR('Error while parsing: %s' % app_config)
+                logging.error('Error while parsing: %s' % app_config)
     return parser
 
 

@@ -3,9 +3,9 @@ __date__      = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
+import logging
 
 # tea
-from tea.logger import *
 from tea import shutil
 from tea.system import platform
 
@@ -37,7 +37,7 @@ def execute_in_environment(environment, command, *args):
     '''Execute a command in a specific environment'''
     e = os.environ.copy()
     e.update(environment)
-    LOG_INFO('Execute: %s %s' % (command, ' '.join(args)))
+    logging.info('Execute: %s %s' % (command, ' '.join(args)))
     process = Process(command, args, environment=e)
     process.start()
     process.wait()
@@ -49,24 +49,24 @@ def execute_and_report(command, *args):
     If execution was successful function will return True,
     if not, it will log the output using standard logging and return False.
     '''
-    LOG_INFO('Execute: %s %s' % (command, ' '.join(args)))
+    logging.info('Execute: %s %s' % (command, ' '.join(args)))
     status = -1
     out    = ''
     err    = ''
     try:
         status, out, err = execute(command, *args)
     except:
-        LOG_EXCEPTION('%s failed! Exception thrown!' % os.path.basename(command))
+        logging.exception('%s failed! Exception thrown!' % os.path.basename(command))
         return False
     if status == 0:
-        LOG_INFO('%s Finished successfully. Exit Code: 0.' % os.path.basename(command))
+        logging.info('%s Finished successfully. Exit Code: 0.' % os.path.basename(command))
         return True
     else:
         try:
-            LOG_ERROR('%s failed! Exit Code: %s\nOut: %s\nError: %s' % (os.path.basename(command), status, out, err))
+            logging.error('%s failed! Exit Code: %s\nOut: %s\nError: %s' % (os.path.basename(command), status, out, err))
         except:
             # This fails when some non ASCII characters are returned from the application
-            LOG_ERROR('%s failed! Exit Code: %s\nOut: %s\nError: %s' % (os.path.basename(command), status, repr(out), repr(err)))            
+            logging.error('%s failed! Exit Code: %s\nOut: %s\nError: %s' % (os.path.basename(command), status, repr(out), repr(err)))            
         return False
 
 
