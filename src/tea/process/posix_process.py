@@ -6,9 +6,15 @@ import os
 import time
 import posix #@UnresolvedImport
 import signal
+import logging
 import tempfile
 import threading
 import subprocess
+# tea imports
+from tea.system import platform
+
+logger = logging.getLogger(__name__)
+
 
 
 class Process(object):
@@ -57,8 +63,8 @@ class Process(object):
     def kill(self):
         try:
             os.kill(self._process.pid, signal.SIGKILL) #@UndefinedVariable
-            # FIXME: Jel ovo treba posto vec imamo thread koji trci...?
-            self._process.wait()
+            # This is not needed any more because we have a thread for this
+            #self._process.wait()
             return True
         except OSError:
             return False
@@ -125,7 +131,10 @@ class Process(object):
         @rtype:  list[tuple(string, string)]
         @return: List of process PID, process name tuples
         '''
-        process = Process('ps', ['ps', 'h', '-eo', 'pid,comm,args' if cmdline else 'pid,comm'])
+        if platform.is_a(platform.DARWIN):
+            process = Process('ps', ['-eo', 'pid,comm,args' if cmdline else 'pid,comm'])
+        else:
+            process = Process('ps', ['h', '-eo', 'pid,comm,args' if cmdline else 'pid,comm'])
         process.start()
         process.wait()
         processes = []
@@ -133,12 +142,16 @@ class Process(object):
             for line in process.read().splitlines():
                 if cmdline:
                     parts = line.strip().split(' ', 3)
-                    # TODO: Int moze da pukne
-                    processes.append((int(parts[0]), parts[1], ' '.join(parts[2:]).strip()))
+                    try:
+                        processes.append((int(parts[0]), parts[1], ' '.join(parts[2:]).strip()))
+                    except ValueError:
+                        logger.error('Failed to parse PID: %s' % parts[0])
                 else:
                     pid, name = line.strip().split(' ', 1)
-                    # FIXME: int moze da pukne!
-                    processes.append((int(pid), name))
+                    try:
+                        processes.append((int(pid), name))
+                    except ValueError:
+                        logger.error('Failed to parse PID: %s' % pid)
         if sort_by_name:
             return sorted(processes, lambda t1, t2: cmp(t1[1], t2[1]) or cmp(int(t1[0]), int(t2[0])))
         else:
@@ -148,16 +161,16 @@ class Process(object):
     def Find(name, arg=None):
         '''Find process by name or by argument in command line if arg param is available'''
         if arg is None:
-            for id, process in Process.GetProcesses():
+            for pid, process in Process.GetProcesses():
                 # FIXME: HACK!!! Daje samo prvih 15 karaktera!!!
                 if process.lower().find(name[:15].lower()) != -1 and '<defunct>' not in process.lower():
-                    return process, id
+                    return process, pid
         else:
-            for id, process, cmdline in Process.GetProcesses(cmdline=True):
+            for pid, process, cmdline in Process.GetProcesses(cmdline=True):
                 # FIXME: HACK!!! Daje samo prvih 15 karaktera!!!
                 if process.lower().find(name[:15].lower()) != -1:
                     if cmdline is not None and cmdline.lower().find(arg.lower()) != -1:
-                        return process, id
+                        return process, pid
         return None
 
     @classmethod

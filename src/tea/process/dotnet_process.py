@@ -144,14 +144,14 @@ class Process(object):
     def Find(name, arg=None):
         '''Find process by name or by argument in command line if arg param is available'''
         if arg is None:
-            for id, process in Process.GetProcesses():
+            for pid, process in Process.GetProcesses():
                 if process.lower().find(name.lower()) != -1:
-                    return process, id
+                    return process, pid
         else:
-            for id, process, cmdline in Process.GetProcesses(cmdline=True):
+            for pid, process, cmdline in Process.GetProcesses(cmdline=True):
                 if process.lower().find(name.lower()) != -1:
                     if cmdline is not None and cmdline.lower().find(arg.lower()) != -1:
-                        return process, id
+                        return process, pid
         return None
 
     @classmethod

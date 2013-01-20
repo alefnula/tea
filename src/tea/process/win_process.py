@@ -48,11 +48,14 @@ class Process(object):
         self._appName           = None
         self._bInheritHandles   = 1
         self._processAttributes = win32security.SECURITY_ATTRIBUTES()
-        # FIXME: Vidi jel treba ovo: self._processAttributes.bInheritHandle = self._bInheritHandles
+        # FIXME: Is this needed?
+        #self._processAttributes.bInheritHandle = self._bInheritHandles
         self._threadAttributes  = win32security.SECURITY_ATTRIBUTES()
-        # FIXME: Vidi jel treba ovo: self._threadAttributes.bInheritHandle = self._bInheritHandles
+        # FIXME: Is this needed
+        #self._threadAttributes.bInheritHandle = self._bInheritHandles
         self._dwCreationFlags   = win32con.CREATE_NO_WINDOW
-        # FIXME: Vidi koji od ovih je najbolji: self._dwCreationFlags=win32con.NORMAL_PRIORITY_CLASS
+        # FIXME: Which one of these is best?
+        #self._dwCreationFlags=win32con.NORMAL_PRIORITY_CLASS
         self._currentDirectory  = None # string or None
         # This will be created during the start
         self._hProcess    = None
@@ -81,7 +84,8 @@ class Process(object):
         # Set the bInheritHandle flag so pipe handles are inherited. 
         sa = win32security.SECURITY_ATTRIBUTES()
         sa.bInheritHandle = 1
-        # FIXME: Vidi sta je sa ovim atributom: sa.lpSecurityDescriptor = None
+        # FIXME: What to do with this?
+        #sa.lpSecurityDescriptor = None
         # Create a pipe for the child process's STDIN.
         # Ensure that the write handle to the child process's pipe for STDIN is not inherited.
         self._stdin_read, self._stdin_write = win32pipe.CreatePipe(sa, 0)
@@ -265,14 +269,14 @@ class Process(object):
     def Find(name, arg=None):
         '''Find process by name or by argument in command line if arg param is available'''
         if arg is None:
-            for id, process in Process.GetProcesses():
+            for pid, process in Process.GetProcesses():
                 if process.lower().find(name.lower()) != -1:
-                    return process, id
+                    return process, pid
         else:
-            for id, process, cmdline in Process.GetProcesses(cmdline=True):
+            for pid, process, cmdline in Process.GetProcesses(cmdline=True):
                 if process.lower().find(name.lower()) != -1:
                     if cmdline is not None and cmdline.lower().find(arg.lower()) != -1:
-                        return process, id        
+                        return process, pid        
         return None
 
     @classmethod
@@ -287,15 +291,7 @@ class Process(object):
         '''
         if process is not None:
             pid = process.pid
-        # TODO: Proveriti return value i ako je False - GetLastError
-        #win32process.TerminateProcess(int(process._handle), -1)
-        # TODO:
-        #PROCESS_TERMINATE = 1
-        #handle = win32api.OpenProcess(PROCESS_TERMINATE, False, pid)
-        #win32api.TerminateProcess(handle, -1)
-        #win32api.CloseHandle(handle)
         process = Process(os.path.join(os.environ['windir'], 'system32', 'taskkill.exe'), ['/PID', str(pid), '/F', '/T'])
         process.start()
         process.wait()
-        #ctypes.windll.kernel32.TerminateProcess(int(process._handle), -1)
         return process.exit_code == 0
