@@ -4,9 +4,9 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 
 class _TokenClass(str):
-    def __init__(self, name=None):
-        super(_TokenClass, self).__init__(name)
-        
+    def __new__(cls, *args, **kwargs):
+        return str.__new__(cls, *args, **kwargs)
+
     def __getattr__(self, value):
         return _TokenClass(value)
 
