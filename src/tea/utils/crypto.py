@@ -2,16 +2,14 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '11 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
-import os, random
+import os
+import random
 from tea.system import platform
 
 __all__ = ['CryptError', 'encrypt', 'decrypt']
 
-class CryptError(Exception): pass
-
-# TODO - remove one of the keys
-__key = '\xe5\xb9\x13A0\xb0\x0bkat\xea\xb7\x08D\xee3'
-__iv  = '\xdbU\x8b5\x08B\xe6\xbe\x8eS\xfe\x04\x7f\xe0\xb6\xd0'
+class CryptError(Exception):
+    pass
 
 # key to use for encryption if no other alternative is possible
 _key    = [213, 21, 199, 11, 17, 227, 18, 7, 114, 184, 27, 
@@ -32,10 +30,13 @@ algorithms = ('aes', 'dotnet', 'win', 'simple')
 # process and a key to process it with.
 # encryptior and decryption decorators can be used to register implementations.
 implementations = {
-    'encryption': {},
-    'decryption': {},
+    'encryption' : {},
+    'decryption' : {},
+    'get_key'    : lambda: _key
 }
 
+
+# Decorators
 def encrypter(name):
     ''' Decorator for registering function as encryptor. '''
     def wrapper(func):
@@ -50,7 +51,14 @@ def decrypter(name):
         return func
     return wrapper
 
-def generate_key(length=32):
+def keygetter(func):
+    ''' Decorator for registering function for getting the encryption key.'''
+    implementations['get_key'] = func
+    return func 
+
+
+# Helpers
+def _generate_key(length=32):
     ''' Generates list of random number in range 0 to 255 inclusive of specified length.'''
     return [random.randint(0, 255) for i in xrange(length)]     #@UnusedVariable
 
@@ -62,7 +70,9 @@ def _from_hex_digest(digest):
     ''' Converts hex digest to sequence of bytes.'''
     return ''.join([chr(int(digest[x:x+2], 16)) for x in xrange(0, len(digest), 2)])
 
-# if we have pycrypt it is out best choice
+
+
+# Try to register AES from pycrypt
 try:
     from Cryptor.Cipher import AES
     
@@ -81,39 +91,79 @@ try:
     def _decrypt(data, key):
         ''' Decrypts data using provided key with AES cipher.'''
         return _get_cipher(key).decrypt(data)
-    
 except ImportError:
     pass
+
 
 if platform.is_only(platform.WINDOWS):
     # if we have win32 installed add native windows crypting
     try:
-        import win32crypt
+        import ctypes
+        from ctypes import wintypes
+        from ctypes import windll
         
-        # win crypt constants
-        CRYPTPROTECT_UI_FORBIDEN       = 0x01
-        CRYPTPROTECT_LOCAL_MACHINE     = 0x04
-        CRYPTPROTECT_CRED_SYNC         = 0x08
-        CRYPTPROTECT_AUDIT             = 0x10
-        CRYPTPROTECT_NO_RECOVERY       = 0x20
-        CRYPTPROTECT_VERIFY_PROTECTION = 0x40
-        CRYPTPROTECT_CRED_REGENERATE   = 0x80
+        class DATA_BLOB(ctypes.Structure):
+            _fields_ = [
+                ('cbData', wintypes.DWORD),
+                ('pbData', ctypes.POINTER(ctypes.c_char))
+            ]
+        
+        def get_data(data_blob):
+            cbData  = int(data_blob.cbData)
+            pbData  = data_blob.pbData
+            cbuffer = ctypes.c_buffer(cbData)
+            ctypes.cdll.msvcrt.memcpy(cbuffer, pbData, cbData)
+            windll.kernel32.LocalFree(pbData) #@UndefinedVariable
+            return cbuffer.raw
+        
+        CRYPTPROTECT_UI_FORBIDDEN = 0x01
         
         @encrypter('win')
-        def _encrypt(data, key=None):                           #@UnusedVariable
-            ''' Encrypts data using windows crypt service. 
-                Key is not used.'''
-            return win32crypt.CryptProtectData(data, 'tea-crypt', 
-                                               None, None, None, 
-                                               CRYPTPROTECT_UI_FORBIDEN)
-            
+        def Win32CryptProtectData(data, key=None):
+            buffer_in = ctypes.c_buffer(data, len(data))
+            blob_in = DATA_BLOB(len(data), buffer_in)
+            blob_out = DATA_BLOB()
+            CryptProtectData = windll.crypt32.CryptProtectData
+            if CryptProtectData(ctypes.byref(blob_in), u'tea-crypt',
+                                None, None, None,
+                                CRYPTPROTECT_UI_FORBIDDEN,
+                                ctypes.byref(blob_out)):
+                return get_data(blob_out)
+            else:
+                return ''
+        
         @decrypter('win')
-        def _decrypt(data, key=None):                           #@UnusedVariable
-            ''' Decrypts data using windows crypt service.
-                Key is not used.'''
-            return win32crypt.CryptUnprotectData(data, 
-                                                 None, None, None, 
-                                                 CRYPTPROTECT_UI_FORBIDEN)[1]
+        def Win32CryptUnprotectData(data, key=None):
+            buffer_in = ctypes.c_buffer(data, len(data))
+            blob_in = DATA_BLOB(len(data), buffer_in)
+            blob_out = DATA_BLOB()
+            CryptUnprotectData = windll.crypt32.CryptUnprotectData
+            if CryptUnprotectData(ctypes.byref(blob_in),
+                                  None, None, None, None,
+                                  CRYPTPROTECT_UI_FORBIDDEN,
+                                  ctypes.byref(blob_out)):
+                return get_data(blob_out)
+            else:
+                return ''
+        
+        #import win32crypt
+        #import win32cryptcon
+        #@encrypter('win')
+        #def _encrypt(data, key=None):                           #@UnusedVariable
+        #    ''' Encrypts data using windows crypt service. 
+        #        Key is not used.'''
+        #    windll.c
+        #    return win32crypt.CryptProtectData(data, 'tea-crypt', 
+        #                                       None, None, None, 
+        #                                       win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN)
+        #    
+        #@decrypter('win')
+        #def _decrypt(data, key=None):                           #@UnusedVariable
+        #    ''' Decrypts data using windows crypt service.
+        #        Key is not used.'''
+        #    return win32crypt.CryptUnprotectData(data, 
+        #                                         None, None, None, 
+        #                                         win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN)[1]
     except ImportError:
         pass
     
@@ -149,12 +199,13 @@ if platform.is_only(platform.WINDOWS):
         # TODO: There is a bug with saving and getting key from vault
         #       probably something with encoding. Sometimes _vault_retrieve
         #       returns numbers higher then 255 (even if they were not stored)
+        @keygetter
         def get_key():
             key = _vault_retrieve('tea', 'tea-crypt')
             if key:
                 return map(ord, key)
             else:
-                key = generate_key()
+                key = _generate_key()
                 _vault_store('tea', 'tea-crypt', ''.join(map(chr, key)))
                 return key
     except ImportError:
@@ -228,7 +279,8 @@ elif platform.is_a(platform.DOTNET):
     # Can't find a way to invoke win32api from ironpython witout wrapping it 
     # to C# dll and using pInvoke. So, instead of using windows credentials to 
     # store a key, key will be stored in file, encrypted with 
-    # ProtedtedData.Protect.      
+    # ProtedtedData.Protect.
+    @keygetter   
     def get_key():
         from tea.system import get_appdata
         from tea.shutil import mkdir
@@ -241,7 +293,7 @@ elif platform.is_a(platform.DOTNET):
                 return map(int, key)
         else:
             mkdir(dir_path)
-            key = generate_key()
+            key = _generate_key()
             arr_key = Array[Byte](key)
             cr_key = ProtectedData.Protect(arr_key, None, DataProtectionScope.CurrentUser)
             with open(key_path, 'wb') as f:
@@ -277,12 +329,6 @@ else:
             decrypted.append(chr((enc_c - key_c) % 127))
         return ''.join(decrypted)
     
-# if there is no get_key method fallback to default
-try:
-    get_key
-except NameError:
-    def get_key():
-        return _key
 
 def get_best_algorithm():
     for alg in algorithms:
@@ -296,7 +342,7 @@ def get_best_algorithm():
 def encrypt(data, digest=True):
     ''' Performs encryption of provided data.'''
     alg = get_best_algorithm()
-    enc = implementations['encryption'][alg](data, get_key())
+    enc = implementations['encryption'][alg](data, implementations['get_key']())
     return '%s$%s' % (alg, (_to_hex_digest(enc) if digest else enc))
 
 def decrypt(data, digest=True):
@@ -306,20 +352,16 @@ def decrypt(data, digest=True):
         return data
     data = _from_hex_digest(data) if digest else data
     try:
-        return implementations['decryption'][alg](data, get_key())
+        return implementations['decryption'][alg](data, implementations['get_key']())
     except KeyError:
         raise CryptError('Can not decrypt key for algorithm: %s' % alg)
 
 
     
 def main():
-#    print platform.get_all_names()
-#    print get_best_algorithm()
-#    print implementations
     print implementations
-    print get_key.__doc__
-    print get_key()
-    print get_key()
+    print implementations['get_key'].__doc__
+    print implementations['get_key']()
     print encrypt('password koji ce biti encryptovan')
     print decrypt(encrypt('password koji ce biti encryptovan'))
 
