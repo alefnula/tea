@@ -79,11 +79,14 @@ class BaseCommand(object):
         default from the attribute ``self.__doc__``.
         '''
         if subcommand is None: subcommand = self.id
-        usage = '%%prog %s [options] %s' % (subcommand, self.args)
+        usage = '%s [options] %s' % (subcommand, self.args)
         if self.__doc__:
             return '%s\n\n%s' % (usage, LEADING_WHITESPACE_REMOVER_RE.sub('', self.__doc__))
         else:
             return usage
+
+    def print_usage(self):
+        self.ui.info(self.usage())
 
     def create_parser(self, prog_name, subcommand):
         '''Create and return the ``OptionParser`` which will be used to
