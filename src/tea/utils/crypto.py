@@ -74,7 +74,7 @@ def _from_hex_digest(digest):
 
 # Try to register AES from pycrypt
 try:
-    from Cryptor.Cipher import AES
+    from Crypto.Cipher import AES
     
     def _get_cipher(key):
         ''' Create AES chiper with provided key.'''
