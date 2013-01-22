@@ -52,7 +52,7 @@ def decrypter(name):
 
 def generate_key(length=32):
     ''' Generates list of random number in range 0 to 255 inclusive of specified length.'''
-    return [random.randint(0, 255) for i in xrange(length)] #@UnusedVariable
+    return [random.randint(0, 255) for i in xrange(length)]     #@UnusedVariable
 
 def _to_hex_digest(bts):
     ''' Converts sequence of bytes to hex digest.'''
@@ -100,7 +100,7 @@ if platform.is_only(platform.WINDOWS):
         CRYPTPROTECT_CRED_REGENERATE   = 0x80
         
         @encrypter('win')
-        def _encrypt(data, key=None): #key is not used in this encryption
+        def _encrypt(data, key=None):                           #@UnusedVariable
             ''' Encrypts data using windows crypt service. 
                 Key is not used.'''
             return win32crypt.CryptProtectData(data, 'tea-crypt', 
@@ -108,7 +108,7 @@ if platform.is_only(platform.WINDOWS):
                                                CRYPTPROTECT_UI_FORBIDEN)
             
         @decrypter('win')
-        def _decrypt(data, key=None): #key is not used in this decryption
+        def _decrypt(data, key=None):                           #@UnusedVariable
             ''' Decrypts data using windows crypt service.
                 Key is not used.'''
             return win32crypt.CryptUnprotectData(data, 
@@ -120,7 +120,7 @@ if platform.is_only(platform.WINDOWS):
     # if we have win32 installed try add key storage using windows credentials
     try:
         import win32cred, pywintypes
-        def _vault_store(service, ident, secret):
+        def _vault_store(service, ident, secret):               #@UnusedVariable
             target = '%(ident)s@%(service)s' % vars()
             credential = dict(Type=win32cred.CRED_TYPE_GENERIC, 
                               TargetName=target, 
@@ -130,18 +130,18 @@ if platform.is_only(platform.WINDOWS):
                               Persist=win32cred.CRED_PERSIST_ENTERPRISE)
             win32cred.CredWrite(credential, 0)
         
-        def _vault_retrieve(service, ident):
+        def _vault_retrieve(service, ident):                    #@UnusedVariable
             target = '%(ident)s@%(service)s' % vars()
             try:
                 res = win32cred.CredRead(Type=win32cred.CRED_TYPE_GENERIC, 
                                          TargetName=target)
-            except pywintypes.error as e:
+            except pywintypes.error as e:                    #@UndefinedVariable
                 if e.winerror == 1168 and e.funcname == 'CredRead':
                     return None
                 raise
             return res['CredentialBlob'].decode('utf-16')
         
-        def _vault_delete(service, ident):
+        def _vault_delete(service, ident):                      #@UnusedVariable
             target = '%(ident)s@%(service)s' % vars()
             win32cred.CredDelete(Type=win32cred.CRED_TYPE_GENERIC, 
                                  TargetName=target)
@@ -163,13 +163,14 @@ if platform.is_only(platform.WINDOWS):
 elif platform.is_a(platform.DOTNET):
     # ironpython - .net implementation of AES can be used 
     # ironpython can be used on mono so check what options are for key storage
-    import clr
-    clr.AddReference('System.Security')
-    from System import Array, Byte
-    from System.Text import UTF8Encoding
-    from System.IO import MemoryStream
-    from System.Security.Cryptography import (RijndaelManaged, CryptoStream, CryptoStreamMode,
-                                              ProtectedData, DataProtectionScope)
+    import clr                                                #@UnresolvedImport
+    clr.AddReference('System.Security')                       #@UnresolvedImport
+    from System import Array, Byte                            #@UnresolvedImport
+    from System.Text import UTF8Encoding                      #@UnresolvedImport
+    from System.IO import MemoryStream                        #@UnresolvedImport
+    from System.Security.Cryptography import (
+            RijndaelManaged, CryptoStream, CryptoStreamMode,  #@UnresolvedImport
+            ProtectedData, DataProtectionScope)               #@UnresolvedImport
     
     @encrypter('dotnet')
     def _encrypt(text, key):
@@ -301,6 +302,8 @@ def encrypt(data, digest=True):
 def decrypt(data, digest=True):
     ''' Decrypts provided data.'''
     alg, _, data = data.rpartition('$')
+    if not alg: 
+        return data
     data = _from_hex_digest(data) if digest else data
     try:
         return implementations['decryption'][alg](data, get_key())
@@ -313,7 +316,8 @@ def main():
 #    print platform.get_all_names()
 #    print get_best_algorithm()
 #    print implementations
-    
+    print implementations
+    print get_key.__doc__
     print get_key()
     print get_key()
     print encrypt('password koji ce biti encryptovan')
