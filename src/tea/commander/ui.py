@@ -34,7 +34,7 @@ class UserInterface(object):
     formatter = abc.abstractproperty(get_formatter, set_formatter)
 
     @abc.abstractmethod
-    def ask(self, message=None, password=False):
+    def ask(self, message=None, password=False, strip=False):
         '''Ask for user input
         
         This method should ask the user for input, presenting to user
@@ -43,15 +43,19 @@ class UserInterface(object):
         '''
     
     @abc.abstractmethod
-    def info(self, message):
+    def message(self, message, newline=True):
+        '''Show just an ordinary message to the user'''
+    
+    @abc.abstractmethod
+    def info(self, message, newline=True):
         '''Present an information message to the user'''
     
     @abc.abstractmethod
-    def warn(self, message):
+    def warn(self, message, newline=True):
         '''Present a warning message to the user'''
     
     @abc.abstractmethod
-    def error(self, message):
+    def error(self, message, newline=True):
         '''Present an error message to the user'''
     
     @abc.abstractmethod
@@ -93,20 +97,25 @@ class ConsoleUserInterface(UserInterface):
         self._formatter = value
     formatter = property(get_formatter, set_formatter)
         
-    def ask(self, message=None, password=False):
+    def ask(self, message=None, password=False, strip=True):
         message = message or ''
         if password:
-            return getpass.getpass(message)
-        return raw_input(message)
+            value = getpass.getpass(message)
+        else:
+            value = raw_input(message)
+        return value.strip() if strip else value
 
-    def info(self, message):
-        cprint('%s\n' % message, Color.blue)
+    def message(self, message, newline=True):
+        cprint('%s%s' % (message, '\n' if newline else ''), Color.normal)
+
+    def info(self, message, newline=True):
+        cprint('%s%s' % (message, '\n' if newline else ''), Color.blue)
     
-    def warn(self, message):
-        cprint('%s\n' % message, Color.yellow)
+    def warn(self, message, newline=True):
+        cprint('%s%s' % (message, '\n' if newline else ''), Color.yellow)
 
-    def error(self, message):
-        cprint('%s\n' % message, Color.red)
+    def error(self, message, newline=True):
+        cprint('%s%s' % (message, '\n' if newline else ''), Color.red)
     
     def report(self, obj, status=0, data=None):
         data = {
