@@ -19,8 +19,10 @@ class Process(object):
         self._process  = DotNetProcess()
         self._process.StartInfo.FileName, self._process.StartInfo.Arguments = self._get_cmd(command, [] if arguments is None else arguments)
         if environment is not None:
-            for key, value in environment.items(): 
-                self._process.StartInfo.EnvironmentVariables.Add(str(key), str(value))
+            process_env = self._process.StartInfo.EnvironmentVariables
+            process_env.Clear()
+            for key, value in environment.items():
+                process_env[str(key)] = str(value)
         self._redirect_output = redirect_output
         self._process.StartInfo.UseShellExecute = False
         self._process.StartInfo.CreateNoWindow = True
