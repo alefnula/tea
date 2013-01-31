@@ -37,8 +37,8 @@ class Repository(object):
         self.name     = name
         self.path     = path
         self.source   = source
-        self.username = urllib2.quote(username)
-        self.password = urllib2.quote(password)
+        self.username = None if username is None else urllib2.quote(username) 
+        self.password = None if password is None else urllib2.quote(password)
         self._uri     = None
         self._muri    = None
         self.hg       = Hg(self)
