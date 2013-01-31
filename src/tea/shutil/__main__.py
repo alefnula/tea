@@ -52,8 +52,8 @@ def main(args):
             # get specs
             iterable, params, required = commands[command]
             # import function
-            import __init__ as module
-            func = getattr(module, command)
+            from tea import shutil
+            func = getattr(shutil, command)
             if not (required <= len(args) <= len(params)):
                 return print_func_help(func, required)
             parsed_args = []
