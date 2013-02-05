@@ -49,8 +49,15 @@ class JsonHandler(web.RequestHandler):
 
     def respond(self, obj, status_code=200):
         self.set_status(status_code)
-        self.set_header('Content-Type', 'application/json')
-        return self.finish(json.dumps({
+        content_type = 'application/json'
+        data = json.dumps({
             'status'  : STATUS_MESSAGES[status_code],
             'message' : obj
-        }, default=lambda obj: obj.__json__() if hasattr(obj, '__json__') else obj))
+        }, default=lambda obj: obj.__json__() if hasattr(obj, '__json__') else obj)
+        # Check if it's jsonp request
+        callback = self.get_argument('callback', None)
+        if callback is not None:
+            content_type = 'application/javascript'
+            data = '%s(%s);' % (callback, data) 
+        self.set_header('Content-Type', content_type)
+        return self.finish(data)
