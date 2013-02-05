@@ -99,9 +99,11 @@ class Hg(object):
                ['--user', user] if user is not None else [])
         return self._hg('commit', *args)
 
-    def push(self):
+    def push(self, new_branch=False):
         '''Pushes the changes into remote repository'''
-        return self._hg('push', '--repository', '%(path)s', '%(uri)s')
+        args = ['--repository', '%(path)s', '%(uri)s'] + (
+               ['--new-branch'] if new_branch else [])
+        return self._hg('push', *args)
 
     def revert(self):
         '''Restores repository to earlier state'''
