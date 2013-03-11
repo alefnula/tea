@@ -37,10 +37,15 @@ DEFAULTS = {
 
 def add_option(parser, name, conf):
     switches = map(string.strip, name.split(','))
+    # Default dest is long_switch.replace('-', '_')
     if 'dest' not in conf:
         conf['dest'] = switches[-1].replace('-', '_')
+    # Default default is None or oposito of store_true/store_false
     if 'default' not in conf:
         conf['default'] = {'store_true': False, 'store_false': True}.get(conf['action'], None)
+    # Default type for store is str
+    if 'type' not in conf and conf['action'] == 'store':
+        conf['type'] = str
     swch = []
     for s in switches:
         if len(s) == 1: swch.append('-%s' % s)
