@@ -5,18 +5,20 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 import os
 import sys
 import pkgutil
+import logging
 import collections
-
 from tea import shutil
 from tea.utils import get_object
+from tea.commander.base import BaseCommand
+from tea.commander.config import BaseConfig
+from tea.commander.exceptions import CommandError
+from tea.commander.ui import ConsoleUserInterface
+from tea.commander.commands import AliasCommand, ConfigCommand
+from tea.commander.options import create_parser, OPTIONS, DEFAULTS
 
 
-from .base import BaseCommand
-from .config import BaseConfig
-from .exceptions import CommandError
-from .ui import ConsoleUserInterface
-from .commands import AliasCommand, ConfigCommand
-from .argparse import LaxOptionParser, create_parser
+logger = logging.getLogger(__name__)
+
 
 
 class Application(object):
@@ -39,6 +41,7 @@ class Application(object):
         self._ui = ui or ConsoleUserInterface()
 
     def _add_options(self, preparser):
+        # Set options
         options = preparser['options']
         group = (None, {'options': []})
         for g in options:
@@ -47,52 +50,33 @@ class Application(object):
                 break
         else:
             options.insert(0, group)
-        group[1]['options'].extend([
-            ('q, quiet', {
-                'action'  : 'store_const',
-                'dest'    : 'report_format',
-                'const'   : 'quiet',
-                'default' : None,
-                'help'    : 'Do not print anything to stdout.  [ False ]',
-            }),
-            ('report-json', {
-                'action'  : 'store_const',
-                'dest'    : 'report_format',
-                'const'   : 'json',
-                'default' : None,
-                'help'    : 'Print out report in json format.  [ False ]',
-            }),
-            ('report-plist', {
-                'action'  : 'store_const',
-                'dest'    : 'report_format',
-                'const'   : 'plist',
-                'default' : None,
-                'help'    : 'Print out report in plist format. [ False ]',
-            }),
-        ])
+        group[1]['options'].extend(OPTIONS)
+        # Set defaults
+        defaults = preparser.setdefault('defaults', {})
+        defaults.update(DEFAULTS)
         return preparser
 
     def preparse(self):
         try:
             if self._preparser is None:
-                parser = create_parser([], parser_class=LaxOptionParser)
+                parser = create_parser([])
                 check_and_set_func = None
             else:
                 parser = create_parser(**{
                     'options'      : self._preparser.get('options',     []),
                     'description'  : self._preparser.get('description', ''),
                     'defaults'     : self._preparser.get('defaults',    None),
-                    'app_config'   : self._app_config,
-                    'parser_class' : LaxOptionParser
+                    'app_config'   : self._app_config
                 })
                 check_and_set_func = self._preparser.get('check_and_set_func', None)
                 
-            (options, args) = parser.parse_args(self.argv)
+            (options, args) = parser.parse_known_args(self.argv)
             if check_and_set_func is not None:
                 options = check_and_set_func(options)
             config = self._config(options, self._app_config)
             return parser, args, config
         except Exception, e:
+            logger.exception('')
             raise CommandError('Command arguments error: %s' % e)
 
     def get_commands(self):
@@ -170,14 +154,14 @@ class Application(object):
         
         if subcommand == 'help':
             if len(args) <= 2:
-                parser.print_lax_help()
+                parser.print_help()
                 sys.stdout.write(self.main_help_text() + '\n')
             elif args[2] == '--commands':
                 sys.stdout.write(self.main_help_text(commands_only=True) + '\n')
             else:
                 self.fetch_command_klass(args[2])(config, self._ui).print_help(self.prog_name, args[2])
         elif args[1:] in (['--help'], ['-h']):
-            parser.print_lax_help()
+            parser.print_help()
             sys.stdout.write(self.main_help_text() + '\n')
         else:
             self.fetch_command_klass(subcommand)(config, self._ui).run_from_argv(args)

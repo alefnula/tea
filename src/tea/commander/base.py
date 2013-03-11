@@ -8,9 +8,9 @@ import sys
 import json
 import time
 import logging
-import optparse
-# commander imports
-from .exceptions import CommandError
+import argparse
+from tea.commander.options import add_option
+from tea.commander.exceptions import CommandError
 
 logger = logging.getLogger(__name__)
 
@@ -92,8 +92,11 @@ class BaseCommand(object):
         '''Create and return the ``OptionParser`` which will be used to
         parse the arguments to this command.
         '''
-        return optparse.OptionParser(prog=os.path.basename(prog_name), usage=self.usage(subcommand), option_list=self.option_list)
-
+        parser = argparse.ArgumentParser(prog=os.path.basename(prog_name), usage=self.usage(subcommand))
+        for name, conf in self.option_list:
+            add_option(parser, name, conf)
+        return parser
+    
     def print_help(self, prog_name, subcommand):
         '''Print the help message for this command, derived from ``self.usage()``. '''
         parser = self.create_parser(prog_name, subcommand)
@@ -104,7 +107,7 @@ class BaseCommand(object):
         then run this command.
         '''
         parser = self.create_parser(argv[0], argv[1])
-        options, args = parser.parse_args(argv[2:])
+        options, args = parser.parse_known_args(argv[2:])
         self.execute(*args, **options.__dict__)
 
     def execute(self, *args, **options):
@@ -118,7 +121,7 @@ class BaseCommand(object):
             self.stdout = options.get('stdout', sys.stdout)
             self.stderr = options.get('stderr', sys.stderr)
             self.validate()
-
+            
             # Setup lexer and style
             lexer = self.ui.formatter.lexer
             style = self.ui.formatter.style
