@@ -117,8 +117,8 @@ class Process(object):
     exit_code = property(_get_exit_code)
 
 
-    @classmethod
-    def GetProcesses(cls, sort_by_name=True, cmdline=False):
+    @staticmethod
+    def GetProcesses(sort_by_name=True, cmdline=False):
         '''Retrieves a list of processes sorted by name.
         
         @type  sort_by_name: boolean
@@ -142,7 +142,7 @@ class Process(object):
         else:
             return sorted(processes, lambda t1, t2: cmp(t1[0], t2[0]) or cmp(t1[1], t2[1]))
 
-    @classmethod
+    @staticmethod
     def Find(name, arg=None):
         '''Find process by name or by argument in command line if arg param is available'''
         if arg is None:
@@ -156,7 +156,7 @@ class Process(object):
                         return process, pid
         return None
 
-    @classmethod
+    @staticmethod
     def Kill(pid=None, process=None):
         '''Kills a process by process PID or
         kills a process started by process module.
