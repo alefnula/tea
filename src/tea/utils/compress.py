@@ -144,7 +144,15 @@ def _get_sz():
     return _SZ_EXECUTABLE
 
 def seven_zip(archive, items, self_extracting=False):
+    '''Create a 7z archive'''
+    if not isinstance(items, (list, tuple)):
+        items = [items]
     if self_extracting:
         return er(_get_sz(), 'a', '-sfx', archive, *items)
     else:
         return er(_get_sz(), 'a', archive, *items)
+
+
+def seven_unzip(archive, output):
+    '''Extract a 7z archive'''
+    return er(_get_sz(), 'x', archive, '-o%s' % output, '-aoa')
