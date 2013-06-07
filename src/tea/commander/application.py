@@ -20,6 +20,16 @@ from tea.commander.options import create_parser, OPTIONS, DEFAULTS
 logger = logging.getLogger(__name__)
 
 
+if type('') is not type(b''):
+    bytes_type = bytes
+    unicode_type = str
+    basestring_type = str
+else:
+    bytes_type = str
+    unicode_type = unicode
+    basestring_type = basestring
+
+
 
 class Application(object):
     '''Encapsulates the logic of the commander.
@@ -31,7 +41,7 @@ class Application(object):
         '''commands: python module path to commands module'''
         self.argv = argv
         self.prog_name = os.path.basename(argv[0])
-        if isinstance(command_modules, basestring):
+        if isinstance(command_modules, basestring_type):
             command_modules = [command_modules]
         self._command_modules = command_modules
         self._commands = None
@@ -75,7 +85,7 @@ class Application(object):
                 options = check_and_set_func(options)
             config = self._config(options, self._app_config)
             return parser, args, config
-        except Exception, e:
+        except Exception as e:
             logger.exception('')
             raise CommandError('Command arguments error: %s' % e)
 

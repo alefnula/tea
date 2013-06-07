@@ -2,7 +2,6 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '07 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 
-import string
 import logging
 import argparse
 
@@ -36,7 +35,7 @@ DEFAULTS = {
 }
 
 def add_option(parser, name, conf):
-    switches = map(string.strip, name.split(','))
+    switches = [sw.strip() for sw in name.split(',')]
     # Default dest is long_switch.replace('-', '_')
     if 'dest' not in conf:
         conf['dest'] = switches[-1].replace('-', '_')

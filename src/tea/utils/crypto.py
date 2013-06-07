@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '11 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
@@ -359,11 +361,11 @@ def decrypt(data, digest=True):
 
     
 def main():
-    print implementations
-    print implementations['get_key'].__doc__
-    print implementations['get_key']()
-    print encrypt('password koji ce biti encryptovan')
-    print decrypt(encrypt('password koji ce biti encryptovan'))
+    print(implementations)
+    print(implementations['get_key'].__doc__)
+    print(implementations['get_key']())
+    print(encrypt('password koji ce biti encryptovan'))
+    print(decrypt(encrypt('password koji ce biti encryptovan')))
 
     
 if __name__ == '__main__':

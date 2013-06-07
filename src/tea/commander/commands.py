@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '07 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
@@ -25,15 +27,15 @@ class AliasCommand(BaseCommand):
         l = len(args)
         if l == 0:
             for alias, value in self.config.get('alias', {}).items():
-                print '%s="%s"' % (alias, value)
+                print('%s="%s"', alias, value)
         elif l == 1:
             value = self.get_alias(args[0])
             if value is not None:
-                print value
+                print(value)
         elif l == 2:
             self.set_alias(args[0], args[1])
         else:
-            print self.usage()
+            print(self.usage())
 
 
 class ConfigCommand(BaseCommand):
@@ -52,14 +54,14 @@ class ConfigCommand(BaseCommand):
     def handle(self, *args, **kwargs):
         l = len(args)
         if l < 2:
-            print self.usage()
+            print(self.usage())
             return
         command = args[0].lower()
         # Get
         if l == 2 and command == 'get': 
             value = self.config.get(args[1])
             if value is not None:
-                print value
+                print(value)
         # Set
         elif l == 3 and command == 'set':
             self.config.set(args[1], args[2])
@@ -75,5 +77,5 @@ class ConfigCommand(BaseCommand):
         elif l == 3 and command == 'rem':
             self.config.remove(args[1], args[2])
         else:
-            print self.usage()
+            print(self.usage())
 

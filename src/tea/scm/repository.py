@@ -3,8 +3,12 @@ __date__      = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import re
-import urllib2
-import urlparse
+try:
+    import urlparse
+    from urllib2 import quote as urlquote
+except ImportError:
+    import urllib.parse as urlparse
+    urlquote = urlparse.quote
 
 
 # tea imports
@@ -37,8 +41,8 @@ class Repository(object):
         self.name     = name
         self.path     = path
         self.source   = source
-        self.username = None if username is None else urllib2.quote(username) 
-        self.password = None if password is None else urllib2.quote(password)
+        self.username = None if username is None else urlquote(username) 
+        self.password = None if password is None else urlquote(password)
         self._uri     = None
         self._muri    = None
         self.hg       = Hg(self)

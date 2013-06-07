@@ -147,7 +147,7 @@ class BaseCommand(object):
                 self.stdout.write(json.dumps(self._report, indent=4))
             if output:
                 self.stdout.write(output)
-        except CommandError, e:
+        except CommandError as e:
             logger.exception('Command %s failed' % self)
             self.stderr.write('Error: %s\n' % e)
             sys.exit(1)

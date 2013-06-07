@@ -3,6 +3,7 @@ __date__      = '07 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 
 import os
+import io
 import json
 import logging
 # tea imports
@@ -23,8 +24,8 @@ class BaseConfig(object):
         if self.__configuration is None:
             if os.path.isfile(self.__app_config):
                 try:
-                    with open(self.__app_config, 'rb') as app_config_file:
-                        self.__configuration = json.load(app_config_file, encoding='utf-8')
+                    with io.open(self.__app_config, 'r', encoding='utf-8') as app_config_file:
+                        self.__configuration = json.load(app_config_file)
                 except:
                     logger.exception('Error reading: %s' % self.__app_config)
                     self.__configuration = {}

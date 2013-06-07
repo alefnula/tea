@@ -56,7 +56,7 @@ def chdir(directory):
             return False
         os.chdir(directory)
         return True
-    except Exception, e:
+    except Exception as e:
         logger.error('chdir -> %s failed! %s' % (directory, e))
         return False
 
@@ -95,7 +95,7 @@ class goto(object):
         os.chdir(self.current)
 
 
-def mkdir(path, mode=0777, delete=False):
+def mkdir(path, mode=0o777, delete=False):
     '''mkdir(path [, mode=0777])
     
     Create a leaf directory and all intermediate ones.
@@ -142,7 +142,7 @@ def copyfile(source, destination):
         __create_destdir(destination)
         shutil.copy(source, destination)
         return True
-    except Exception, e:
+    except Exception as e:
         logger.error('copyfile: %s -> %s failed! Error: %s' % (source, destination, e))
         return False
 
@@ -164,7 +164,7 @@ def copyfile2(source, destination):
         __create_destdir(destination)
         shutil.copy2(source, destination)
         return True
-    except Exception, e:
+    except Exception as e:
         logger.error('copyfile2: %s -> %s failed! Error: %s' % (source, destination, e))
         return False
     
@@ -193,7 +193,7 @@ def copytree(source, destination, symlinks=False):
         __create_destdir(destination)
         shutil.copytree(source, destination, symlinks)
         return True
-    except Exception, e:
+    except Exception as e:
         logger.exception('copytree: %s -> %s failed! Error: %s' % (source, destination, e))
         return False
 
@@ -258,7 +258,7 @@ def rmfile(path):
     try:
         os.remove(path)
         return True
-    except Exception, e:
+    except Exception as e:
         logger.error('rmfile: %s failed! Error: %s' % (path, e))
         return False
 
@@ -275,7 +275,7 @@ def rmtree(path):
     try:
         shutil.rmtree(path)
         return True
-    except Exception, e:
+    except Exception as e:
         logger.error('rmtree: %s failed! Error: %s' % (path, e))
         return False
 

@@ -4,7 +4,7 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import logging
-from win_file import WindowsFile
+from .win_file import WindowsFile
 
 
 class FileHandler(logging.StreamHandler):
