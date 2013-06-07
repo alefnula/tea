@@ -10,6 +10,17 @@ from tea.system import platform
 
 __all__ = ['CryptError', 'encrypt', 'decrypt']
 
+
+if type('') is not type(b''):
+    bytes_type = bytes
+    unicode_type = str
+    basestring_type = str
+else:
+    bytes_type = str
+    unicode_type = unicode
+    basestring_type = basestring
+
+
 class CryptError(Exception):
     pass
 
@@ -62,7 +73,7 @@ def keygetter(func):
 # Helpers
 def _generate_key(length=32):
     ''' Generates list of random number in range 0 to 255 inclusive of specified length.'''
-    return [random.randint(0, 255) for i in xrange(length)]     #@UnusedVariable
+    return [random.randint(0, 255) for i in range(length)]     #@UnusedVariable
 
 def _to_hex_digest(bts):
     ''' Converts sequence of bytes to hex digest.'''
@@ -70,7 +81,7 @@ def _to_hex_digest(bts):
 
 def _from_hex_digest(digest):
     ''' Converts hex digest to sequence of bytes.'''
-    return ''.join([chr(int(digest[x:x+2], 16)) for x in xrange(0, len(digest), 2)])
+    return ''.join([chr(int(digest[x:x+2], 16)) for x in range(0, len(digest), 2)])
 
 
 
@@ -122,6 +133,8 @@ if platform.is_only(platform.WINDOWS):
         
         @encrypter('win')
         def Win32CryptProtectData(data, key=None):
+            if isinstance(data, unicode_type):
+                data = data.encode('utf-8')
             buffer_in = ctypes.c_buffer(data, len(data))
             blob_in = DATA_BLOB(len(data), buffer_in)
             blob_out = DATA_BLOB()
@@ -136,6 +149,8 @@ if platform.is_only(platform.WINDOWS):
         
         @decrypter('win')
         def Win32CryptUnprotectData(data, key=None):
+            if isinstance(data, unicode_type):
+                data = data.encode('utf-8')
             buffer_in = ctypes.c_buffer(data, len(data))
             blob_in = DATA_BLOB(len(data), buffer_in)
             blob_out = DATA_BLOB()
