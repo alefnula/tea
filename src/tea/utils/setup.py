@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
@@ -31,7 +33,7 @@ def setup(module, target='zip', output_path=None, data_dir=None):
                    *(['--install-data',    os.path.join(dist, data_dir)] if data_dir is not None else []))
             with shutil.goto(dist) as ok:
                 assert ok
-                modules = filter(os.path.exists, ['lib', 'scripts'] + ([data_dir] if data_dir is not None else []))
+                modules = list(filter(os.path.exists, ['lib', 'scripts'] + ([data_dir] if data_dir is not None else [])))
                 assert compress.seven_zip('%s.exe' % module, modules, self_extracting=True)
                 # Cleanup
                 for module in modules:
@@ -44,8 +46,8 @@ def setup(module, target='zip', output_path=None, data_dir=None):
                 for filename in shutil.search(dist, '*'):
                     assert shutil.move(filename, os.path.join(output_path, filename.replace(dist, '', 1).strip('\\/')))
         return 0
-    except AssertionError, e:
-        print e
+    except AssertionError as e:
+        print(e)
         return 1
     finally:
         # Cleanup            

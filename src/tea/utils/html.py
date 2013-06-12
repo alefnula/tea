@@ -3,8 +3,10 @@ __date__      = '25 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 from re import sub
-from HTMLParser import HTMLParser
-
+try:
+    from HTMLParser import HTMLParser  # py2
+except ImportError:
+    from html.parser import HTMLParser # py3
 
 
 class _StripTagsParser(HTMLParser):

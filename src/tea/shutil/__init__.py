@@ -43,7 +43,7 @@ def search(path, matcher='*', dirs=False, files=True):
     @param dirs: if True returns also directories that match the pattern
     '''
     if callable(matcher):
-        fnmatcher = lambda items: filter(matcher, items)
+        fnmatcher = lambda items: list(filter(matcher, items))
     else:
         fnmatcher = lambda items: fnmatch.filter(items, matcher)
     for root, directories, filenames in os.walk(os.path.abspath(path)):

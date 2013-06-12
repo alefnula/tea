@@ -21,8 +21,8 @@ class Hg(object):
             'uri'  : self.repository.uri,
             'muri' : self.repository.muri,
         }
-        pargs = map(lambda a: a % data, args)
-        largs = map(lambda a: a.replace('%(uri)s', '%(muri)s') % data, args)
+        pargs = [a % data for a in args]
+        largs = [a.replace('%(uri)s', '%(muri)s') % data for a in args]
         logger.info('Execute: hg %s %s' % (operation, ' '.join(largs)))
         status = 1
         output = ''

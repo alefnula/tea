@@ -64,7 +64,7 @@ def unzip(archive, destination, filenames=None):
             archive = zipfile.ZipFile(archive, 'r', allowZip64=True)
             close = True        
         logger.info('Extracting: %s -> %s' % (archive.filename, destination))
-        if isinstance(filenames, basestring):
+        if isinstance(filenames, str):
             filenames = [filenames]
         if filenames is None: # extract all
             filenames = archive.namelist()
@@ -101,7 +101,7 @@ def mkzip(archive, items, mode='w', save_full_paths=False):
             archive = zipfile.ZipFile(archive, mode, allowZip64=True)
             close = True
         logger.info('mkdzip: Creating %s, from: %s' % (archive.filename, items))
-        if isinstance(items, basestring): items = [items]
+        if isinstance(items, str): items = [items]
         for item in items:
             item = os.path.abspath(item)
             basename = os.path.basename(item)
@@ -121,7 +121,7 @@ def mkzip(archive, items, mode='w', save_full_paths=False):
                     archive_name = basename.encode('utf-8')
                 archive.write(item, archive_name) #, zipfile.ZIP_DEFLATED)
         return True
-    except Exception, e:
+    except Exception as e:
         logger.error('Error occurred during mkzip: %s' % e)
         return False
     finally:

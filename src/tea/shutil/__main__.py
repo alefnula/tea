@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '18 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
@@ -20,19 +22,17 @@ commands = {
 
 
 def print_help():
-    print 'Usage: python -m tea.shutil [command] [params]'
-    print
-    print 'Commands: %s' % ', '.join(commands.keys())
+    print('Usage: python -m tea.shutil [command] [params]\nCommands: %s' % ', '.join(commands.keys()))
     return 1
 
 def print_func_help(func, required):
     import inspect
     args = inspect.getargspec(func).args
-    print 'Usage: %s' % func.__name__,
+    print('Usage: %s' % func.__name__, end=' ')
     for i in range(required):
-        print args[i],
+        print(args[i], end=' ')
     if required < len(args):
-        print '[%s]' % ' '.join(args[required:])
+        print('[%s]' % ' '.join(args[required:]))
     return 1
 
 
@@ -61,21 +61,21 @@ def main(args):
                 try:
                     parsed_args.append(params[i](arg))
                 except:
-                    print 'Failed to parse argument: %s' % arg
+                    print('Failed to parse argument: %s' % arg)
                     return 1
             try:
                 if iterable:
                     for i in func(*parsed_args):
-                        print i
+                        print(i)
                 else:
                     if func(*parsed_args):
-                        print 'OK'
+                        print('OK')
                         return 0
                     else:
-                        print 'FAILED'
+                        print('FAILED')
                         return 1 
-            except Exception, e:
-                print 'ERROR: %s' % e
+            except Exception as e:
+                print('ERROR: %s' % e)
                 return 1
             return 0
 

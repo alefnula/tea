@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '20 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
@@ -96,10 +98,10 @@ def print_page(text):
     '''
     color_re = re.compile(r'\[(?P<color>[FB]G_[A-Z_]+|NORMAL)\]')
     width = max(map(lambda x: len(strip_colors(x)), text.splitlines()))
-    print '\n' + hbar(width)
+    print('\n' + hbar(width))
     for line in text.splitlines():
         if line == '[HBAR]':
-            print hbar(width)
+            print(hbar(width))
             continue
         tail = width - len(strip_colors(line))
         sys.stdout.write('| ')
@@ -111,7 +113,7 @@ def print_page(text):
             previous = match.end()
         sys.stdout.write(line[previous:end])
         sys.stdout.write(' '*tail + ' |\n')
-    print hbar(width)
+    print(hbar(width))
 
 
 def wrap_text(text, width=80):

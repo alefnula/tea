@@ -208,7 +208,7 @@ def _colorize_single_line(line, regexp, color_def):
     else:
         rev_groups = {v:k for k, v in groupdict.items()}
         for part in groups:
-            if rev_groups.has_key(part) and color_def.has_key(rev_groups[part]):
+            if part in rev_groups and rev_groups[part] in color_def:
                 group_name = rev_groups[part]
                 cprint(part, color_def[group_name][0], fg_dark=color_def[group_name][1])
             else:
