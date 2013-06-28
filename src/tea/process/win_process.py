@@ -5,11 +5,8 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 import os
 import re
 import sys
+import psutil
 import tempfile
-
-import wmi
-import pythoncom
-
 import win32api
 import win32con
 import win32pipe
@@ -218,48 +215,10 @@ class Process(object):
         @rtype:  list[tuple(string, string)]
         @return: List of process PID, process name tuples
         '''
-        
-        '''if 'win' in sys.platform:
-            win32pdh.EnumObjects(None, None, win32pdh.PERF_DETAIL_WIZARD)
-            junk, instances = win32pdh.EnumObjectItems(None,None,'Process', win32pdh.PERF_DETAIL_WIZARD)
-        
-            proc_dict = {}
-            for instance in instances:
-                if proc_dict.has_key(instance):
-                    proc_dict[instance] = proc_dict[instance] + 1
-                else:
-                    proc_dict[instance] = 1
-        
-            
-            for instance, max_instances in proc_dict.items():
-                for inum in xrange(max_instances):
-                    hq = win32pdh.OpenQuery() # initializes the query handle 
-                    try:
-                        path = win32pdh.MakeCounterPath( (None, 'Process', instance, None, inum, 'ID Process') )
-                        counter_handle = win32pdh.AddCounter(hq, path) #convert counter path to counter handle
-                        try:
-                            win32pdh.CollectQueryData(hq) #collects data for the counter 
-                            type, val = win32pdh.GetFormattedCounterValue(counter_handle, win32pdh.PDH_FMT_LONG)
-                            processes.append((instance, val))
-                        except win32pdh.error, e:
-                            logging.exception('Error retreaving process list')
-                        win32pdh.RemoveCounter(counter_handle)
-                    except win32pdh.error, e:
-                        logging.exception('Error retreaving process list')
-                    win32pdh.CloseQuery(hq)
-        '''
-        processes = []
-        pythoncom.CoInitialize() #@UndefinedVariable
-        try:
-            c = wmi.WMI(find_classes=False)
-            if cmdline:
-                for i in c.Win32_Process(['ProcessID', 'Caption', 'CommandLine']):
-                    processes.append((i.ProcessID, i.Caption, i.CommandLine))
-            else:
-                for i in c.Win32_Process(['ProcessID', 'Caption']):
-                    processes.append((i.ProcessID, i.Caption))
-        finally:
-            pythoncom.CoUninitialize() #@UndefinedVariable
+        if cmdline:
+            processes = [(p.pid, p.name, p.cmdline) for p in psutil.get_process_list()]
+        else:
+            processes = [(p.pid, p.name) for p in psutil.get_process_list()]
         if sort_by_name:
             return sorted(processes, lambda t1, t2: cmp(t1[1], t2[1]) or cmp(t1[0], t2[0]))
         else:
