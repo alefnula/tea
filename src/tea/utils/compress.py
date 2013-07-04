@@ -148,9 +148,9 @@ def seven_zip(archive, items, self_extracting=False):
     if not isinstance(items, (list, tuple)):
         items = [items]
     if self_extracting:
-        return er(_get_sz(), 'a', '-sfx', archive, *items)
+        return er(_get_sz(), 'a', '-ssw', '-sfx', archive, *items)
     else:
-        return er(_get_sz(), 'a', archive, *items)
+        return er(_get_sz(), 'a', '-ssw', archive, *items)
 
 
 def seven_unzip(archive, output):
