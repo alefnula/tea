@@ -27,7 +27,7 @@ class AliasCommand(BaseCommand):
         l = len(args)
         if l == 0:
             for alias, value in self.config.get('alias', {}).items():
-                print('%s="%s"', alias, value)
+                print('%s="%s"' % (alias, value))
         elif l == 1:
             value = self.get_alias(args[0])
             if value is not None:
