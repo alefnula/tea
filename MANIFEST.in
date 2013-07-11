@@ -1,5 +1,6 @@
 recursive-include tea *.py
 include CONTRIBUTING.rst
 include LICENSE
+include AUTHORS
 include README.rst
 include setup.py
