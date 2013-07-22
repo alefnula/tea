@@ -16,6 +16,9 @@ class Hg(object):
         self.repository = repository
 
     def _hg(self, operation, *args):
+        '''Execute the hg command substituting variables like repository path,
+        remote repository URI, masked URI (masking password for logging)
+        '''
         data = {
             'path' : self.repository.path,
             'uri'  : self.repository.uri,
@@ -34,6 +37,17 @@ class Hg(object):
             logger.exception('hg failed! Exception thrown!')
         return status, output, error
 
+    def _hgr(self, operation, *args):
+        '''Execute hg command, on existing repository.
+        
+        Same as _hg but adds --repository %(path) to the command line,
+        '''
+        return self._hg(operation, '--repository', '%(path)s', *args)
+
+    def clone(self):
+        '''Clone repository'''
+        return self._hg('clone', '%(uri)s', '%(path)s')
+
     def identify(self):
         '''Returns the working directory revision
         return values:
@@ -41,48 +55,39 @@ class Hg(object):
             - str: revision in format {rev}:{node}
         '''
         if os.path.isdir(self.repository.path):
-            status, output, _ = self._hg('identify', '--repository', '%(path)s', '-in')
+            status, output, _ = self._hgr('parents', '--template', '{rev}:{node}\n')
             if status != 0: return None
-            full, short = output.split()
-            return '%s:%s' % (short, full)
+            return output.strip()
         else:
             return None
 
-    def clone(self):
-        '''Clone repository'''
-        return self._hg('clone', '%(uri)s', '%(path)s')
-
     def incoming(self):
         '''Checks if there are incoming changes in the repository'''
-        return self._hg('incoming', '--repository', '%(path)s', '%(uri)s')
+        return self._hgr('incoming', '%(uri)s')
 
     def outgoing(self):
         '''Checks if there are outgoing changes in the repository'''
-        return self._hg('outgoing', '--repository', '%(path)s', '%(uri)s')
+        return self._hgr('outgoing', '%(uri)s')
 
     def update(self, revision=None, clean=True):
         '''Performs update clean on repository'''
-        args = ['--repository', '%(path)s'] + (
-               ['--clean'] if clean else[]) + (
-               ['--rev', revision] if revision is not None else [])
-        return self._hg('update', *args)
+        args = (['--rev', revision] if revision is not None else []) + (
+                ['--clean'] if clean else []) 
+        return self._hgr('update', *args)
 
     def pull(self):
         '''Pushes the changes into remote repository'''
         if os.path.isdir(self.repository.path):
-            return self._hg('pull', '--repository', '%(path)s', '%(uri)s')
+            return self._hgr('pull', '%(uri)s')
         else:
             return self.clone()
 
     def fetch(self, message='Automated merge.'):
         '''Fetches the repository'''
         if os.path.isdir(self.repository.path):
-            args = [
-                '--repository', '%(path)s',
-                '--config', 'extensions.hgext.fetch=',
-                '--message', message, '%(uri)s',
-            ]
-            status, output, error = self._hg('fetch', *args)
+            status, output, error = self._hgr('fetch',
+                                              '--config', 'extensions.hgext.fetch=',
+                                              '--message', message, '%(uri)s')
             if 'no changes found' in output:
                 status = 1
             elif 'outstanding uncommitted changes' in error:
@@ -93,105 +98,97 @@ class Hg(object):
 
     def commit(self, message, addremove=False, amend=False, user=None):
         '''Commits'''
-        args = ['--repository', '%(path)s', '--message', message] + (
+        args = ['--message', message] + (
                ['--addremove'] if addremove else []) + (
                ['--amend'] if amend else []) + (
                ['--user', user] if user is not None else [])
-        return self._hg('commit', *args)
+        return self._hgr('commit', *args)
 
     def push(self, new_branch=False):
         '''Pushes the changes into remote repository'''
-        args = ['--repository', '%(path)s', '%(uri)s'] + (
-               ['--new-branch'] if new_branch else [])
-        return self._hg('push', *args)
+        args = ['--new-branch'] if new_branch else []
+        return self._hgr('push', '%(uri)s', *args)
 
     def revert(self):
         '''Restores repository to earlier state'''
-        return self._hg('revert', '--repository', '%(path)s', '--all', '--no-backup')
+        return self._hgr('revert', '--all', '--no-backup')
 
     def purge(self, purge_all=False, only_print=False):
         '''Restores repository to earlier state.'''
-        args = ['--repository', '%(path)s'] + (
-               # purge is extension, this will enable it if it is not enabled in mercurial.ini
-               ['--config', 'extensions.hgext.purge=']) + (
-               ['--all'] if purge_all else []) + (
+        
+        args = ['--all'] if purge_all else [] + (
                ['--print'] if only_print else [])
-        return self._hg('purge', *args)
+        # purge is extension, this will enable it if it is not enabled in mercurial.ini
+        return self._hgr('purge', '--config', 'extensions.hgext.purge=', *args)
 
     def tag(self, tag, local=False, message=None, user=None):
         '''Tag repository with specified tag'''
-        args = ['--repository', '%(path)s', tag] + (
-               ['--local'] if local else []) + (
-               ['--message', message] if message is not None else []) + (
-               ['--user', user] if user is not None else [])
-        return self._hg('tag', *args)
+        args = (['--local'] if local else []) + (
+                ['--message', message] if message is not None else []) + (
+                ['--user', user] if user is not None else [])
+        return self._hgr('tag', tag, *args)
     
     def status(self, show_all=False, modified=False, added=False, removed=False,
-                     deleted=False, clean=False, unknown=False, ignored=False,
-                     no_status=False, copies=False):
+               deleted=False, clean=False, unknown=False, ignored=False,
+               no_status=False, copies=False):
         '''Perform hg status'''  
-        args = ['--repository', '%(path)s'] + (
-               ['--all'] if show_all else []) + (
-               ['--modified'] if modified else []) + (
-               ['--added'] if added else []) + (
-               ['--removed'] if removed else []) + (
-               ['--deleted'] if deleted else []) + (
-               ['--clean'] if clean else []) + (
-               ['--unknown'] if unknown else []) + (
-               ['--ignored'] if ignored else []) + (
-               ['--no-status'] if no_status else []) + (
-               ['--copies'] if copies else [])
-        status, output, error = self._hg('status', *args)
+        args = (['--all'] if show_all else []) + (
+                ['--modified'] if modified else []) + (
+                ['--added'] if added else []) + (
+                ['--removed'] if removed else []) + (
+                ['--deleted'] if deleted else []) + (
+                ['--clean'] if clean else []) + (
+                ['--unknown'] if unknown else []) + (
+                ['--ignored'] if ignored else []) + (
+                ['--no-status'] if no_status else []) + (
+                ['--copies'] if copies else [])
+        status, output, error = self._hgr('status', *args)
         if status == 0:
             status = 0 if output.strip() == '' else 1
         return status, output, error
     
     def log(self, no=3, follow=False, copies=False, graph=False, user=None, branch=None):
         '''Perform hg log'''  
-        args = ['--limit', str(no), '--repository', '%(path)s'] + (
-               ['--follow'] if follow else []) + (
-               ['--copies'] if copies else []) + (
-               ['--graph'] if graph else []) + (
-               ['--user'] + user if user is not None else []) + (
-               ['--branch'] + branch if branch is not None else [])
-        return self._hg('log', *args)
+        args = (['--follow'] if follow else []) + (
+                ['--copies'] if copies else []) + (
+                ['--graph'] if graph else []) + (
+                ['--user'] + user if user is not None else []) + (
+                ['--branch'] + branch if branch is not None else [])
+        return self._hgr('log', '--limit', str(no), *args)
         
     def diff(self, revision=None, change=None, text=False, git=False, 
-                   show_function=False, reverse=False, ignore_all_space=False, 
-                   ignore_space_change=False, ignore_blank_lines=False, 
-                   unified=-1, stat=False):
+             show_function=False, reverse=False, ignore_all_space=False, 
+             ignore_space_change=False, ignore_blank_lines=False, 
+             unified=-1, stat=False):
         ''' Perform hg diff'''
-        args = ['--repository', '%(path)s'] + (
-               ['--rev', revision] if revision is not None else []) + (
-               ['--change', change] if change is not None else []) + (
-               ['--text'] if text else []) + (
-               ['--git'] if git else []) + (
-               ['--show-function'] if show_function else []) + (
-               ['--reverse'] if reverse else []) + (
-               ['--ignore--all-space'] if ignore_all_space else []) + (
-               ['--ignore-space-change'] if ignore_space_change else []) + (
-               ['--ignore-blank-lines'] if ignore_blank_lines else []) + (
-               ['--unified', str(unified)] if unified != -1 else []) + (
-               ['--stat'] if stat else [])
-        return self._hg('diff', *args)
+        args = (['--rev', revision] if revision is not None else []) + (
+                ['--change', change] if change is not None else []) + (
+                ['--text'] if text else []) + (
+                ['--git'] if git else []) + (
+                ['--show-function'] if show_function else []) + (
+                ['--reverse'] if reverse else []) + (
+                ['--ignore--all-space'] if ignore_all_space else []) + (
+                ['--ignore-space-change'] if ignore_space_change else []) + (
+                ['--ignore-blank-lines'] if ignore_blank_lines else []) + (
+                ['--unified', str(unified)] if unified != -1 else []) + (
+                ['--stat'] if stat else [])
+        return self._hgr('diff', *args)
         
     def branch(self, name=None):
         ''' Perform hg branch'''
-        return self._hg('branch', '--repository', '%(path)s', *([] if name is None else [name]))
+        return self._hgr('branch', *([] if name is None else [name]))
     
     def branches(self):
         ''' Perfrom hg branches'''
-        return self._hg('branches', '--repository', '%(path)s')
+        return self._hgr('branches')
         
     def heads(self):
         ''' Perform hg heads'''
-        return self._hg('heads', '--repository', '%(path)s')
+        return self._hgr('heads')
 
     def churn(self, sort=False, changesets=False, diffstat=False):
-        args = ['--repository', '%(path)s'] + (
-               # churn is extension, this will enable it if it is not enabled in mercurial.ini
-               ['--config', 'extensions.hgext.churn=']) + (
-               ['--sort'] if sort else []) + (
-               ['--changesets'] if changesets else []) + (
-               ['--diffstat'] if diffstat else [])
-        return self._hg('churn', *args)
+        args = (['--sort'] if sort else []) + (
+                ['--changesets'] if changesets else []) + (
+                ['--diffstat'] if diffstat else [])
+        # churn is extension, this will enable it if it is not enabled in mercurial.ini
+        return self._hgr('churn', '--config', 'extensions.hgext.churn=', *args)

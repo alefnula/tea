@@ -36,7 +36,7 @@ class WindowsFile(object):
                                       dwFlagsAndAttributes, 0)
         win32api.SetHandleInformation(self.handle, win32con.HANDLE_FLAG_INHERIT, 0)
         if mode in ('a', 'a+'):
-            self.seek(0,2)
+            self.seek(0, 2)
         self.file_size = win32file.GetFileSize(self.handle)
         self.is_closed = False
 
