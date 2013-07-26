@@ -7,6 +7,7 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 import os
 import io
 import copy
+import pprint
 import logging
 from StringIO import StringIO
 
@@ -21,8 +22,14 @@ class ConfigType:
     NA = 'na'     # not available
 
 
+class ConfigError(Exception):
+    pass
 
-class ConfigObject(object):
+
+class Cfg(object):
+    class NotFound(Exception):
+        pass
+    
     def __init__(self, data, fmt=ConfigType.NA, encoding='utf-8'):
         if isinstance(data, (dict, list, tuple)):
             self.filename = None
@@ -105,98 +112,122 @@ class ConfigObject(object):
                 with io.open(self.filename, 'w', encoding=self.encofing) as f:
                     yaml.safe_dump(self.data, f)
 
-    def contains(self, var):
+    def _get(self, var, create=False):
         current = self.data
         for part in var.split('.'):
-            if part in current:
-                current = current[part]
+            if isinstance(current, dict):
+                if part in current:
+                    current = current[part]
+                elif create:
+                    current = current.setdefault(part, {})
+                else:
+                    raise Cfg.NotFound(var)
+            elif isinstance(current, list):
+                try:
+                    part = int(part, 10)
+                    current = current[part]
+                except:
+                    raise Cfg.NotFound(var)
             else:
-                return False
-        return True
-
-    def get(self, var, default=None):
-        current = self.data
-        for part in var.split('.'):
-            if part in current:
-                current = current[part]
-            else:
-                return default
+                raise Cfg.NotFound(var) 
         return current
+    
+    def get(self, var):
+        return self._get(var)
 
     def set(self, var, value):
-        current = self.data
-        parts = var.split('.')
-        for part in parts[:-1]:
-            current = current.setdefault(part, {})
-        current[parts[-1]] = value
+        if '.' in var:
+            path, _, item = var.rpartition('.')
+            current = self._get(path, create=True)
+        else:
+            current = self.data
+            item = var
+        if isinstance(current, dict):
+            current[item] = value
+        elif isinstance(current, list):
+            item = int(item, 10)
+            current[item] = value
         self.__dump()
 
     def delete(self, var):
-        current = self.data
-        parts = var.split('.')
-        for part in parts[:-1]:
-            if part in current:
-                current = current[part]
+        try:
+            if '.' in var:
+                path, _, item = var.rpartition('.')
+                current = self._get(path)
             else:
-                return
-        del current[parts[-1]]
-        self.__dump()
+                current = self.data
+                item = var
+            if isinstance(current, dict):
+                del current[item]
+            elif isinstance(current, list):
+                item = int(item, 10)
+                current.pop(item)
+            self.__dump()
+        except Cfg.NotFound:
+            pass
 
-    def add(self, var, value, index=None):
-        current = self.data
-        parts = var.split('.')
-        for part in parts[:-1]:
-            current = current.setdefault(part, {})
-        last = parts[-1]
-        if last in current:
-            if not isinstance(current[last], list):
-                current[last] = [current[last]]
-            if index is not None:
-                current[last].insert(int(index), value)
-            else:
-                current[last].append(value)
+    def insert(self, var, value, index=None):
+        '''Inserts at the index, and if the index is not provided
+        appends to the end of the list
+        '''
+        current = self._get(var)
+        if not isinstance(current, list):
+            raise ConfigError('Item is not a list')
+        if index is None:
+            current.append(value)
         else:
-            current[last] = [value]
+            current.insert(index, value)
         self.__dump()
 
-    def remove(self, var, index):
-        current = self.__data
-        parts = var.split('.')
-        for part in parts[:-1]:
-            if part in current:
-                current = current[part]
-            else:
-                return
-        if isinstance(current[parts[-1]], list):
-            try:
-                current[parts[-1]].pop(int(index))
-            except: pass
-        self.__dump()
+    def __repr__(self):
+        return 'Cfg(%s)' % pprint.saferepr(self.data)
 
 
 class Config(object):
     '''Base class for configuration management'''
     def __init__(self, data, fmt=ConfigType.NA, encoding='utf-8'):
-        self.__configs = []
+        self.__cfgs = []
         self.attach(data, fmt, encoding)
     
     @property
     def current(self):
-        return self.__configs[0]
+        return self.__cfgs[0]
     
     def attach(self, data, fmt=ConfigType.NA, encoding='utf-8'):
-        self.__configs.insert(0, ConfigObject(data, fmt, encoding))
+        self.__cfgs.insert(0, Cfg(data, fmt, encoding))
     
     def get(self, var, default=None):
-        for config in self.__configs:
-            if config.contains(var):
-                return config.get(var)
+        for cfg in self.__cfgs:
+            try:
+                return cfg.get(var)
+            except Cfg.NotFound:
+                pass
         return default
     
     def set(self, var, value):
         self.current.set(var, value)
 
+    def delete(self, var):
+        for cfg in self.__cfgs:
+            cfg.delete(var)
 
+    def insert(self, var, value, index=None):
+        self.current.insert(var, value, index)
+
+    def __repr__(self):
+        def merge(d1, d2):
+            for key in d2:
+                if key not in d1:
+                    d1[key] = copy.deepcopy(d2[key])
+                elif isinstance(d2[key], dict):
+                    merge(d1[key], d2[key])
+                else:
+                    d1[key] = copy.deepcopy(d2[key])
+        d = {}
+        for cfg in reversed(self.__cfgs):
+            merge(d, cfg.data)
+        return 'Config(%s)' % pprint.saferepr(d)
+                    
 
 if __name__ == '__main__':
     c = Config({'foo': {'bar' : 3}})
