@@ -34,7 +34,7 @@ class Cfg(object):
         if isinstance(data, (dict, list, tuple)):
             self.filename = None
             self.fmt = ConfigType.DICT
-            self.encofing = encoding
+            self.encoding = encoding
             self.data = copy.deepcopy(data)
         elif isinstance(data, basestring):
             if os.path.isfile(data):
@@ -52,7 +52,7 @@ class Cfg(object):
         else:
             self.filename = None
             self.fmt = fmt
-            self.encofing = encoding
+            self.encoding = encoding
             self.data = {}
                 
     def __get_fmt(self, fmt, filename=None, data=None):
@@ -60,7 +60,7 @@ class Cfg(object):
         if fmt in (ConfigType.JSON, ConfigType.YAML, ConfigType.INI):
             return fmt
         if filename is not None:
-            ext = os.path.splitext(data)[-1].lower()
+            ext = os.path.splitext(filename)[-1].lower()
             return {
                 '.json': ConfigType.JSON,
                 '.yaml': ConfigType.YAML,
@@ -90,8 +90,8 @@ class Cfg(object):
             if data is not None:
                 return json.loads(data)
             else:
-                with io.open(self.filename, 'r', encoding=self.encoding) as f:
-                    return json.load(f)
+                with io.open(self.filename, 'r+b') as f:
+                    return json.load(f, encoding=self.encoding)
         elif self.fmt == ConfigType.YAML:
             import yaml
             if data is not None:
@@ -105,12 +105,12 @@ class Cfg(object):
         if self.filename is not None:
             if self.fmt == ConfigType.JSON:
                 import json
-                with io.open(self.filename, 'w', encoding=self.encoding) as f:
-                    json.dump(self.data, f)
+                with io.open(self.filename, 'w+b') as f:
+                    json.dump(self.data, f, indent=2, encoding=self.encoding)
             elif self.fmt == ConfigType.YAML:
                 import yaml
-                with io.open(self.filename, 'w', encoding=self.encofing) as f:
-                    yaml.safe_dump(self.data, f)
+                with io.open(self.filename, 'w', encoding=self.encoding) as f:
+                    yaml.safe_dump(self.data, f, default_flow_style=False)
 
     def _get(self, var, create=False):
         current = self.data
@@ -163,7 +163,7 @@ class Cfg(object):
                 item = int(item, 10)
                 current.pop(item)
             self.__dump()
-        except Cfg.NotFound:
+        except (Cfg.NotFound, KeyError, IndexError):
             pass
 
     def insert(self, var, value, index=None):
