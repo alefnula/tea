@@ -6,21 +6,82 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
 import io
+import json
 import copy
+import pickle
 import pprint
 import logging
-from StringIO import StringIO
+try:
+    import yaml
+    have_yaml = True
+except ImportError:
+    have_yaml = False
 
 
 logger = logging.getLogger(__name__)
 
-class ConfigType:
-    DICT = 'dict'
-    JSON = 'json' # json files
-    YAML = 'yaml' # yaml files
-    INI = 'ini'   # ini files
-    NA = 'na'     # not available
+class ConfigFormat:
+    DICT   = 'dict'    # python dictionary
+    PICKLE = 'pickle'  # pickle file
+    JSON   = 'json'    # json files
+    YAML   = 'yaml'    # yaml files
+    NA     = 'na'      # not available
 
+    @staticmethod
+    def from_filename(filename):
+        ext = os.path.splitext(filename)[-1].lower()
+        return {
+            '.pickle': ConfigFormat.PICKLE,
+            '.json': ConfigFormat.JSON,
+            '.yaml': ConfigFormat.YAML,
+        }.get(ext, ConfigFormat.NA)
+    
+    @staticmethod
+    def load(fmt, data):
+        if isinstance(data, dict):
+            return ConfigFormat.DICT, copy.deepcopy(data)
+        elif fmt == ConfigFormat.JSON:
+            try:
+                return fmt, json.loads(data)
+            except:
+                logger.error('Format set to JSON but the data is not valid.')
+                return fmt, {}
+        elif fmt == ConfigFormat.YAML and have_yaml:
+            try:
+                return fmt, yaml.safe_load(data)
+            except:
+                logger.error('Format set to YAML but the data is not valid.')
+                return fmt, {}
+        elif fmt == ConfigFormat.PICKLE:
+            try:
+                return fmt, pickle.loads(data)
+            except:
+                logger.error('Format set to Pickle but the data is not valid.')
+        else:
+            try:
+                return ConfigFormat.JSON, json.loads(data)
+            except: pass
+            if have_yaml:
+                try:
+                    return ConfigFormat.YAML, yaml.safe_load(data)
+                except: pass
+            try:
+                return ConfigFormat.PICKLE, pickle.loads(data)
+            except: pass
+            return ConfigFormat.NA, {}
+
+    @staticmethod
+    def dump(filename, fmt, data, encoding):
+        if fmt == ConfigFormat.JSON:
+            with io.open(filename, 'w+b') as f:
+                json.dump(data, f, indent=2, encoding=encoding)
+        elif fmt == ConfigFormat.YAML and have_yaml:
+            with io.open(filename, 'w', encoding=encoding) as f:
+                yaml.safe_dump(data, f, default_flow_style=False)
+        elif fmt == ConfigFormat.PICKLE:
+            with io.open(filename, 'w', encoding=encoding) as f:
+                pickle.dump(data, f)
+        
 
 class ConfigError(Exception):
     pass
@@ -30,87 +91,23 @@ class Cfg(object):
     class NotFound(Exception):
         pass
     
-    def __init__(self, data, fmt=ConfigType.NA, encoding='utf-8'):
-        if isinstance(data, (dict, list, tuple)):
-            self.filename = None
-            self.fmt = ConfigType.DICT
-            self.encoding = encoding
-            self.data = copy.deepcopy(data)
-        elif isinstance(data, basestring):
-            if os.path.isfile(data):
-                self.filename = os.path.abspath(data)
-                self.fmt = self.__get_fmt(fmt, filename=self.filename)
-                self.encoding = encoding
-                self.data = self.__load()
-            else:
-                self.filename = None
-                self.encoding = encoding
-                if isinstance(data, str):
-                    data = str.decode(encoding)
-                self.fmt = self.__get_fmt(fmt, data=data)
-                self.data = self.__load(data)
+    def __init__(self, data, fmt=ConfigFormat.NA, encoding='utf-8'):
+        self.encoding = encoding
+        # Check if the data is a file and if it is read it
+        if isinstance(data, basestring) and os.path.isfile(data):
+            self.filename = os.path.abspath(data)
+            fmt = ConfigFormat.from_filename(self.filename)
+            with io.open(self.filename, 'r', encoding=encoding) as f:
+                data = f.read()
         else:
             self.filename = None
-            self.fmt = fmt
-            self.encoding = encoding
-            self.data = {}
-                
-    def __get_fmt(self, fmt, filename=None, data=None):
-        # First check if type is provided and if it's valid
-        if fmt in (ConfigType.JSON, ConfigType.YAML, ConfigType.INI):
-            return fmt
-        if filename is not None:
-            ext = os.path.splitext(filename)[-1].lower()
-            return {
-                '.json': ConfigType.JSON,
-                '.yaml': ConfigType.YAML,
-                '.ini': ConfigType.INI, 
-            }.get(ext, ConfigType.NA)
-        if data is not None:
-            try:
-                import json
-                json.loads(data)
-                return ConfigType.JSON
-            except: pass
-            try:
-                import yaml
-                yaml.safe_load(data)
-                return ConfigType.YAML
-            except: pass
-            try:
-                from ConfigParser import ConfigParser
-                ConfigParser.readfp(StringIO(data))
-                return ConfigType.INI
-            except: pass
-        return ConfigType.NA
-
-    def __load(self, data=None):
-        if self.fmt == ConfigType.JSON:
-            import json
-            if data is not None:
-                return json.loads(data)
-            else:
-                with io.open(self.filename, 'r+b') as f:
-                    return json.load(f, encoding=self.encoding)
-        elif self.fmt == ConfigType.YAML:
-            import yaml
-            if data is not None:
-                return yaml.safe_load(data)
-            else:
-                with io.open(self.filename, 'r', encoding=self.encoding) as f:
-                    return yaml.safe_load(f)
-        return {}
+        if isinstance(data, str):
+            data = data.decode(encoding)
+        self.fmt, self.data = ConfigFormat.load(fmt, data)
 
     def __dump(self):
         if self.filename is not None:
-            if self.fmt == ConfigType.JSON:
-                import json
-                with io.open(self.filename, 'w+b') as f:
-                    json.dump(self.data, f, indent=2, encoding=self.encoding)
-            elif self.fmt == ConfigType.YAML:
-                import yaml
-                with io.open(self.filename, 'w', encoding=self.encoding) as f:
-                    yaml.safe_dump(self.data, f, default_flow_style=False)
+            ConfigFormat.dump(self.filename, self.fmt, self.data, self.encoding)
 
     def _get(self, var, create=False):
         current = self.data
@@ -185,7 +182,7 @@ class Cfg(object):
 
 class Config(object):
     '''Base class for configuration management'''
-    def __init__(self, data, fmt=ConfigType.NA, encoding='utf-8'):
+    def __init__(self, data, fmt=ConfigFormat.NA, encoding='utf-8'):
         self.__cfgs = []
         self.attach(data, fmt, encoding)
     
@@ -193,7 +190,7 @@ class Config(object):
     def current(self):
         return self.__cfgs[0]
     
-    def attach(self, data, fmt=ConfigType.NA, encoding='utf-8'):
+    def attach(self, data, fmt=ConfigFormat.NA, encoding='utf-8'):
         self.__cfgs.insert(0, Cfg(data, fmt, encoding))
     
     def get(self, var, default=None):

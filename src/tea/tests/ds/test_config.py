@@ -1,9 +1,10 @@
+from boto import config
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '25 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import unittest
-from tea.ds.config import Config, ConfigType
+from tea.ds.config import Config, ConfigFormat
 
 
 class TestDictConfig(unittest.TestCase):
@@ -22,7 +23,7 @@ class TestDictConfig(unittest.TestCase):
         self.c = None
     
     def test_config_format(self):
-        self.assertEqual(self.c.current.fmt, ConfigType.DICT)
+        self.assertEqual(self.c.current.fmt, ConfigFormat.DICT)
     
     def test_get(self, foo=True, bar=True):
         if foo:
@@ -94,7 +95,7 @@ class TestDetectJsonConfig(TestDictConfig):
 ''')
     
     def test_config_format(self):
-        self.assertEqual(self.c.current.fmt, ConfigType.JSON)
+        self.assertEqual(self.c.current.fmt, ConfigFormat.JSON)
 
 
 class TestDetectYamlConfig(TestDictConfig):
@@ -108,7 +109,7 @@ bar: 44
 ''')
 
     def test_config_format(self):
-        self.assertEqual(self.c.current.fmt, ConfigType.YAML)
+        self.assertEqual(self.c.current.fmt, ConfigFormat.YAML)
 
 
 class TestDoubleConfig(unittest.TestCase):
@@ -134,52 +135,52 @@ class TestDoubleConfig(unittest.TestCase):
         c = Config(self.dict_first)
         c.attach(self.dict_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.DICT)
+        self.assertEqual(c.current.fmt, ConfigFormat.DICT)
 
     def test_dict_json(self):
         c = Config(self.dict_first)
         c.attach(self.json_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.JSON)
+        self.assertEqual(c.current.fmt, ConfigFormat.JSON)
 
     def test_dict_yaml(self):
         c = Config(self.dict_first)
         c.attach(self.yaml_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.YAML)
+        self.assertEqual(c.current.fmt, ConfigFormat.YAML)
 
     def test_json_dict(self):
         c = Config(self.json_first)
         c.attach(self.dict_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.DICT)
+        self.assertEqual(c.current.fmt, ConfigFormat.DICT)
 
     def test_json_json(self):
         c = Config(self.json_first)
         c.attach(self.json_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.JSON)
+        self.assertEqual(c.current.fmt, ConfigFormat.JSON)
 
     def test_json_yaml(self):
         c = Config(self.json_first)
         c.attach(self.yaml_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.YAML)
+        self.assertEqual(c.current.fmt, ConfigFormat.YAML)
 
     def test_yaml_dict(self):
         c = Config(self.yaml_first)
         c.attach(self.dict_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.DICT)
+        self.assertEqual(c.current.fmt, ConfigFormat.DICT)
 
     def test_yaml_json(self):
         c = Config(self.yaml_first)
         c.attach(self.json_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.JSON)
+        self.assertEqual(c.current.fmt, ConfigFormat.JSON)
 
     def test_yaml_yaml(self):
         c = Config(self.yaml_first)
         c.attach(self.yaml_second)
         self.__test_structure(c)
-        self.assertEqual(c.current.fmt, ConfigType.YAML)
+        self.assertEqual(c.current.fmt, ConfigFormat.YAML)
