@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '25 July 2013'

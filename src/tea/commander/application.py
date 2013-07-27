@@ -83,11 +83,13 @@ class Application(object):
             (options, args) = parser.parse_known_args(self.argv)
             if check_and_set_func is not None:
                 options = check_and_set_func(options)
+            # First add options to configuration
             config = self._config(data={'options': options.__dict__})
-            if options.app_config:
-                config.attach(filename=options.app_config)
-            else:
-                config.attach(filename=self._app_config)
+            # Then add the application specific configuration specified either through
+            # the constructor or overridden through the command line options
+            app_config = options.app_config if options.app_config else self._app_config
+            config.ensure_exists(app_config)
+            config.attach(filename=app_config)
             return parser, args, config
         except Exception as e:
             logger.exception('')
