@@ -38,8 +38,9 @@ def print_func_help(func, required):
 
 def main(args):
     # Configure logger
+    import logging
     from tea.logger import configure_logging
-    configure_logging(stdout_level='WARN')
+    configure_logging(stdout_level=logging.WARNING)
     
     if len(args) == 0:
         print_help()

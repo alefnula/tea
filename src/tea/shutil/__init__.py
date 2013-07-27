@@ -1,13 +1,13 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
-
-__doc__ = '''
-This module mimics the behavior of the builtin module B{shutil} from the
+'''
+This module mimics the behavior of the builtin :mod:`shutil` module from the
 standard python library, adding logging to all operations.
 
 Also, it adds a few useful additional functions to the module.
 '''
+
+__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__      = '27 November 2009'
+__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import glob
@@ -112,9 +112,11 @@ def mkdir(path, mode=0o777, delete=False):
     just the rightmost) will be created if it does not exist.  This is
     recursive.
     
-    :param path:   directory to create
-    :param mode:   directory mode
-    :param delete: delete directory/file if exists
+    :param str path: directory to create
+    :param int mode: directory mode
+    :param bool delete: delete directory/file if exists
+    :rtype: :obj:`bool`
+    :return: True if succeeded else False
     '''
     logger.info('mkdir: %s' % path)
     if os.path.isdir(path):
@@ -139,11 +141,9 @@ def copyfile(source, destination):
 
     The destination may be a directory.
     
-    :type  source: string
-    :param source: Source file (file to copy).
-    :type  destination: string
-    :param destination: Destination file or directory (where to copy).
-    :rtype:  boolean
+    :param str source: Source file (file to copy).
+    :param str destination: Destination file or directory (where to copy).
+    :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise. 
     '''
     logger.info('copyfile: %s -> %s' % (source, destination))
@@ -161,11 +161,9 @@ def copyfile2(source, destination):
 
     The destination may be a directory.
     
-    :type  source: string
-    :param source: Source file (file to copy).
-    :type  destination: string
-    :param destination: Destination file or directory (where to copy).
-    :rtype:  boolean
+    :param str source: Source file (file to copy).
+    :param str destination: Destination file or directory (where to copy).
+    :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise. 
     '''
     logger.info('copyfile2: %s -> %s' % (source, destination))
@@ -188,14 +186,11 @@ def copytree(source, destination, symlinks=False):
     it is false, the contents of the files pointed to by symbolic
     links are copied.
     
-    @type  source: string
-    @param source: Source directory (directory to copy).
-    @type  destination: string
-    @param destination: Destination directory (where to copy).
-    @type  symlinks: boolean
-    @param symlinks: Follow symbolic links.
-    @rtype:  boolean
-    @return: True if the operation is successful, False otherwise.
+    :param str source: Source directory (directory to copy).
+    :param str destination: Destination directory (where to copy).
+    :param bool symlinks: Follow symbolic links.
+    :rtype: :obj:`bool`
+    :return: True if the operation is successful, False otherwise.
     '''
     logger.info('copytree: %s -> %s' % (source, destination))
     try:
@@ -230,11 +225,9 @@ def move(source, destination):
     rename. Otherwise, copy source to the destination and then remove
     source.
     
-    :type  source: string
-    :param source: Source file or directory (file or directory to move).
-    :type  destination: string
-    :param destination: Destination file or directory (where to move).
-    :rtype:  boolean
+    :param str source: Source file or directory (file or directory to move).
+    :param str destination: Destination file or directory (where to move).
+    :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
     '''
     logger.info('Move: %s -> %s' % (source, destination))
@@ -258,9 +251,8 @@ def gmove(pattern, destination):
 def rmfile(path):
     '''Delete a file
     
-    :type  path: string
-    :param path: Path to the file that needs to be deleted.
-    :rtype:  boolean
+    :param str path: Path to the file that needs to be deleted.
+    :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
     '''
     logger.info('rmfile: %s' % path)
@@ -275,9 +267,8 @@ def rmfile(path):
 def rmtree(path):
     '''Recursively delete a directory tree.
 
-    :type  path: string
-    :param path: Path to the directory that needs to be deleted.
-    :rtype:  boolean
+    :param str path: Path to the directory that needs to be deleted.
+    :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
     '''
     logger.info('rmtree: %s' % path)
@@ -292,9 +283,8 @@ def rmtree(path):
 def remove(path):
     '''Delete a file or directory
     
-    :type  path: string
-    :param path: Path to the file or directory that needs to be deleted.
-    :rtype:  boolean
+    :param str path: Path to the file or directory that needs to be deleted.
+    :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
     '''
     if os.path.isdir(path):

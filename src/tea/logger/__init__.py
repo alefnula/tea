@@ -1,10 +1,4 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
-
-from .log import configure_logging
-
-__doc__ = '''
+'''
 Logging module
 ==============
 This logging module is designed as a wrapper around the python I{logging}
@@ -17,28 +11,35 @@ to file and stderr.
 
 Usage
 =====
-
+>>> import logging
 >>> import tempfile
->>> from tea.logger import configure_logger
->>> configure_logger(filename=tempfile.mktemp())
->>> logging.debug('Debug level log entry')
->>> logging.info('Info level log entry')
->>> logging.warning('Warn level log entry')
-WARNING     - Warn level log entry [__main__:1]
->>> logging.error('Error level log entry')
-ERROR       - Error level log entry [__main__:1]
->>> logging.fatal('Critical level log entry')
-ERROR_FATAL - Critical level log entry [__main__:1]
+>>> from tea.logger import configure_logging
+>>> configure_logging(filename=tempfile.mktemp())
+>>> logger = logging.getLogger('test')
+>>> logger.debug('Debug level log entry')
+>>> logger.info('Info level log entry')
+>>> logger.warning('Warn level log entry')
+WARNING     - Warn level log entry [test:1]
+>>> logger.error('Error level log entry')
+ERROR       - Error level log entry [test:1]
+>>> logger.critical('Critical level log entry')
+CRITICAL    - Critical level log entry [test:1]
 >>> try:
 ...     raise Exception('Test exception')
 ... except:
-...     logging.exception('Error level log entry with stack trace')
-ERROR       - Error level log entry with stack trace [__main__:4]
+...     logger.exception('Error level log entry with stack trace')
+ERROR       - Error level log entry with stack trace [test:4]
 Traceback (most recent call last):
   ...
 Exception: Test exception
 '''
 
+__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__      = '27 November 2009'
+__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod(optionflags=doctest.ELLIPSIS)
+else:
+    from .log import configure_logging
