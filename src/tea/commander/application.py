@@ -9,8 +9,8 @@ import logging
 import collections
 from tea import shutil
 from tea.utils import get_object
+from tea.ds.config import MultiConfig
 from tea.commander.base import BaseCommand
-from tea.commander.config import BaseConfig
 from tea.commander.exceptions import CommandError
 from tea.commander.ui import ConsoleUserInterface
 from tea.commander.commands import AliasCommand, ConfigCommand
@@ -47,7 +47,7 @@ class Application(object):
         self._commands = None
         self._preparser = self._add_options(preparser)
         self._app_config = app_config
-        self._config = config or BaseConfig
+        self._config = config or MultiConfig
         self._ui = ui or ConsoleUserInterface()
 
     def _add_options(self, preparser):
@@ -83,7 +83,8 @@ class Application(object):
             (options, args) = parser.parse_known_args(self.argv)
             if check_and_set_func is not None:
                 options = check_and_set_func(options)
-            config = self._config(options, self._app_config)
+            config = self._config(data={'options': options.__dict__})
+            config.attach(filename=self._app_config)
             return parser, args, config
         except Exception as e:
             logger.exception('')
@@ -103,7 +104,7 @@ class Application(object):
             }
             for module in self._command_modules:
                 package = get_object(module)
-                for loader, module_name, is_pkg in  pkgutil.walk_packages(package.__path__):
+                for loader, module_name, is_pkg in pkgutil.walk_packages(package.__path__):
                     loader.find_module(module_name).load_module(module_name)
                 for command in BaseCommand.__subclasses__():
                     if not command.__module__.startswith('tea.commander'):

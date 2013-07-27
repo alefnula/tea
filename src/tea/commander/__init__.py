@@ -3,7 +3,6 @@ __date__      = '07 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 
 from .base import BaseCommand
-from .config import BaseConfig
 from .exceptions import CommandError
 from .application import Application
 from .ui import UserInterface, ConsoleUserInterface

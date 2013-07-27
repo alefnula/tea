@@ -59,10 +59,10 @@ class Config(object):
         try:
             if self.format == Config.JSON:
                 with io.open(self.filename, 'r+b') as f:
-                    return json.load(f, encoding=self.encodign)
+                    return json.load(f, encoding=self.encoding)
             elif self.format == Config.YAML:
                 if has_yaml:
-                    with io.open(self.filename, 'r', encoding=self.encodign) as f:
+                    with io.open(self.filename, 'r', encoding=self.encoding) as f:
                         return yaml.safe_load(f)
                 else:
                     logger.error('YAML is not installed, cannot load .yaml files.')
@@ -226,4 +226,4 @@ class MultiConfig(object):
         self.current.insert(var, value, index)
 
     def __repr__(self):
-        return 'MultiConfig(\n  %s\n)' % (',\n  '.join(map(repr, self._configs)))                    
+        return 'MultiConfig(\n  %s\n)' % (',\n  '.join(reversed(map(repr, self._configs))))                    
