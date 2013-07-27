@@ -9,6 +9,8 @@ import io
 import json
 import copy
 import logging
+import functools
+import threading
 try:
     import yaml
     has_yaml = True
@@ -30,6 +32,14 @@ class ConfigError(Exception):
     pass
 
 
+def locked(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        with self.lock:
+            return func(self, *args, **kwargs)
+    return wrapper
+
+
 class Config(object):
     '''Configuration class'''
     JSON = '.json'
@@ -39,6 +49,7 @@ class Config(object):
         pass
     
     def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
+        self.lock = threading.Lock()
         self.encoding = encoding
         self.autosave = autosave
         if filename is not None:
@@ -127,12 +138,14 @@ class Config(object):
                 raise Config.NotFound(var) 
         return current
     
+    @locked
     def get(self, var, default=None):
         try:
             return self._get(var)
         except Config.NotFound:
             return default
 
+    @locked
     def set(self, var, value):
         if '.' in var:
             path, _, item = var.rpartition('.')
@@ -148,6 +161,7 @@ class Config(object):
         if self.autosave:
             self.save()
 
+    @locked
     def delete(self, var):
         try:
             if '.' in var:
@@ -166,6 +180,7 @@ class Config(object):
         except (Config.NotFound, KeyError, IndexError):
             pass
 
+    @locked
     def insert(self, var, value, index=None):
         '''Inserts at the index, and if the index is not provided
         appends to the end of the list
@@ -187,9 +202,11 @@ class Config(object):
 class MultiConfig(object):
     '''Base class for configuration management'''
     def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
+        self.lock = threading.Lock()
         self._configs = []
         self.attach(filename, data, fmt, encoding, autosave)
-    
+
+    @locked    
     def attach(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True, index=None):
         config = Config(filename, data, fmt, encoding, autosave)
         if index is None:
@@ -197,16 +214,18 @@ class MultiConfig(object):
         else:
             self._configs.insert(index, config)
     
+    @locked
     def detach(self, index=None):
         if index is None:
             self._configs.pop(0)
         else:
             self._configs.pop(index)
-    
+
     @property
     def current(self):
         return self._configs[0]
     
+    @locked
     def get(self, var, default=None):
         for config in self._configs:
             try:
@@ -215,13 +234,16 @@ class MultiConfig(object):
                 pass
         return default
     
+    @locked
     def set(self, var, value):
         self.current.set(var, value)
 
+    @locked
     def delete(self, var):
         for config in self._configs:
             config.delete(var)
 
+    @locked
     def insert(self, var, value, index=None):
         self.current.insert(var, value, index)
 
