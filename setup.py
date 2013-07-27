@@ -3,14 +3,15 @@ __date__      = '20 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 import os
+import io
 import glob
 from distutils.core import setup
 
 setup(name='tea',
-      version='0.0.2',
-      description='tea python library',
-      long_description='Set of useful commonly used python modules.',
-      platforms=['Windows', 'POSIX', 'MacOS'],
+      version='0.0.3',
+      description='Set of utility python modules.',
+      long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
+      platforms=['Windows', 'POSIX', 'MacOSX'],
       author='Viktor Kerkez',
       author_email='alefnula@gmail.com',
       maintainer='Viktor Kerkez',
@@ -22,6 +23,7 @@ setup(name='tea',
           'tea.commander',
           'tea.console',
           'tea.cron',
+          'tea.ds',
           'tea.logger',
           'tea.msg',
           'tea.parsing',

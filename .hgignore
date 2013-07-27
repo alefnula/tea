@@ -4,3 +4,5 @@ syntax: glob
 .project
 .pydevproject
 *.pyc
+MANIFEST
+docs/_build
