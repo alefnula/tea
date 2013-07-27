@@ -84,13 +84,16 @@ class Application(object):
             if check_and_set_func is not None:
                 options = check_and_set_func(options)
             config = self._config(data={'options': options.__dict__})
-            config.attach(filename=self._app_config)
+            if options.app_config:
+                config.attach(filename=options.app_config)
+            else:
+                config.attach(filename=self._app_config)
             return parser, args, config
         except Exception as e:
             logger.exception('')
             raise CommandError('Command arguments error: %s' % e)
 
-    def get_commands(self):
+    def get_commands(self, config):
         if self._commands is None:
             self._commands = {
                 'alias' : {
@@ -102,7 +105,9 @@ class Application(object):
                     'klass' : ConfigCommand,
                 },
             }
-            for module in self._command_modules:
+            # Add additional commands if available
+            command_modules = set(self._command_modules[:] + config.get('options.commands', []) + config.get('commands', []))
+            for module in command_modules:
                 package = get_object(module)
                 for loader, module_name, is_pkg in pkgutil.walk_packages(package.__path__):
                     loader.find_module(module_name).load_module(module_name)
@@ -115,10 +120,10 @@ class Application(object):
                         }
         return self._commands
 
-    def main_help_text(self, commands_only=False):
+    def main_help_text(self, config, commands_only=False):
         '''Returns the script's main help text, as a string.'''
         if commands_only:
-            usage = sorted(self.get_commands().keys())
+            usage = sorted(self.get_commands(config).keys())
         else:
             usage = [
                 '',
@@ -127,7 +132,7 @@ class Application(object):
                 'Available subcommands:',
             ]
             commands_dict = collections.defaultdict(lambda: [])
-            for name, command in self.get_commands().iteritems():
+            for name, command in self.get_commands(config).iteritems():
                 commands_dict[command['app']].append(name)
             for app in sorted(commands_dict.keys()):
                 usage.append('')
@@ -136,12 +141,12 @@ class Application(object):
                     usage.append('    %s' % name)
         return '\n'.join(usage)
 
-    def fetch_command_klass(self, subcommand):
+    def fetch_command_klass(self, config, subcommand):
         '''Tries to fetch the given subcommand, printing a message with the
         appropriate command called from the command line if it can't be found.
         '''
         try:
-            command = self.get_commands()[subcommand]
+            command = self.get_commands(config)[subcommand]
         except KeyError:
             sys.stderr.write("Unknown command: %r\nType '%s help' for usage.\n" % \
                 (subcommand, self.prog_name))
@@ -166,13 +171,13 @@ class Application(object):
         if subcommand == 'help':
             if len(args) <= 2:
                 parser.print_help()
-                sys.stdout.write(self.main_help_text() + '\n')
+                sys.stdout.write(self.main_help_text(config) + '\n')
             elif args[2] == '--commands':
-                sys.stdout.write(self.main_help_text(commands_only=True) + '\n')
+                sys.stdout.write(self.main_help_text(config, commands_only=True) + '\n')
             else:
-                self.fetch_command_klass(args[2])(config, self._ui).print_help(self.prog_name, args[2])
+                self.fetch_command_klass(config, args[2])(config, self._ui).print_help(self.prog_name, args[2])
         elif args[1:] in (['--help'], ['-h']):
             parser.print_help()
-            sys.stdout.write(self.main_help_text() + '\n')
+            sys.stdout.write(self.main_help_text(config) + '\n')
         else:
-            self.fetch_command_klass(subcommand)(config, self._ui).run_from_argv(args)
+            self.fetch_command_klass(config, subcommand)(config, self._ui).run_from_argv(args)

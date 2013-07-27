@@ -21,6 +21,22 @@ OPTIONS = [
         'type'    : str,
         'help'    : 'Log file.                         [ %(default)s ]',
     }),
+    ('app-config', {
+        'action'  : 'store',
+        'type'    : str,
+        'metavar' : 'CONFIG',
+        'help'    : '''Path to a configuration file for the application. This
+                    option will override the default value provided by the
+                    application and use this one instead. [ %(default)s ]''',
+    }),
+    ('commands', {
+        'dest'    : 'commands',
+        'action'  : 'append',
+        'type'    : str,
+        'help'    : '''Paths to additional modules from which commands should
+                    be loaded. Paths should represent valid python paths ands
+                    modules should be in python path.      [ none ]''',
+    }),
     ('report-json', {
         'action'  : 'store_const',
         'dest'    : 'report_format',
@@ -31,7 +47,8 @@ OPTIONS = [
 ]
 
 DEFAULTS = {
-    'logfile': 'sv.log',
+    'logfile'  : 'sv.log',
+    'commands' : [],
 }
 
 def add_option(parser, name, conf):

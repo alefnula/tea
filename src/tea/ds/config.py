@@ -11,6 +11,7 @@ import copy
 import logging
 import functools
 import threading
+from tea import shutil
 try:
     import yaml
     has_yaml = True
@@ -39,14 +40,35 @@ def locked(func):
             return func(self, *args, **kwargs)
     return wrapper
 
+def _get_format(filename):
+    return os.path.splitext(filename)[-1].lower()[1:]
+
+def _ensure_exists(filename, encoding='utf-8'):
+    '''Ensures that the configuration file exists and that it produces a
+    correct empty configuration.
+    '''
+    filename = os.path.abspath(filename)
+    if not os.path.isfile(filename):
+        dirname = os.path.dirname(filename)
+        if not os.path.isdir(dirname):
+            shutil.mkdir(dirname)
+        with io.open(filename, 'w', encoding=encoding) as f:
+            fmt = _get_format(filename)
+            if fmt in (Config.JSON, Config.YAML):
+                f.write('{}')
+            f.write('\n')
+
 
 class Config(object):
     '''Configuration class'''
-    JSON = '.json'
-    YAML = '.yaml'
+    DICT = 'dict'
+    JSON = 'json'
+    YAML = 'yaml'
     
     class NotFound(Exception):
         pass
+
+    ensure_exists = staticmethod(_ensure_exists)
     
     def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
         self.lock = threading.Lock()
@@ -54,12 +76,13 @@ class Config(object):
         self.autosave = autosave
         if filename is not None:
             self.filename = os.path.abspath(filename)
-            self.format = fmt if fmt is not None else os.path.splitext(self.filename)[-1].lower()
+            self.format = fmt if fmt is not None else _get_format(self.filename)
             self.data = self._read_file()
         else:
             self.filename = filename
             self.format   = Config.JSON if fmt is None else fmt
             if isinstance(data, dict):
+                self.format = Config.DICT
                 self.data = copy.deepcopy(data)
             elif isinstance(data, (bytes_type, unicode_type)):
                 self.data = self._read_string(data)
@@ -81,8 +104,8 @@ class Config(object):
             else:
                 logger.error('Unsupported configuration format: %s', self.format)
                 return {}
-        except:
-            logger.exception('Failed to load file "%s" in format "%s"', self.filename, self.format)
+        except Exception as e:
+            logger.error('Failed to load file "%s" in format "%s". %s', self.filename, self.format, e)
             return {}
 
     def _read_string(self, data):
@@ -201,6 +224,9 @@ class Config(object):
 
 class MultiConfig(object):
     '''Base class for configuration management'''
+    
+    ensure_exists = staticmethod(_ensure_exists)
+    
     def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
         self.lock = threading.Lock()
         self._configs = []
