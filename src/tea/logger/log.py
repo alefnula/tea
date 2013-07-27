@@ -54,33 +54,33 @@ def configure_logging(filename=None, filemode='a', datefmt=DATE_FORMAT,
                      max_size=1048576, rotations_number=5, remove_handlers=True):
     '''Configure logging module
     
-    @type  filename: string
-    @param filename: Specifies a filename to log to.
-    @type  filemode: char
-    @param filemode: Specifies the mode to open the log file.
+    :type  filename: string
+    :param filename: Specifies a filename to log to.
+    :type  filemode: char
+    :param filemode: Specifies the mode to open the log file.
         Values: C{'a', 'w'}.
-    @type  datefmt: string
-    @param datefmt: Use the specified date/time format.
-    @type  format: string
-    @param format: Format string for the file handler.
-    @type  stdout_format: string
-    @param stdout_format: Format string for the stdout handler.
-    @type  level: string
-    @param level: Log level for the file handler.
-        Values: C{'VERBOSE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'ERROR_FATAL'}
-    @type  stdout_level: string
-    @param stdout_level: Log level for the stdout handler.
-        Values: C{'VERBOSE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'ERROR_FATAL'}
-    @type  initial_file_message: string
-    @param initial_file_message: First log entry written in file.
-    @type  max_size: integer
-    @param max_size: Maximal size of the logfile. If the size of the file exceed
+    :type  datefmt: string
+    :param datefmt: Use the specified date/time format.
+    :type  format: string
+    :param format: Format string for the file handler.
+    :type  stdout_format: string
+    :param stdout_format: Format string for the stdout handler.
+    :type  level: string
+    :param level: Log level for the file handler.
+        Values: 'VERBOSE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'ERROR_FATAL'
+    :type  stdout_level: string
+    :param stdout_level: Log level for the stdout handler.
+        Values: 'VERBOSE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'ERROR_FATAL'
+    :type  initial_file_message: string
+    :param initial_file_message: First log entry written in file.
+    :type  max_size: integer
+    :param max_size: Maximal size of the logfile. If the size of the file exceed
         the maximal size it will be rotated.
-    @type  rotations_number: integer
-    @param rotations_number: Number of rotations to save
-    @type  remove_handlers: boolean
-    @param remove_handlers: Remove all existing handlers
-    @rtype: None
+    :type  rotations_number: integer
+    :param rotations_number: Number of rotations to save
+    :type  remove_handlers: boolean
+    :param remove_handlers: Remove all existing handlers
+    :rtype: None
     '''
     logger = logging.getLogger()
     logger.level = logging.NOTSET
