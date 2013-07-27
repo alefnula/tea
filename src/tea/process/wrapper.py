@@ -4,10 +4,7 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import logging
-# tea
-from tea import shutil
 from tea.system import platform
-# process imports
 if platform.is_a(platform.POSIX):
     from .posix_process import Process
 elif platform.is_a(platform.DOTNET):
@@ -19,7 +16,6 @@ else:
 
 
 logger = logging.getLogger(__name__)
-
 
 
 def execute(command, *args):
@@ -82,42 +78,6 @@ def execute_nowait(command, *args):
     process = Process(command, args, redirect_output=False)
     process.start()
     return process
-
-
-def execute_free(command, *args):
-    '''Execute a command with arguments and wait for output.
-    Arguments can be in a free form!
-    
-    >>> print 'status: %s, output: %s, error: %s' % execute_free('python', '-c', '"import sys;sys.stdout.write(\\'out\\');sys.stderr.write(\\'err\\');sys.exit(1)"')
-    status: 1, output: out, error: err
-    >>> print 'status: %s, output: %s, error: %s' % execute_free('python', '-c "import sys;sys.stdout.write(\\'out\\');sys.stderr.write(\\'err\\');sys.exit(2)"')
-    status: 2, output: out, error: err
-    >>> print 'status: %s, output: %s, error: %s' % execute_free('python -c "import sys;sys.stdout.write(\\'out\\');sys.stderr.write(\\'err\\');sys.exit(3)"')
-    status: 3, output: out, error: err
-    '''
-    arguments = command
-    for arg in args:
-        arguments += ' %s' % arg
-    arguments = shutil.split(arguments)
-    return execute(*arguments)
-
-
-def execute_nowait_free(command, *args):
-    '''Execute a command with arguments and doesn't wait for output.
-    Arguments can be in a free form!
-    
-    >>> print 'status: %s, output: %s, error: %s' % execute_nowait_free('python', '-c', '"import sys;sys.stdout.write(\\'out\\');sys.stderr.write(\\'err\\');sys.exit(1)"')
-    status: None, output: out, error: err
-    >>> print 'status: %s, output: %s, error: %s' % execute_nowait_free('python', '-c "import sys;sys.stdout.write(\\'out\\');sys.stderr.write(\\'err\\');sys.exit(2)"')
-    status: None, output: out, error: err
-    >>> print 'status: %s, output: %s, error: %s' % execute_nowait_free('python -c "import sys;sys.stdout.write(\\'out\\');sys.stderr.write(\\'err\\');sys.exit(3)"')
-    status: None, output: out, error: err
-    '''
-    arguments = command
-    for arg in args:
-        arguments += ' %s' % arg
-    arguments = shutil.split(arguments)
-    return execute_nowait(*arguments)
 
 
 def find_process(name):

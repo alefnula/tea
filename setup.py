@@ -8,7 +8,7 @@ import glob
 from distutils.core import setup
 
 setup(name='tea',
-      version='0.0.3',
+      version='0.0.4',
       description='Set of utility python modules.',
       long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
       platforms=['Windows', 'POSIX', 'MacOSX'],
