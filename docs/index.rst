@@ -13,7 +13,7 @@ Contents:
 
 
 API Documentation
------------------
+=================
 
 .. toctree::
    :maxdepth: 3
@@ -31,6 +31,7 @@ API Documentation
    api/system.rst
    api/tornado.rst
    api/utils.rst
+
 
 Indices and tables
 ==================
