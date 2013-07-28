@@ -30,7 +30,6 @@ class Font(object):
     }
 
 
-
 class Style(object):
     # overall background color (``None`` means transparent)
     background_color = None
@@ -108,27 +107,41 @@ class ConsoleStyleAdapter(StyleAdapter):
     def _adapt_color(self, color):
         r, g, b = int(color[:2], 16), int(color[2:4], 16), int(color[4:], 16)
         # Black
-        if r <= 64 and g <= 64 and b <= 64:     return (Color.black,  False)
+        if r <= 64 and g <= 64 and b <= 64:
+            return (Color.black, False)
         # Blue
-        elif r <= 64 and g <= 64 and b <= 128:  return (Color.blue,   True)
-        elif r <= 64 and g <= 64:               return (Color.blue,   False)
+        elif r <= 64 and g <= 64 and b <= 128:
+            return (Color.blue, True)
+        elif r <= 64 and g <= 64:
+            return (Color.blue, False)
         # Green
-        elif r <= 64 and b <= 64 and g <= 128:  return (Color.green,  True)
-        elif r <= 64 and b <= 64:               return (Color.green,  False)
+        elif r <= 64 and b <= 64 and g <= 128:
+            return (Color.green, True)
+        elif r <= 64 and b <= 64:
+            return (Color.green, False)
         # Red
-        elif b <= 64 and g <= 64 and r <= 128:  return (Color.red,    True)
-        elif b <= 64 and g <= 64:               return (Color.red,    False)
+        elif b <= 64 and g <= 64 and r <= 128:
+            return (Color.red, True)
+        elif b <= 64 and g <= 64:
+            return (Color.red, False)
         # Cyan
-        elif r <= 64 and g <= 128 and b <= 128: return (Color.cyan,   True)
-        elif r <= 64 and g > 128 and b > 128:   return (Color.cyan,   False)
+        elif r <= 64 and g <= 128 and b <= 128:
+            return (Color.cyan, True)
+        elif r <= 64 and g > 128 and b > 128:
+            return (Color.cyan, False)
         # Purple
-        elif g <= 64 and r <= 128 and b <= 128: return (Color.purple, True)
-        elif g <= 64 and r > 128 and b > 128:   return (Color.purple, False)
+        elif g <= 64 and r <= 128 and b <= 128:
+            return (Color.purple, True)
+        elif g <= 64 and r > 128 and b > 128:
+            return (Color.purple, False)
         # Yellow
-        elif b <= 64 and r <= 128 and g <= 128: return (Color.yellow, True)
-        elif b <= 64 and r > 128 and g > 128:   return (Color.yellow, False)
+        elif b <= 64 and r <= 128 and g <= 128:
+            return (Color.yellow, True)
+        elif b <= 64 and r > 128 and g > 128:
+            return (Color.yellow, False)
         # White
-        elif r > 192 and g > 192 and b > 192:   return (Color.white,  False)
+        elif r > 192 and g > 192 and b > 192:
+            return (Color.white,  False)
         # Gray
         elif abs(r - g) < 64 and abs(r - b) < 64 and abs(g - b) < 64:
             if r <= 128 and g <= 128 and b <= 128:
