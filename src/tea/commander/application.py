@@ -30,7 +30,6 @@ else:
     basestring_type = basestring
 
 
-
 class Application(object):
     '''Encapsulates the logic of the commander.
 
@@ -79,7 +78,7 @@ class Application(object):
                     'app_config'   : self._app_config
                 })
                 check_and_set_func = self._preparser.get('check_and_set_func', None)
-                
+
             (options, args) = parser.parse_known_args(self.argv)
             if check_and_set_func is not None:
                 options = check_and_set_func(options)
@@ -111,9 +110,9 @@ class Application(object):
             command_modules = set(self._command_modules[:] + config.get('options.commands', []) + config.get('commands', []))
             for module in command_modules:
                 package = get_object(module)
-                for loader, module_name, is_pkg in pkgutil.walk_packages(package.__path__):
+                for loader, module_name, is_pkg in pkgutil.walk_packages(package.__path__):  # @UnusedVariable
                     loader.find_module(module_name).load_module(module_name)
-                for command in BaseCommand.__subclasses__():
+                for command in BaseCommand.__subclasses__():  # @UndefinedVariable
                     if not command.__module__.startswith('tea.commander'):
                         app, name = command.__module__.split('.')
                         self._commands[name] = {
@@ -163,13 +162,13 @@ class Application(object):
         try:
             subcommand = args[1]
         except IndexError:
-            subcommand = 'help' # Display help if no arguments were given.
-            
+            subcommand = 'help'  # Display help if no arguments were given.
+
         # First search in aliases
         if subcommand in config.get('alias', {}):
             args = [args[0]] + shutil.split(config.get('alias.%s' % subcommand).encode('utf-8')) + args[2:]
             subcommand = args[1]
-        
+
         if subcommand == 'help':
             if len(args) <= 2:
                 parser.print_help()

@@ -2,19 +2,19 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '19 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
-
 from tea.console.color import Color
+
 
 class Font(object):
     '''Font properties'''
 
     Defalt    = 0
-    
+
     # Style
     Mono      = 1
     Roman     = 2
     Sans      = 4
-    
+
     # Decoration
     Bold      =  8
     Italic    = 16
@@ -31,14 +31,13 @@ class Font(object):
 
 
 
-class Style(object):    
+class Style(object):
     # overall background color (``None`` means transparent)
     background_color = None
 
     # Cached parsed styles - do not touch this
     _cache = {}
-    
-    
+
     # Style definitions for individual token types.
     styles = {}
 
@@ -66,12 +65,12 @@ class Style(object):
     @classmethod
     def get(cls, token):
         '''Searches the whole inheritance three for a token style.
-        
+
         If it doesn't find it return an empty style.
         '''
         # First look into the cache
-        if token not in cls._cache:    
-            for klass in cls.mro()[:-1]: # Do not search in object
+        if token not in cls._cache:
+            for klass in cls.mro()[:-1]:  # Do not search in object
                 if token in klass.styles:
                     cls._cache[token] = cls._parse_style(klass.styles[token])
                     break
@@ -80,15 +79,14 @@ class Style(object):
         return cls._cache[token]
 
 
-
 class StyleAdapter(object):
     '''Style adapter is a helper class for adapting a style for restricted
     environments, where not all colors or font styles are available.
-    
+
     For example the terminal console doesn't have the full range of colors
     and also doesn't have font styles. Look in the ConsoleStyleAdapter for
     example implementation.
-    ''' 
+    '''
     def __init__(self, style):
         self.style = style
 
@@ -100,10 +98,9 @@ class StyleAdapter(object):
         return self.adapt(self.style.get(token))
 
 
-    
 class ConsoleStyleAdapter(StyleAdapter):
     '''Simple hex color to console color adapter'''
-    
+
     def __init__(self, *args, **kwargs):
         super(ConsoleStyleAdapter, self).__init__(*args, **kwargs)
         self._cache = {}
@@ -140,7 +137,6 @@ class ConsoleStyleAdapter(StyleAdapter):
                 return (Color.gray, False)
         return (Color.normal, False)
 
-
     def _get_color(self, color):
         if color is None:
             return (Color.normal, False)
@@ -150,9 +146,7 @@ class ConsoleStyleAdapter(StyleAdapter):
             self._cache[color] = self._adapt_color(color)
         return self._cache[color]
 
-
     def adapt(self, style):
-         
         return {
             'fg'     : self._get_color(style['fg']),
             'bg'     : self._get_color(style['bg']),

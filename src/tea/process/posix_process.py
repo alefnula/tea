@@ -4,7 +4,7 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import time
-import posix #@UnresolvedImport
+import posix  # @UnresolvedImport
 import signal
 import logging
 import tempfile
@@ -14,7 +14,6 @@ import subprocess
 from tea.system import platform
 
 logger = logging.getLogger(__name__)
-
 
 
 class Process(object):
@@ -43,7 +42,7 @@ class Process(object):
         if self._redirect_output:
             self._stdout_named    = tempfile.NamedTemporaryFile()
             self._stderr_named    = tempfile.NamedTemporaryFile()
-            self._stdout_reader   = open(self._stdout_named.name, 'rb') 
+            self._stdout_reader   = open(self._stdout_named.name, 'rb')
             self._stderr_reader   = open(self._stderr_named.name, 'rb')
             self._process = subprocess.Popen(self._commandline,
                                              stdin=subprocess.PIPE,
@@ -62,7 +61,7 @@ class Process(object):
 
     def kill(self):
         try:
-            os.kill(self._process.pid, signal.SIGKILL) #@UndefinedVariable
+            os.kill(self._process.pid, signal.SIGKILL)  # @UndefinedVariable
             # This is not needed any more because we have a thread for this
             #self._process.wait()
             return True
@@ -73,7 +72,7 @@ class Process(object):
         '''Wait for process to end'''
         if timeout is not None:
             current_time = time.time()
-            while time.time() - current_time < timeout*1000:
+            while time.time() - current_time < (timeout * 1000):
                 if not self._process.is_running():
                     return True
                 time.sleep(0.1)
@@ -110,7 +109,7 @@ class Process(object):
 
     def _get_pid(self):
         return self._process.pid
-   
+
     def _get_exit_code(self):
         if self.is_running():
             return None
@@ -119,11 +118,10 @@ class Process(object):
     pid       = property(_get_pid)
     exit_code = property(_get_exit_code)
 
-
     @staticmethod
     def GetProcesses(sort_by_name=True, cmdline=False):
         '''Retrieves a list of processes sorted by name.
-        
+
         @type  sort_by_name: boolean
         @param sort_by_name: Sort the list by name or by PID
         @type  cmdline: boolean
@@ -179,13 +177,13 @@ class Process(object):
         kills a process started by process module.
 
         @type pid: int
-        @param pid: Process ID of the process to kill 
+        @param pid: Process ID of the process to kill
         @type  process: ShellProcess
         @param process: Process started by process module
         '''
         if process is not None:
             pid = process.pid
         if pid == posix.getpgid(pid):
-            os.killpg(process.pid, signal.SIGKILL) #@UndefinedVariable
+            os.killpg(process.pid, signal.SIGKILL)  # @UndefinedVariable
         else:
-            os.kill(process.pid, signal.SIGKILL) #@UndefinedVariable
+            os.kill(process.pid, signal.SIGKILL)  # @UndefinedVariable

@@ -37,7 +37,7 @@ def split(s, posix=True):
 
 def search(path, matcher='*', dirs=False, files=True):
     '''Recursive search function.
-    
+
     :param path: path to search recursively
     :param matcher: string pattern to search for or function that returns True/False for a file argument
     :param dirs: if True returns also directories that match the pattern
@@ -48,8 +48,10 @@ def search(path, matcher='*', dirs=False, files=True):
         fnmatcher = lambda items: fnmatch.filter(items, matcher)
     for root, directories, filenames in os.walk(os.path.abspath(path)):
         items = []
-        if dirs:  items.extend(directories)
-        if files: items.extend(filenames)
+        if dirs:
+            items.extend(directories)
+        if files:
+            items.extend(filenames)
         for item in fnmatcher(items):
             yield os.path.join(root, item)
 
@@ -71,9 +73,9 @@ def chdir(directory):
 
 class goto(object):
     '''Context object for changing directory.
-    
+
     Usage::
-    
+
         >>> with goto(directory) as ok:
         ...     if not ok:
         ...         print 'Error'
@@ -106,12 +108,12 @@ class goto(object):
 
 def mkdir(path, mode=0o777, delete=False):
     '''mkdir(path [, mode=0777])
-    
+
     Create a leaf directory and all intermediate ones.
     Works like mkdir, except that any intermediate path segment (not
     just the rightmost) will be created if it does not exist.  This is
     recursive.
-    
+
     :param str path: directory to create
     :param int mode: directory mode
     :param bool delete: delete directory/file if exists
@@ -120,14 +122,17 @@ def mkdir(path, mode=0o777, delete=False):
     '''
     logger.info('mkdir: %s' % path)
     if os.path.isdir(path):
-        if not delete: return True
-        if not remove(path): return False
+        if not delete:
+            return True
+        if not remove(path):
+            return False
     try:
         os.makedirs(path, mode)
         return True
     except:
         logger.exception('Failed to mkdir: %s' % path)
         return False
+
 
 def __create_destdir(destination):
     destdir = os.path.dirname(destination)
@@ -140,11 +145,11 @@ def copyfile(source, destination):
     '''Copy data and mode bits ("cp source destination").
 
     The destination may be a directory.
-    
+
     :param str source: Source file (file to copy).
     :param str destination: Destination file or directory (where to copy).
     :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise. 
+    :return: True if the operation is successful, False otherwise.
     '''
     logger.info('copyfile: %s -> %s' % (source, destination))
     try:
@@ -160,11 +165,11 @@ def copyfile2(source, destination):
     '''Copy data and all stat info ("cp -p source destination").
 
     The destination may be a directory.
-    
+
     :param str source: Source file (file to copy).
     :param str destination: Destination file or directory (where to copy).
     :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise. 
+    :return: True if the operation is successful, False otherwise.
     '''
     logger.info('copyfile2: %s -> %s' % (source, destination))
     try:
@@ -174,18 +179,18 @@ def copyfile2(source, destination):
     except Exception as e:
         logger.error('copyfile2: %s -> %s failed! Error: %s' % (source, destination, e))
         return False
-    
+
 
 def copytree(source, destination, symlinks=False):
     '''Recursively copy a directory tree using copy2().
-    
+
     The destination directory must not already exist.
 
     If the optional symlinks flag is true, symbolic links in the
     source tree result in symbolic links in the destination tree; if
     it is false, the contents of the files pointed to by symbolic
     links are copied.
-    
+
     :param str source: Source directory (directory to copy).
     :param str destination: Destination directory (where to copy).
     :param bool symlinks: Follow symbolic links.
@@ -220,11 +225,11 @@ def gcopy(pattern, destination):
 
 def move(source, destination):
     '''Recursively move a file or directory to another location.
-    
-    If the destination is on our current filesystem, then simply use
+
+    If the destination is on our current file system, then simply use
     rename. Otherwise, copy source to the destination and then remove
     source.
-    
+
     :param str source: Source file or directory (file or directory to move).
     :param str destination: Destination file or directory (where to move).
     :rtype: :obj:`bool`
@@ -250,7 +255,7 @@ def gmove(pattern, destination):
 
 def rmfile(path):
     '''Delete a file
-    
+
     :param str path: Path to the file that needs to be deleted.
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
@@ -282,7 +287,7 @@ def rmtree(path):
 
 def remove(path):
     '''Delete a file or directory
-    
+
     :param str path: Path to the file or directory that needs to be deleted.
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.

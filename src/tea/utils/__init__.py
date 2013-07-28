@@ -12,7 +12,7 @@ def get_object(path='', obj=None):
         return obj
     if path.startswith('.'):
         if not obj:
-            raise TypeError('relative imports require the "obj" argument')    
+            raise TypeError('relative imports require the "obj" argument')
     path = path.split('.')
     if obj is None:
         __import__(path[0])
@@ -23,7 +23,8 @@ def get_object(path='', obj=None):
             if type(obj) == types.ModuleType:
                 try:
                     __import__('%s.%s' % (obj.__name__, item))
-                except: pass
+                except:
+                    pass
             obj = getattr(obj, item)
     return obj
 
@@ -36,5 +37,5 @@ def get_exception():
         exception += entry
     tb_list = traceback.format_tb(sys.exc_info()[2])
     for entry in tb_list:
-        trace += entry    
+        trace += entry
     return '\n\n%s\n%s' % (exception, trace)

@@ -39,6 +39,7 @@ DEFAULT_ATTACHMENT_MIME_TYPE = 'application/octet-stream'
 # Default charset
 DEFAULT_CHARSET = 'utf-8'
 
+
 # Cache the hostname, but do it lazily: socket.getfqdn() can take a couple of
 # seconds, which slows down the restart of the server.
 class CachedDnsName(object):
@@ -51,6 +52,7 @@ class CachedDnsName(object):
         return self._fqdn
 
 DNS_NAME = CachedDnsName()
+
 
 # Copied from Python standard library, with the following modifications:
 # * Used cached hostname for performance.
@@ -83,10 +85,8 @@ def make_msgid(idstring=None, utc=False):
     return msgid
 
 
-
 class BadHeaderError(ValueError):
     pass
-
 
 
 def forbid_multi_line_headers(name, val):
@@ -112,19 +112,16 @@ def forbid_multi_line_headers(name, val):
     return name, val
 
 
-
 class SafeMIMEText(MIMEText):
     def __setitem__(self, name, val):
         name, val = forbid_multi_line_headers(name, val)
         MIMEText.__setitem__(self, name, val)
 
 
-
 class SafeMIMEMultipart(MIMEMultipart):
     def __setitem__(self, name, val):
         name, val = forbid_multi_line_headers(name, val)
         MIMEMultipart.__setitem__(self, name, val)
-
 
 
 class SMTPConnection(object):
@@ -212,7 +209,6 @@ class SMTPConnection(object):
                 raise
             return False
         return True
-
 
 
 class EmailMessage(object):
@@ -344,7 +340,6 @@ class EmailMessage(object):
         return attachment
 
 
-
 class EmailMultiAlternatives(EmailMessage):
     '''A version of EmailMessage that makes it easy to send multipart/alternative
     messages. For example, including text and HTML versions of the text is
@@ -355,7 +350,6 @@ class EmailMultiAlternatives(EmailMessage):
     def attach_alternative(self, content, mimetype=None):
         '''Attach an alternative content representation.'''
         self.attach(content=content, mimetype=mimetype)
-
 
 
 def send_mail(subject, sender, to, message, html_message=None, cc=None, bcc=None,
@@ -384,7 +378,6 @@ def send_mail(subject, sender, to, message, html_message=None, cc=None, bcc=None
                                        attachments=attachments, connection=connection)
         email.attach_alternative(html_message, 'text/html')
     return email.send()
-
 
 
 def send_mass_mail(datatuple, fail_silently=False, auth_user=None, auth_password=None):

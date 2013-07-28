@@ -16,28 +16,28 @@ from .color import strip_colors, set_color
 
 def format_page(text):
     '''Formats the text for output adding ASCII frame around the text.
-    
+
     @type  text: string
     @param text: Text that needs to be formated.
     @rtype:  string
     @return: Formated string.
     '''
     width = max(map(len, text.splitlines()))
-    page = '+-' + '-'*width + '-+\n'
+    page = '+-' + '-' * width + '-+\n'
     for line in text.splitlines():
         page += '| ' + line.ljust(width) + ' |\n'
-    page += '+-' + '-'*width + '-+\n'
+    page += '+-' + '-' * width + '-+\n'
     return page
 
 
 def table(text):
     '''Formats the text as a table
-    
+
     Text in format:
-    
+
     first | second
     row 2 col 1 | 4
-    
+
     Will be formated as
     +-------------+--------+
     | first       | second |
@@ -49,7 +49,7 @@ def table(text):
     @param text: Text that needs to be formated.
     @rtype:  string
     @return: Formated string.
-    '''    
+    '''
     table_bar = lambda col_lengths: '+-%s-+%s' % ('-+-'.join(map(lambda length: '-' * length, col_lengths)), os.linesep)
     rows  = []
     for line in text.splitlines():
@@ -76,25 +76,23 @@ def table(text):
 
 def hbar(width):
     '''Returns ASCII HBar +---+ with the specified width.
-    
+
     @type  width: integer
     @param width: Width of the central part of the bar.
     @rtype:  string
     @return: ASCII HBar.
-    ''' 
-    return '+-' + '-'*width + '-+'
+    '''
+    return '+-' + '-' * width + '-+'
 
 
 def print_page(text):
     '''Formats the text and prints it on stdout.
-    
+
     Text is formated by adding a ASCII frame around it and coloring the text.
     Colors can be added to text using color tags, for example:
-        
+
         My [FG_BLUE]blue[NORMAL] text.
         My [BG_BLUE]blue background[NORMAL] text.
-    
-    
     '''
     color_re = re.compile(r'\[(?P<color>[FB]G_[A-Z_]+|NORMAL)\]')
     width = max(map(lambda x: len(strip_colors(x)), text.splitlines()))
@@ -112,15 +110,15 @@ def print_page(text):
             set_color(match.groupdict()['color'])
             previous = match.end()
         sys.stdout.write(line[previous:end])
-        sys.stdout.write(' '*tail + ' |\n')
+        sys.stdout.write(' ' * tail + ' |\n')
     print(hbar(width))
 
 
 def wrap_text(text, width=80):
     '''Wraps text lines to maximum *width* characters.
-    
+
     Wrapped text is aligned against the left text border.
-    
+
     @type  text: string
     @param text: Text to wrap.
     @type  width: integer
@@ -133,11 +131,11 @@ def wrap_text(text, width=80):
                           replace_whitespace=True)
     return wrapper.fill(text)
 
-    
+
 def rjust_text(text, width=80, indent=0, subsequent=None):
     '''Same as L{wrap_text} with the difference that the text is aligned
     against the right text border.
-    
+
     @type  text: string
     @param text: Text to wrap and align.
     @type  width: integer
@@ -153,17 +151,17 @@ def rjust_text(text, width=80, indent=0, subsequent=None):
         subsequent = indent
     wrapper = TextWrapper(width=width, break_long_words=False,
                           replace_whitespace=True,
-                          initial_indent=' '*(indent+subsequent),
-                          subsequent_indent=' '*subsequent)
+                          initial_indent=' ' * (indent + subsequent),
+                          subsequent_indent=' ' * subsequent)
     return wrapper.fill(text)[subsequent:]
 
 
 def center_text(text, width=80):
     '''Center all lines of the text.
-    
+
     It is assumed that all lines width is smaller then B{width}, because the
     line width will not be checked.
-    
+
     @type  text: string
     @param text: Text to wrap.
     @type  width: integer

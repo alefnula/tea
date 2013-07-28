@@ -15,7 +15,6 @@ from tea.commander.exceptions import CommandError
 logger = logging.getLogger(__name__)
 
 
-
 LEADING_WHITESPACE_REMOVER_RE = re.compile('^    ', re.MULTILINE)
 
 

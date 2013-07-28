@@ -8,10 +8,10 @@ import sys
 import time
 import threading
 
-import clr #@UnresolvedImport
+import clr  # @UnresolvedImport
 clr.AddReference('System.Management')
-from System.Diagnostics import Process as DotNetProcess#@UnresolvedImport
-from System.Management import ManagementObjectSearcher #@UnresolvedImport
+from System.Diagnostics import Process as DotNetProcess  # @UnresolvedImport
+from System.Management import ManagementObjectSearcher  # @UnresolvedImport
 
 
 class Process(object):
@@ -31,7 +31,7 @@ class Process(object):
         self._process.StartInfo.RedirectStandardError  = redirect_output
         self._process.OutputDataReceived += self._stdout_handler
         self._process.ErrorDataReceived  += self._stderr_handler
-        
+
         self._stdout = ''
         self._stdout_lock = threading.Lock()
         self._stderr = ''
@@ -52,16 +52,18 @@ class Process(object):
                 args.append(argument)
         arguments = ' '.join(args)
         return command, arguments
-    
+
     def _stdout_handler(self, sender, outline):
         data = outline.Data
-        if data is None: return
+        if data is None:
+            return
         with self._stdout_lock:
             self._stdout += data
-    
+
     def _stderr_handler(self, sender, outline):
         data = outline.Data
-        if data is None: return
+        if data is None:
+            return
         with self._stderr_lock:
             self._stderr += outline.Data
 
@@ -84,10 +86,10 @@ class Process(object):
 
     def is_running(self):
         return not self._process.HasExited
-        
+
     def _get_pid(self):
         return self._process.Id
-   
+
     def _get_exit_code(self):
         if self._process.HasExited:
             return self._process.ExitCode
@@ -96,7 +98,7 @@ class Process(object):
     def write(self, string):
         if self._redirect_output:
             self._process.StandardInput.WriteLine(string)
-    
+
     def read(self):
         if self._redirect_output:
             with self._stdout_lock:
@@ -104,7 +106,7 @@ class Process(object):
                 self._stdout = ''
                 return result
         return ''
-    
+
     def eread(self):
         if self._redirect_output:
             with self._stderr_lock:
@@ -112,15 +114,14 @@ class Process(object):
                 self._stderr = ''
                 return result
         return ''
-    
+
     pid       = property(_get_pid)
     exit_code = property(_get_exit_code)
-
 
     @staticmethod
     def GetProcesses(sort_by_name=True, cmdline=False):
         '''Retrieves a list of processes sorted by name.
-        
+
         @type  sort_by_name: boolean
         @param sort_by_name: Sort the list by name or by PID
         @type  cmdline: boolean
@@ -162,7 +163,7 @@ class Process(object):
         kills a process started by process module.
 
         @type pid: int
-        @param pid: Process ID of the process to kill 
+        @param pid: Process ID of the process to kill
         @type  process: ShellProcess
         @param process: Process started by process module
         '''

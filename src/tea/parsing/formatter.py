@@ -8,27 +8,28 @@ from tea.console.color import cprint
 from .token import Token
 from .style import Style, ConsoleStyleAdapter
 
+
 class Formatter(object):
     '''Formatter class
-    
+
     Properties:
-    
+
     lexer:  Current lexer
     style:  Current style
     stream: Current output stream (if not set use sys.stdout)
     '''
-        
+
     def __init__(self, lexer=None, style=None, stream=None):
         self._lexer  = lexer
         self._style  = style
         self._stream = stream or sys.stdout
-    
+
     def get_lexer(self):
         return self._lexer
-    
+
     def set_lexer(self, value):
         self._lexer = value
-    
+
     def get_style(self):
         if self._style is None:
             self._style = Style()
@@ -36,18 +37,18 @@ class Formatter(object):
 
     def set_style(self, value):
         self._style = value
-    
+
     def get_stream(self):
         return self._stream
-    
+
     def set_stream(self, value):
         self._stream = value
-    
+
     # Properties
     lexer  = property(get_lexer,  set_lexer)
     style  = property(get_style,  set_style)
     stream = property(get_stream, set_stream)
-    
+
     def format(self, data):
         '''Use this method for formatting data'''
         if self.lexer is None:
@@ -65,7 +66,7 @@ class ConsoleFormatter(Formatter):
     '''Simple console output formatter using ConsoleStyleAdapter
     and tea.console.color cprint
     '''
-    
+
     def get_style(self):
         if self._style is None:
             self._style = ConsoleStyleAdapter(Style)
@@ -73,7 +74,7 @@ class ConsoleFormatter(Formatter):
 
     def set_style(self, value):
         self._style = ConsoleStyleAdapter(value)
-    
+
     # Properties
     style = property(get_style, set_style)
 

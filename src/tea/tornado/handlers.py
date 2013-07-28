@@ -11,7 +11,6 @@ from tornado import web
 logger = logging.getLogger(__name__)
 
 
-
 STATUS_MESSAGES = defaultdict(lambda: 'UNKNOWN', **{
     200: 'OK',
     400: 'BAD_REQUEST',
@@ -24,7 +23,6 @@ STATUS_MESSAGES = defaultdict(lambda: 'UNKNOWN', **{
     503: 'SERVICE_UNAVAILABLE',
     504: 'GATEWAY_TIMEOUT',
 })
-
 
 
 class JsonHandler(web.RequestHandler):
@@ -58,6 +56,6 @@ class JsonHandler(web.RequestHandler):
         callback = self.get_argument('callback', None)
         if callback is not None:
             content_type = 'application/javascript'
-            data = '%s(%s);' % (callback, data) 
+            data = '%s(%s);' % (callback, data)
         self.set_header('Content-Type', content_type)
         return self.finish(data)

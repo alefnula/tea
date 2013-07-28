@@ -16,6 +16,7 @@ from .hg import Hg
 
 NETLOC_RE = re.compile('^(?:(?P<username>[^:]+)(?:\:(?P<password>[^@]+))?@)?(?P<netloc>.*)$')
 
+
 def set_uri(uri, **kwargs):
     try:
         parsed = urlparse.urlparse(uri)
@@ -41,7 +42,7 @@ class Repository(object):
         self.name     = name
         self.path     = path
         self.source   = source
-        self.username = None if username is None else urlquote(username) 
+        self.username = None if username is None else urlquote(username)
         self.password = None if password is None else urlquote(password)
         self._uri     = None
         self._muri    = None

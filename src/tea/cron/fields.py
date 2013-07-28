@@ -10,7 +10,6 @@ DEFAULT_VALUES = {'year': '*', 'month': 1, 'day': 1,
                   'day_of_week': '*', 'hour': 0, 'minute': 0, 'second': 0}
 
 
-
 class BaseField(object):
     REAL = True
     COMPILERS = [AllExpression, RangeExpression]
@@ -75,7 +74,6 @@ class DayOfWeekField(BaseField):
 
     def get_value(self, dateval):
         return dateval.weekday()
-
 
 
 class DayOfMonthField(BaseField):

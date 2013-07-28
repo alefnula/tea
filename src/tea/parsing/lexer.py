@@ -10,16 +10,16 @@ from .token import Token
 
 class Lexer(object):
     __metaclass__ = abc.ABCMeta
-    
+
     config = None
-    
+
     def __init__(self):
         self._config_stack = []
-    
+
     def push_config(self, config):
         self._config_stack.append(self.config)
         self.config = config
-    
+
     def pop_config(self):
         config = self.config
         self.config = self._config_stack.pop()
@@ -31,30 +31,30 @@ class Lexer(object):
     def tokenize(self, data):
         '''This methods receives an arbitrary data and returns an iterable
         of (token, text) pairs generated from data.
-        
+
         For example it can receive text:
-        
+
         >>> lexer = MyTextLexer()
         >>> text = 'Name: John Doe\nAge: 33'
         >>> for token, text in lexer.tokenize(text):
                 print '%-7s %s' % (token, repr(text))
-        
+
         Header  'Name: '
         Text    'John Doe'
         Header  'Age: '
         Text    '33'
         >>>
-        
+
         Or it can receive an arbitrary data
-        
+
         >>> lexer = MyStatusLexer()
         >>> data = [{'status': 0, 'text': 'My OK data'}, {'status': 1, 'text': 'My not OK data'}]
         >>> for token, text in lexer.tokenize(data):
                 print '%-7s %s' % (token, repr(text))
-        
+
         Ok      'My OK data'
         Fail    'My not OK data'
-        >>> 
+        >>>
         '''
         data = self.preprocess(data)
         for t, v in self.lex(data):
@@ -83,7 +83,7 @@ class RegexLexer(Lexer):
     # Dict of {'state': [(regex, token, new_state), ...], ...}
     # The initial state is 'root'.
     config = {}
-    
+
     def _get_tokens(self):
         tokens = {}
         for state, items in self.config.items():

@@ -25,7 +25,6 @@ class FileHandler(logging.StreamHandler):
         logging.StreamHandler.close(self)
 
 
-
 class BaseRotatingHandler(FileHandler):
     '''Base class for handlers that rotate log files at a certain point.
     Not meant to be instantiated directly.  Instead, use RotatingFileHandler
@@ -53,7 +52,6 @@ class BaseRotatingHandler(FileHandler):
             self.handleError(record)
 
 
-
 class RotatingFileHandler(BaseRotatingHandler):
     '''Handler for logging to a set of files, which switches from one file
     to the next when the current file reaches a certain size.
@@ -79,7 +77,7 @@ class RotatingFileHandler(BaseRotatingHandler):
         If maxBytes is zero, rollover never occurs.
         '''
         if maxBytes > 0:
-            mode = 'a' # doesn't make sense otherwise!
+            mode = 'a'  # doesn't make sense otherwise!
         BaseRotatingHandler.__init__(self, filename, mode, encoding)
         self.maxBytes = maxBytes
         self.backupCount = backupCount
@@ -87,7 +85,7 @@ class RotatingFileHandler(BaseRotatingHandler):
     def doRollover(self):
         '''Do a rollover, as described in __init__().'''
         self.stream.close()
-        try:            
+        try:
             if self.backupCount > 0:
                 tmp_location = '%s.0' % self.baseFilename
                 os.rename(self.baseFilename, tmp_location)
@@ -102,10 +100,10 @@ class RotatingFileHandler(BaseRotatingHandler):
                 if os.path.exists(dfn):
                     os.remove(dfn)
                 os.rename(tmp_location, dfn)
-        except: pass
+        except:
+            pass
         finally:
             self.stream = WindowsFile(self.baseFilename, 'a', self.encoding)
-            
 
     def shouldRollover(self, record):
         '''Determine if rollover should occur.
@@ -115,7 +113,7 @@ class RotatingFileHandler(BaseRotatingHandler):
         '''
         if self.maxBytes > 0:                   # are we rolling over?
             msg = "%s\n" % self.format(record)
-            self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
+            self.stream.seek(0, 2)  # due to non-posix-compliant Windows feature
             if self.stream.tell() + len(msg) >= self.maxBytes:
                 return 1
         return 0

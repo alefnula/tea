@@ -25,6 +25,7 @@ def print_help():
     print('Usage: python -m tea.shutil [command] [params]\nCommands: %s' % ', '.join(commands.keys()))
     return 1
 
+
 def print_func_help(func, required):
     import inspect
     args = inspect.getargspec(func).args
@@ -41,7 +42,7 @@ def main(args):
     import logging
     from tea.logger import configure_logging
     configure_logging(stdout_level=logging.WARNING)
-    
+
     if len(args) == 0:
         print_help()
     else:
@@ -74,7 +75,7 @@ def main(args):
                         return 0
                     else:
                         print('FAILED')
-                        return 1 
+                        return 1
             except Exception as e:
                 print('ERROR: %s' % e)
                 return 1
@@ -83,4 +84,3 @@ def main(args):
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
-    

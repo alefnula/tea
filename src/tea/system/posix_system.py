@@ -8,5 +8,6 @@ import getpass
 
 get_username = getpass.getuser
 
+
 def get_appdata():
     return os.path.join(os.path.expanduser('~'), '.config')

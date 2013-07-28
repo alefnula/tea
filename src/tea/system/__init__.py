@@ -7,9 +7,9 @@ _names = sys.builtin_module_names
 
 
 class __platform(object):
-    
+
     POSIX, MAC, DARWIN, WINDOWS, WINDOWS_CE, DOTNET, OS2, RISCOS = (1, 2, 4, 8, 16, 32, 64, 128)
-    
+
     NAMES = {
         POSIX      : 'POSIX',
         MAC        : 'MAC',
@@ -20,23 +20,22 @@ class __platform(object):
         OS2        : 'OS2',
         RISCOS     : 'RISC OS'
     }
-    
+
     ORDER = [DOTNET, DARWIN, POSIX, WINDOWS, OS2, MAC, WINDOWS_CE, RISCOS]
-    
+
     class PlatformNotSupportedError(Exception):
         def __init__(self, platform, message):
             self.platform = platform
             self.message  = message
-        
+
         def __repr__(self):
             return 'PlatformNotSupportedError [%s]: %s' % (__platform.NAMES[self.platform], self.message)
         __str__ = __repr__
 
-    
     def __init__(self):
         self.__platforms = 0
         self.__default   = 0
-        
+
         if 'posix' in _names:
             self.__platforms |= self.POSIX
         if 'mac' in _names:
@@ -56,26 +55,26 @@ class __platform(object):
         for platform in self.ORDER:
             if self.__platforms & platform:
                 self.__default = platform
-                break 
+                break
 
     def is_a(self, platforms):
         return (self.__platforms & platforms) > 0
 
     def is_only(self, platform):
         return (self.__platforms & platform) == self.__platforms
-    
+
     def get_all(self):
         all_platforms = []
         for p in self.ORDER:
             if self.__platforms & p:
                 all_platforms.append(p)
         return all_platforms
-    
+
     def get_all_names(self):
         all_names = []
         for p in self.get_all():
             all_names.append(self.NAMES[p])
-        return all_names   
+        return all_names
 
     @property
     def default(self):

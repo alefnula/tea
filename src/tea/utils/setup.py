@@ -50,7 +50,7 @@ def setup(module, target='zip', output_path=None, data_dir=None):
         print(e)
         return 1
     finally:
-        # Cleanup            
+        # Cleanup
         if output_path != dist:
             shutil.remove(dist)
         if os.path.isdir('build'):

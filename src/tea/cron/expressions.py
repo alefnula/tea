@@ -1,6 +1,7 @@
 import re
 from calendar import monthrange
 
+
 def asint(value):
     if value is not None:
         if isinstance(value, basestring):
@@ -26,13 +27,13 @@ class AllExpression(object):
         start = max(start, minval)
 
         if not self.step:
-            next = start
+            next_value = start
         else:
             distance_to_next = (self.step - (start - minval)) % self.step
-            next = start + distance_to_next
+            next_value = start + distance_to_next
 
-        if next <= maxval:
-            return next
+        if next_value <= maxval:
+            return next_value
 
     def __str__(self):
         if self.step:
@@ -69,21 +70,21 @@ class RangeExpression(AllExpression):
             maxval = min(maxval, self.last)
         start = max(start, minval)
         if not self.step:
-            next = start
+            next_value = start
         else:
             distance_to_next = (self.step - (start - minval)) % self.step
-            next = start + distance_to_next
-        if next <= maxval:
-            return next
+            next_value = start + distance_to_next
+        if next_value <= maxval:
+            return next_value
 
     def __str__(self):
         if self.last != self.first and self.last is not None:
-            range = '%d-%d' % (self.first, self.last)
+            range_str = '%d-%d' % (self.first, self.last)
         else:
-            range = str(self.first)
+            range_str = str(self.first)
 
         if self.step:
-            return '%s/%d' % (range, self.step)
+            return '%s/%d' % (range_str, self.step)
         return range
 
     def __repr__(self):

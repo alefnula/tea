@@ -4,9 +4,9 @@ __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 from re import sub
 try:
-    from HTMLParser import HTMLParser  # py2
+    from HTMLParser import HTMLParser   # py2
 except ImportError:
-    from html.parser import HTMLParser # py3
+    from html.parser import HTMLParser  # py3
 
 
 class _StripTagsParser(HTMLParser):

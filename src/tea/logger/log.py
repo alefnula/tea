@@ -9,9 +9,9 @@ import logging
 
 from tea.system import platform
 if platform.is_only(platform.WINDOWS):
-    from .win_handlers import RotatingFileHandler #@UnusedImport
+    from .win_handlers import RotatingFileHandler  # @UnusedImport
 else:
-    from logging.handlers import RotatingFileHandler #@Reimport
+    from logging.handlers import RotatingFileHandler  # @Reimport
 
 # Constants
 FMT        = '%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'
@@ -28,10 +28,10 @@ def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
                      stdout_level=logging.WARNING, initial_file_message='',
                      max_size=1048576, rotations_number=5, remove_handlers=True):
     '''Configure logging module
-    
+
     :param str filename: Specifies a filename to log to.
     :param str filemode: Specifies the mode to open the log file. Values:
-                         ``'a'``, ``'w'``. *Default:* ``a`` 
+                         ``'a'``, ``'w'``. *Default:* ``a``
     :param str datefmt: Use the specified date/time format.
     :param str fmt: Format string for the file handler.
     :param str stdout_fmt: Format string for the stdout handler.

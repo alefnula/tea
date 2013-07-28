@@ -18,13 +18,13 @@ class TestLogger(unittest.TestCase):
         configure_logging(self.output_filename, level=logging.DEBUG)
         self.logger = logging.getLogger(__name__)
         self.output_test_file = file(self.output_filename)
-    
+
     def tearDown(self):
         self.output_test_file.close()
         # FIXME: You cannot delete open file on windows, and the file remains open
         # because the logging is holding it.
         #os.remove(self.output_filename)
-    
+
     def test_debug(self):
         self.logger.debug('Debug message #01')
         regexp = DATE + r'\s+ DEBUG: Debug message #01 \[[\w\.]+:\d{2,3}\]'
@@ -33,7 +33,7 @@ class TestLogger(unittest.TestCase):
 
     def test_info(self):
         self.logger.info('Info message #02')
-        regexp = DATE + r'\s+ INFO: Info message #02 \[[\w\.]+:\d{2,3}\]' 
+        regexp = DATE + r'\s+ INFO: Info message #02 \[[\w\.]+:\d{2,3}\]'
         self.assert_(re.match(regexp, self.output_test_file.readline()))
 
     def test_warning(self):
@@ -50,9 +50,9 @@ class TestLogger(unittest.TestCase):
         self.logger.critical('Critical message #06')
         regexp = DATE + r'\s+ CRITICAL: Critical message #06 \[[\w\.]+:\d{2,3}\]'
         self.assert_(re.match(regexp, self.output_test_file.readline()))
-    
+
     def test_exception(self):
         self.logger.exception('Exception #08')
         regexp = DATE + r'\s+ ERROR: Exception #08 \[[\w\.]+:\d{2,3}\]'
-        self.assert_(re.match(regexp, self.output_test_file.readline()))  
+        self.assert_(re.match(regexp, self.output_test_file.readline()))
         self.assertEqual(self.output_test_file.readline(), 'None\n')
