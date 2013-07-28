@@ -10,7 +10,7 @@ from .base import BaseCommand
 # Management commands
 class AliasCommand(BaseCommand):
     '''Alias management
-    
+
     Usage:
     alias ALIAS        # get alias value
     alias ALIAS VALUE  # set alias value
@@ -48,7 +48,7 @@ class ConfigCommand(BaseCommand):
     config add VAR VALUE [INDEX] # add value into list assosiated with the var (at index)
     config rem VAR INDEX         # removes a value from list by index
     '''
-    
+
     id = 'config'
 
     def handle(self, *args, **kwargs):
@@ -58,7 +58,7 @@ class ConfigCommand(BaseCommand):
             return
         command = args[0].lower()
         # Get
-        if l == 2 and command == 'get': 
+        if l == 2 and command == 'get':
             value = self.config.get(args[1])
             if value is not None:
                 print(value)
@@ -78,4 +78,3 @@ class ConfigCommand(BaseCommand):
             self.config.remove(args[1], args[2])
         else:
             print(self.usage())
-

@@ -40,8 +40,10 @@ def locked(func):
             return func(self, *args, **kwargs)
     return wrapper
 
+
 def _get_format(filename):
     return os.path.splitext(filename)[-1].lower()[1:]
+
 
 def _ensure_exists(filename, encoding='utf-8'):
     '''Ensures that the configuration file exists and that it produces a
@@ -64,12 +66,9 @@ class Config(object):
     DICT = 'dict'
     JSON = 'json'
     YAML = 'yaml'
-    
-    class NotFound(Exception):
-        pass
 
     ensure_exists = staticmethod(_ensure_exists)
-    
+
     def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
         self.lock = threading.Lock()
         self.encoding = encoding
@@ -88,7 +87,7 @@ class Config(object):
                 self.data = self._read_string(data)
             else:
                 self.data = {}
-        
+
     def _read_file(self):
         try:
             if self.format == Config.JSON:
@@ -125,7 +124,7 @@ class Config(object):
                 return {}
         except:
             logger.exception('Failed to load data in format "%s"', self.format)
-            return {}         
+            return {}
 
     def save(self):
         if self.filename is not None:
@@ -141,7 +140,7 @@ class Config(object):
             else:
                 logger.error('Unsupported configuration format: %s', self.format)
 
-    def _get(self, var, create=False):
+    def __get(self, var, create=False):
         current = self.data
         for part in var.split('.'):
             if isinstance(current, dict):
@@ -150,29 +149,21 @@ class Config(object):
                 elif create:
                     current = current.setdefault(part, {})
                 else:
-                    raise Config.NotFound(var)
+                    raise KeyError(var)
             elif isinstance(current, list):
                 try:
                     part = int(part, 10)
                     current = current[part]
                 except:
-                    raise Config.NotFound(var)
+                    raise IndexError(var)
             else:
-                raise Config.NotFound(var) 
+                raise KeyError(var)
         return current
-    
-    @locked
-    def get(self, var, default=None):
-        try:
-            return self._get(var)
-        except Config.NotFound:
-            return default
 
-    @locked
-    def set(self, var, value):
+    def __set(self, var, value):
         if '.' in var:
             path, _, item = var.rpartition('.')
-            current = self._get(path, create=True)
+            current = self.__get(path, create=True)
         else:
             current = self.data
             item = var
@@ -184,23 +175,53 @@ class Config(object):
         if self.autosave:
             self.save()
 
+    def __del(self, var):
+        if '.' in var:
+            path, _, item = var.rpartition('.')
+            current = self.__get(path)
+        else:
+            current = self.data
+            item = var
+        if isinstance(current, dict):
+            del current[item]
+        elif isinstance(current, list):
+            item = int(item, 10)
+            current.pop(item)
+        if self.autosave:
+            self.save()
+
+    @locked
+    def __getitem__(self, item):
+        '''Unsafe version, may raise KeyError or IndexError'''
+        return self.__get(item)
+
+    @locked
+    def __setitem__(self, item, value):
+        return self.__set(item, value)
+
+    @locked
+    def __delitem__(self, item):
+        '''Unsafe version, may raise KeyError or IndexError'''
+        return self.__del(item)
+
+    @locked
+    def get(self, var, default=None):
+        '''Safe version which always returns a default value'''
+        try:
+            return self.__get(var)
+        except (KeyError, IndexError):
+            return default
+
+    @locked
+    def set(self, var, value):
+        return self.__set(var, value)
+
     @locked
     def delete(self, var):
+        '''Safe version, never, raises an error'''
         try:
-            if '.' in var:
-                path, _, item = var.rpartition('.')
-                current = self._get(path)
-            else:
-                current = self.data
-                item = var
-            if isinstance(current, dict):
-                del current[item]
-            elif isinstance(current, list):
-                item = int(item, 10)
-                current.pop(item)
-            if self.autosave:
-                self.save()
-        except (Config.NotFound, KeyError, IndexError):
+            return self.__del(var)
+        except:
             pass
 
     @locked
@@ -208,9 +229,9 @@ class Config(object):
         '''Inserts at the index, and if the index is not provided
         appends to the end of the list
         '''
-        current = self._get(var)
+        current = self.__get(var)
         if not isinstance(current, list):
-            raise ConfigError('Item is not a list')
+            raise KeyError('%s: is not a list' % var)
         if index is None:
             current.append(value)
         else:
@@ -224,54 +245,95 @@ class Config(object):
 
 class MultiConfig(object):
     '''Base class for configuration management'''
-    
+
     ensure_exists = staticmethod(_ensure_exists)
-    
+
     def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
         self.lock = threading.Lock()
-        self._configs = []
+        self.__configs = []
         self.attach(filename, data, fmt, encoding, autosave)
 
-    @locked    
+    @locked
     def attach(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True, index=None):
         config = Config(filename, data, fmt, encoding, autosave)
         if index is None:
-            self._configs.insert(0, config)
+            self.__configs.insert(0, config)
         else:
-            self._configs.insert(index, config)
-    
+            self.__configs.insert(index, config)
+
     @locked
     def detach(self, index=None):
         if index is None:
-            self._configs.pop(0)
+            self.__configs.pop(0)
         else:
-            self._configs.pop(index)
+            self.__configs.pop(index)
 
     @property
     def current(self):
-        return self._configs[0]
-    
+        return self.__configs[0]
+
+    def __get(self, var):
+        for config in self.__configs:
+            try:
+                return config[var]
+            except (KeyError, IndexError):
+                pass
+        raise KeyError(var)
+
+    def __set(self, var, value):
+        return self.current.set(var, value)
+
+    def __del(self, var):
+        # It has to keep track if it found a value in any of the configuration
+        # files. If the value is found it won't raise and error, if it is not
+        # found in any configuration file, it will raise a KeyError
+        found = []
+        for config in self.__configs:
+            try:
+                del config[var]
+                found.append(True)
+            except (KeyError, IndexError):
+                found.append(True)
+        if not any(found):
+            raise KeyError(var)
+
+    @locked
+    def __getitem__(self, item):
+        '''Unsafe version, may raise KeyError or IndexError'''
+        return self.__get(item)
+
+    @locked
+    def __setitem__(self, item, value):
+        return self.__set(item, value)
+
+    @locked
+    def __delitem(self, item):
+        '''Unsafe version, may raise KeyError or IndexError'''
+        self.__del(item)
+
     @locked
     def get(self, var, default=None):
-        for config in self._configs:
-            try:
-                return config._get(var)
-            except Config.NotFound:
-                pass
-        return default
-    
+        '''Safe version always returns a default value'''
+        try:
+            return self.__get(var)
+        except (KeyError, IndexError):
+            return default
+
     @locked
     def set(self, var, value):
-        self.current.set(var, value)
+        return self.__set(var, value)
 
     @locked
     def delete(self, var):
-        for config in self._configs:
-            config.delete(var)
+        '''Safe version, never raises an error'''
+        try:
+            self.__del(var)
+        except (KeyError, IndexError):
+            pass
 
     @locked
     def insert(self, var, value, index=None):
         self.current.insert(var, value, index)
 
     def __repr__(self):
-        return 'MultiConfig(\n  %s\n)' % (',\n  '.join(reversed(map(repr, self._configs))))                    
+        return 'MultiConfig(\n  %s\n)' % (',\n  '.join(reversed(map(repr, self._configs))))

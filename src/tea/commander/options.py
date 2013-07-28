@@ -51,12 +51,14 @@ DEFAULTS = {
     'commands' : [],
 }
 
+
 def add_option(parser, name, conf):
-    switches = [sw.strip() for sw in name.split(',')]
+    # HACK: For positional arguments there are no switches
+    switches = [sw.strip() for sw in name.split(',')] if name is not None else []
     # Default dest is long_switch.replace('-', '_')
     if 'dest' not in conf:
         conf['dest'] = switches[-1].replace('-', '_')
-    # Default default is None or oposito of store_true/store_false
+    # Default default is None or opposite of store_true/store_false
     if 'default' not in conf:
         conf['default'] = {'store_true': False, 'store_false': True}.get(conf['action'], None)
     # Default type for store is str
@@ -64,17 +66,19 @@ def add_option(parser, name, conf):
         conf['type'] = str
     swch = []
     for s in switches:
-        if len(s) == 1: swch.append('-%s' % s)
-        else: swch.append('--%s' % s)
+        if len(s) == 1:
+            swch.append('-%s' % s)
+        else:
+            swch.append('--%s' % s)
     parser.add_argument(*swch, **conf)
 
 
 def create_parser(options, description='', defaults=None, app_config=None):
     '''Create a options parser form configuration
-    
-    options:           dictionary of configurations
-    defaults:          default values
-    configuration:     name of the plist file with default options for this user
+
+    :param options:       dictionary of configurations
+    :param defaults:      default values
+    :param configuration: name of the json file with default options for this user
     '''
     parser = argparse.ArgumentParser()
     parser.description = description
@@ -83,28 +87,29 @@ def create_parser(options, description='', defaults=None, app_config=None):
         if group_name is None:
             group = parser
         else:
-            group = parser.add_argument_group(group_name, data['help'] if 'help' in data else '')         
+            group = parser.add_argument_group(group_name, data['help'] if 'help' in data else '')
         for name, conf in data['options']:
             add_option(group, name, conf)
     # Set Defaults
     if defaults is not None:
         for key, value in defaults.items():
-            parser.set_defaults(**{key.replace('-', '_'): value})    
+            parser.set_defaults(**{key.replace('-', '_'): value})
     return parser
 
 
 def parse_arguments(args, options, description='', defaults=None, app_config=None, check_and_set_func=None):
     '''Create a options parser form configuration and parse arguments
-    
-    args:               arguments to parse
-    options:            dictionary of configurations
-    defaults:           default values
-    inifile:            ini file with default values for this user
+
+    :param args:     arguments to parse
+    :param options:  dictionary of configurations
+    :param defaults: default values
+    :param inifile:  ini file with default values for this user
     check_and_set_func: function that receives options, and checks and sets additional values
-    ''' 
+    '''
     parser = create_parser(options, description, defaults, app_config)
-    if args is None: args = []
+    if args is None:
+        args = []
     (options, args) = parser.parse_args(args)
     if check_and_set_func is not None:
-        options = check_and_set_func(options)    
+        options = check_and_set_func(options)
     return options

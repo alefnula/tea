@@ -65,7 +65,7 @@ class BaseCommand(object):
     # Metadata about this command.
     option_list = tuple()
     args        = ''
-    
+
     def __init__(self, config, ui):
         self.id       = str(self).split('.')[-1]
         self.config   = config
@@ -78,7 +78,8 @@ class BaseCommand(object):
         '''Return a brief description of how to use this command, by
         default from the attribute ``self.__doc__``.
         '''
-        if subcommand is None: subcommand = self.id
+        if subcommand is None:
+            subcommand = self.id
         usage = '%s [options] %s' % (subcommand, self.args)
         if self.__doc__:
             return '%s\n\n%s' % (usage, LEADING_WHITESPACE_REMOVER_RE.sub('', self.__doc__))
@@ -96,7 +97,7 @@ class BaseCommand(object):
         for name, conf in self.option_list:
             add_option(parser, name, conf)
         return parser
-    
+
     def print_help(self, prog_name, subcommand):
         '''Print the help message for this command, derived from ``self.usage()``. '''
         parser = self.create_parser(prog_name, subcommand)
@@ -121,7 +122,7 @@ class BaseCommand(object):
             self.stdout = options.get('stdout', sys.stdout)
             self.stderr = options.get('stderr', sys.stderr)
             self.validate()
-            
+
             # Setup lexer and style
             lexer = self.ui.formatter.lexer
             style = self.ui.formatter.style
@@ -131,10 +132,10 @@ class BaseCommand(object):
                 self.ui.formatter.style = self.Style
             if hasattr(self, 'LexerConfig'):
                 self.ui.formatter.lexer.push_config(self.LexerConfig)
-            
-            self._start_time = time.time() # Start report timer
+
+            self._start_time = time.time()  # Start report timer
             output = self.handle(*args, **options)
-            
+
             # Teardown lexer and style
             if hasattr(self, 'LexerConfig'):
                 self.ui.formatter.lexer.pop_config()
@@ -159,8 +160,6 @@ class BaseCommand(object):
     def handle(self, *args, **options):
         '''The actual logic of the command. Subclasses must implement this method.'''
         raise NotImplementedError()
-
-
 
 
 class LabelCommand(BaseCommand):
@@ -190,7 +189,6 @@ class LabelCommand(BaseCommand):
         string as given on the command line.
         '''
         raise NotImplementedError()
-
 
 
 class NoArgsCommand(BaseCommand):

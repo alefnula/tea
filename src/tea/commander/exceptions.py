@@ -2,6 +2,7 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '18 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
+
 class CommandError(Exception):
     '''
     Exception class indicating a problem while executing a command.
