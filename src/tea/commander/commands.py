@@ -35,33 +35,46 @@ class AliasCommand(BaseCommand):
         elif l == 2:
             self.set_alias(args[0], args[1])
         else:
-            print(self.usage())
+            self.print_usage()
 
 
 class ConfigCommand(BaseCommand):
     '''Configuration management
 
     Usage:
-    config get VAR               # prints a var
-    config set VAR VALUE         # sets a value to var
-    config del VAR               # deletes a var
-    config add VAR VALUE [INDEX] # add value into list assosiated with the var (at index)
-    config rem VAR INDEX         # removes a value from list by index
+    config list [VAR]             # lists the sub-keys of a var
+    config get  VAR               # prints a var
+    config set  VAR VALUE         # sets a value to var
+    config del  VAR               # deletes a var
+    config add  VAR VALUE [INDEX] # add value into list associated with the var (at index)
+    config rem  VAR INDEX         # removes a value from list by index
     '''
 
     id = 'config'
 
     def handle(self, *args, **kwargs):
         l = len(args)
-        if l < 2:
-            print(self.usage())
+        if l < 1:
+            self.print_usage()
             return
         command = args[0].lower()
+        # List
+        if l <= 2 and command == 'list':
+            if l == 1:
+                for key in self.config.keys():
+                    self.ui.message(key)
+            else:
+                item = self.config.get(args[1])
+                if isinstance(item, dict):
+                    for key in item:
+                        self.ui.message(key)
+                elif isinstance(item, list):
+                    self.ui.message(', '.join(range(len(item))))
         # Get
-        if l == 2 and command == 'get':
+        elif l == 2 and command == 'get':
             value = self.config.get(args[1])
             if value is not None:
-                print(value)
+                self.ui.message(value)
         # Set
         elif l == 3 and command == 'set':
             self.config.set(args[1], args[2])
@@ -70,11 +83,17 @@ class ConfigCommand(BaseCommand):
             self.config.delete(args[1])
         # Add
         elif l == 3 and command == 'add':
-            self.config.add(args[1], args[2])
+            item = self.config.get(args[1])
+            if item is None:
+                self.config.set(args[1], [])
+            self.config.insert(args[1], args[2])
         elif l == 4 and command == 'add':
-            self.config.add(args[1], args[2], args[3])
+            item = self.config.get(args[1])
+            if item is None:
+                self.config.set(args[1], [])
+            self.config.insert(args[1], args[2], int(args[3]))
         # Rem
         elif l == 3 and command == 'rem':
             self.config.remove(args[1], args[2])
         else:
-            print(self.usage())
+            self.print_usage()

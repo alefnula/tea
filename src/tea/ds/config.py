@@ -191,6 +191,11 @@ class Config(object):
             self.save()
 
     @locked
+    def keys(self):
+        '''Returns a set of top level keys in this configuration'''
+        return set(self.data.keys())
+
+    @locked
     def __getitem__(self, item):
         '''Unsafe version, may raise KeyError or IndexError'''
         return self.__get(item)
@@ -296,6 +301,14 @@ class MultiConfig(object):
                 found.append(True)
         if not any(found):
             raise KeyError(var)
+
+    @locked
+    def keys(self):
+        '''Returns a merged set of top level keys from all the configuration files'''
+        s = set()
+        for config in self.__configs:
+            s |= config.keys()
+        return s
 
     @locked
     def __getitem__(self, item):

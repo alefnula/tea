@@ -1,6 +1,8 @@
 v0.0.4 (August XX, 2013)
 ------------------------
 
+  - Added list to ``config`` commander command, and fixed add to create a list
+    if it doesn't exist.
   - Added a hack for positional arguments in commands.
   - Adding safe and unsafe methods to the Config and MultiConfig classes. Safe
     methods will never raise and error. They will either swallow the exception
