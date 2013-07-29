@@ -38,8 +38,4 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(optionflags=doctest.ELLIPSIS)
-else:
-    from .log import configure_logging
+from .log import configure_logging
