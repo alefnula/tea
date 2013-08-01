@@ -129,6 +129,3 @@ if platform.is_a(platform.POSIX):
             It will be called after the process has been daemonized by start() or restart().
             '''
             pass
-
-else:
-    raise platform.not_supported('tea.utils.daemon')

@@ -10,13 +10,13 @@ import logging
 import tempfile
 import threading
 import subprocess
-# tea imports
 from tea.system import platform
+from tea.process.base import Process
 
 logger = logging.getLogger(__name__)
 
 
-class Process(object):
+class PosixProcess(Process):
     def __init__(self, command, arguments=None, environment=None, redirect_output=True):
         self._commandline = self._get_cmd(command, [] if arguments is None else arguments)
         # will be created on start
@@ -69,26 +69,35 @@ class Process(object):
             return False
 
     def wait(self, timeout=None):
-        '''Wait for process to end'''
         if timeout is not None:
             current_time = time.time()
             while time.time() - current_time < (timeout * 1000):
-                if not self._process.is_running():
+                if not self._process.is_running:
                     return True
                 time.sleep(0.1)
             return False
         else:
-            while self.is_running():
+            while self.is_running:
                 time.sleep(0.1)
             return True
 
+    @property
     def is_running(self):
         if self._process is None or self._process.returncode is not None:
             return False
         return True
 
+    @property
+    def pid(self):
+        return self._process.pid
+
+    @property
+    def exit_code(self):
+        if self.is_running:
+            return None
+        return self._process.returncode
+
     def write(self, string):
-        '''Send to stdin'''
         if self._redirect_output:
             if string[-1] != '\n':
                 string = string + '\n'
@@ -96,39 +105,17 @@ class Process(object):
             self._process.stdin.flush()
 
     def read(self):
-        '''Get stdout'''
         if self._redirect_output:
             return self._stdout_reader.read()
         return ''
 
     def eread(self):
-        '''Get stderr'''
         if self._redirect_output:
             return self._stderr_reader.read()
         return ''
 
-    def _get_pid(self):
-        return self._process.pid
-
-    def _get_exit_code(self):
-        if self.is_running():
-            return None
-        return self._process.returncode
-
-    pid       = property(_get_pid)
-    exit_code = property(_get_exit_code)
-
-    @staticmethod
-    def GetProcesses(sort_by_name=True, cmdline=False):
-        '''Retrieves a list of processes sorted by name.
-
-        @type  sort_by_name: boolean
-        @param sort_by_name: Sort the list by name or by PID
-        @type  cmdline: boolean
-        @param cmdline: Add process command line to output
-        @rtype:  list[tuple(string, string)]
-        @return: List of process PID, process name tuples
-        '''
+    @classmethod
+    def GetProcesses(cls, sort_by_name=True, cmdline=False):
         if platform.is_a(platform.DARWIN):
             process = Process('ps', ['-eo', 'pid,comm,args' if cmdline else 'pid,comm'])
         else:
@@ -155,32 +142,23 @@ class Process(object):
         else:
             return sorted(processes, lambda t1, t2: cmp(int(t1[0]), int(t2[0])) or cmp(t1[1], t2[1]))
 
-    @staticmethod
-    def Find(name, arg=None):
-        '''Find process by name or by argument in command line if arg param is available'''
+    @classmethod
+    def Find(cls, name, arg=None):
         if arg is None:
-            for pid, process in Process.GetProcesses():
-                # FIXME: HACK!!! Daje samo prvih 15 karaktera!!!
+            for pid, process in cls.GetProcesses():
+                # FIXME: HACK!!! Gives only the first 15 characters!!!
                 if process.lower().find(name[:15].lower()) != -1 and '<defunct>' not in process.lower():
                     return process, pid
         else:
-            for pid, process, cmdline in Process.GetProcesses(cmdline=True):
-                # FIXME: HACK!!! Daje samo prvih 15 karaktera!!!
+            for pid, process, cmdline in cls.GetProcesses(cmdline=True):
+                # FIXME: HACK!!! Gives only the first 15 characters!!!
                 if process.lower().find(name[:15].lower()) != -1:
                     if cmdline is not None and cmdline.lower().find(arg.lower()) != -1:
                         return process, pid
         return None
 
-    @staticmethod
-    def Kill(pid=None, process=None):
-        '''Kills a process by process PID or
-        kills a process started by process module.
-
-        @type pid: int
-        @param pid: Process ID of the process to kill
-        @type  process: ShellProcess
-        @param process: Process started by process module
-        '''
+    @classmethod
+    def Kill(cls, pid=None, process=None):
         if process is not None:
             pid = process.pid
         if pid == posix.getpgid(pid):

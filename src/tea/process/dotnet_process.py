@@ -7,16 +7,17 @@ import re
 import sys
 import time
 import threading
+from tea.process.base import Process
 
 import clr  # @UnresolvedImport
 clr.AddReference('System.Management')
-from System.Diagnostics import Process as DotNetProcess  # @UnresolvedImport
+from System.Diagnostics import Process as CSharpProcess  # @UnresolvedImport
 from System.Management import ManagementObjectSearcher  # @UnresolvedImport
 
 
-class Process(object):
+class DotnetProcess(Process):
     def __init__(self, command, arguments=None, environment=None, redirect_output=True):
-        self._process  = DotNetProcess()
+        self._process  = CSharpProcess()
         self._process.StartInfo.FileName, self._process.StartInfo.Arguments = self._get_cmd(command, [] if arguments is None else arguments)
         if environment is not None:
             process_env = self._process.StartInfo.EnvironmentVariables
@@ -80,17 +81,20 @@ class Process(object):
         if timeout is not None:
             return self._process.WaitForExit(timeout)
         else:
-            while self.is_running():
+            while self.is_running:
                 time.sleep(1)
             return True
 
+    @property
     def is_running(self):
         return not self._process.HasExited
 
-    def _get_pid(self):
+    @property
+    def pid(self):
         return self._process.Id
 
-    def _get_exit_code(self):
+    @property
+    def exit_code(self):
         if self._process.HasExited:
             return self._process.ExitCode
         return None
@@ -115,20 +119,8 @@ class Process(object):
                 return result
         return ''
 
-    pid       = property(_get_pid)
-    exit_code = property(_get_exit_code)
-
-    @staticmethod
-    def GetProcesses(sort_by_name=True, cmdline=False):
-        '''Retrieves a list of processes sorted by name.
-
-        @type  sort_by_name: boolean
-        @param sort_by_name: Sort the list by name or by PID
-        @type  cmdline: boolean
-        @param cmdline: Add process command line to output
-        @rtype:  list[tuple(string, string)]
-        @return: List of process PID, process name tuples
-        '''
+    @classmethod
+    def GetProcesses(cls, sort_by_name=True, cmdline=False):
         processes = []
         if cmdline:
             searcher = ManagementObjectSearcher('select ProcessID, Caption, CommandLine from Win32_Process')
@@ -143,32 +135,23 @@ class Process(object):
         else:
             return sorted(processes, lambda t1, t2: cmp(t1[0], t2[0]) or cmp(t1[1], t2[1]))
 
-    @staticmethod
-    def Find(name, arg=None):
-        '''Find process by name or by argument in command line if arg param is available'''
+    @classmethod
+    def Find(cls, name, arg=None):
         if arg is None:
-            for pid, process in Process.GetProcesses():
+            for pid, process in cls.GetProcesses():
                 if process.lower().find(name.lower()) != -1:
                     return process, pid
         else:
-            for pid, process, cmdline in Process.GetProcesses(cmdline=True):
+            for pid, process, cmdline in cls.GetProcesses(cmdline=True):
                 if process.lower().find(name.lower()) != -1:
                     if cmdline is not None and cmdline.lower().find(arg.lower()) != -1:
                         return process, pid
         return None
 
-    @staticmethod
-    def Kill(pid=None, process=None):
-        '''Kills a process by process PID or
-        kills a process started by process module.
-
-        @type pid: int
-        @param pid: Process ID of the process to kill
-        @type  process: ShellProcess
-        @param process: Process started by process module
-        '''
+    @classmethod
+    def Kill(cls, pid=None, process=None):
         if process is not None:
             process.kill()
         else:
-            process = DotNetProcess.GetProcessById(pid)
+            process = CSharpProcess.GetProcessById(pid)
             process.Kill()

@@ -6,11 +6,11 @@ import os
 import logging
 from tea.system import platform
 if platform.is_a(platform.POSIX):
-    from .posix_process import Process  # @UnusedImport
+    from .posix_process import PosixProcess  as Process# @UnusedImport
 elif platform.is_a(platform.DOTNET):
-    from .dotnet_process import Process  # @UnusedImport @Reimport
+    from .dotnet_process import DotnetProcess as Process  # @UnusedImport @Reimport
 elif platform.is_a(platform.WINDOWS):
-    from .win_process import Process  # @Reimport
+    from .win_process import WinProcess as Process # @Reimport
 else:
     raise platform.not_supported('tea.process')
 

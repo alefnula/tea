@@ -1,6 +1,11 @@
 v0.0.4 (August XX, 2013)
 ------------------------
 
+  - Adding tests for the ``tea.process`` module.
+  - Process.is_running is now a property instead of a method 
+  - Added abstract base class for the Process in the ``tea.process`` module,
+    now every platform specific implementation will conform to the interface of
+    the Process class
   - Added list to ``config`` commander command, and fixed add to create a list
     if it doesn't exist.
   - Added a hack for positional arguments in commands.
