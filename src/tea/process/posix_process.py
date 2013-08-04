@@ -61,10 +61,13 @@ class PosixProcess(Process):
 
     def kill(self):
         try:
-            os.kill(self._process.pid, signal.SIGKILL)  # @UndefinedVariable
-            # This is not needed any more because we have a thread for this
-            #self._process.wait()
-            return True
+            if self._process is not None:
+                self.Kill(self._process.pid)
+                self._wait_thread.join()
+                self._process = None
+                return True
+            else:
+                return None
         except OSError:
             return False
 
@@ -161,7 +164,8 @@ class PosixProcess(Process):
     def Kill(cls, pid=None, process=None):
         if process is not None:
             pid = process.pid
+        print pid
         if pid == posix.getpgid(pid):
-            os.killpg(process.pid, signal.SIGKILL)  # @UndefinedVariable
+            os.killpg(pid, signal.SIGKILL)  # @UndefinedVariable
         else:
-            os.kill(process.pid, signal.SIGKILL)  # @UndefinedVariable
+            os.kill(pid, signal.SIGKILL)  # @UndefinedVariable
