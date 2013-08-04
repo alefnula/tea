@@ -1,6 +1,7 @@
-v0.0.4 (August XX, 2013)
+v0.0.4 (August 04, 2013)
 ------------------------
 
+  - Fix in the ``tea.process.posix_process`` when killing a process.
   - Adding tests for the ``tea.process`` module.
   - Process.is_running is now a property instead of a method 
   - Added abstract base class for the Process in the ``tea.process`` module,
