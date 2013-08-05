@@ -4,13 +4,14 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import logging
-# tea imports
 from tea.process import execute
+from tea.scm.base import SCM
+
 
 logger = logging.getLogger(__name__)
 
 
-class Hg(object):
+class Hg(SCM):
     def __init__(self, repository):
         self.repository = repository
 

@@ -12,7 +12,8 @@ except ImportError:
 
 
 # tea imports
-from .hg import Hg
+from tea.scm.hg import Hg
+from tea.scm.git import Git
 
 NETLOC_RE = re.compile('^(?:(?P<username>[^:]+)(?:\:(?P<password>[^@]+))?@)?(?P<netloc>.*)$')
 
@@ -38,15 +39,22 @@ def set_uri(uri, **kwargs):
 
 
 class Repository(object):
-    def __init__(self, name, path=None, source=None, username=None, password=None):
-        self.name     = name
-        self.path     = path
-        self.source   = source
+    HG = 'hg'
+    GIT = 'git'
+
+    def __init__(self, name, path=None, source=None, username=None, password=None, repo_type=HG):
+        self.name = name
+        self.path = path
+        self.source = source
         self.username = None if username is None else urlquote(username)
         self.password = None if password is None else urlquote(password)
-        self._uri     = None
-        self._muri    = None
-        self.hg       = Hg(self)
+        self._uri = None
+        self._muri = None
+        self.repo_type = repo_type
+        if self.repo_type == Repository.HG:
+            self.scm = Hg(self)
+        else:
+            self.scm = Git(self)
 
     @property
     def uri(self):
@@ -75,3 +83,8 @@ class Repository(object):
             'path'   : self.path,
             'source' : self.source,
         }
+
+    def __getattr__(self, attr):
+        if hasattr(self.scm, attr):
+            return getattr(self.scm, attr)
+        raise AttributeError(attr)
