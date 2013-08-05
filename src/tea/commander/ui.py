@@ -7,9 +7,11 @@ import getpass
 
 from tea.console.color import cprint, Color
 from tea.parsing import ConsoleFormatter
+from tea.utils import six
+from tea.utils.six.moves import input  # @UnresolvedImport
 
 
-class UserInterface(object):
+class UserInterface(six.with_metaclass(abc.ABCMeta)):
     '''Abstract class representing user interface object for commander.
 
     Commander Application can be provided with a custom implementation
@@ -19,9 +21,6 @@ class UserInterface(object):
     Every command will receive a UserInterface object in it's constructor
     and can call all methods to provide user feedback.
     '''
-
-    __metaclass__ = abc.ABCMeta
-
     def __init__(self):
         '''Initialization method'''
         self._formatter = None
@@ -103,7 +102,7 @@ class ConsoleUserInterface(UserInterface):
         if password:
             value = getpass.getpass(message)
         else:
-            value = raw_input(message)
+            value = input(message)
         return value.strip() if strip else value
 
     def message(self, message, newline=True):

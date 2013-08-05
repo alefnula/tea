@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '29 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
@@ -58,4 +60,4 @@ def load_plugins(modules, cls=None, annotation=None, subclasses=False):
 
 if __name__ == '__main__':
     from unittest import TestCase
-    print load_plugins('tea.tests', cls=TestCase)
+    print(load_plugins('tea.tests', cls=TestCase))

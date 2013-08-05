@@ -1,6 +1,9 @@
 v0.0.5 (August XX, 2013)
 ------------------------
 
+  - Porting everything to work with Python 2.7 and Python 3.3
+  - Adding ``six`` library to ``utils`` module
+
 
 v0.0.4 (August 04, 2013)
 ------------------------

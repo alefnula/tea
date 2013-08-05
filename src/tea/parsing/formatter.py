@@ -3,10 +3,10 @@ __date__      = '19 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import sys
+from tea.utils import six
 from tea.console.color import cprint
-
-from .token import Token
-from .style import Style, ConsoleStyleAdapter
+from tea.parsing.token import Token
+from tea.parsing.style import Style, ConsoleStyleAdapter
 
 
 class Formatter(object):
@@ -52,7 +52,7 @@ class Formatter(object):
     def format(self, data):
         '''Use this method for formatting data'''
         if self.lexer is None:
-            self.format_text(self.style.get(Token.Text), unicode(data))
+            self.format_text(self.style.get(Token.Text), six.text_type(data))
         else:
             for token, text in self.lexer.tokenize(data):
                 self.format_text(self.style.get(token), text)

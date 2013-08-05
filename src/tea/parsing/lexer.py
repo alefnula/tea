@@ -4,13 +4,11 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import re
 import abc
+from tea.utils import six
+from tea.parsing.token import Token
 
-from .token import Token
 
-
-class Lexer(object):
-    __metaclass__ = abc.ABCMeta
-
+class Lexer(six.with_metaclass(abc.ABCMeta)):
     config = None
 
     def __init__(self):

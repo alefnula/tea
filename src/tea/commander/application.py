@@ -8,6 +8,7 @@ import pkgutil
 import logging
 import collections
 from tea import shutil
+from tea.utils import six
 from tea.utils import get_object
 from tea.ds.config import MultiConfig
 from tea.commander.base import BaseCommand
@@ -20,16 +21,6 @@ from tea.commander.options import create_parser, OPTIONS, DEFAULTS
 logger = logging.getLogger(__name__)
 
 
-if type('') is not type(b''):
-    bytes_type = bytes
-    unicode_type = str
-    basestring_type = str
-else:
-    bytes_type = str
-    unicode_type = unicode
-    basestring_type = basestring
-
-
 class Application(object):
     '''Encapsulates the logic of the commander.
 
@@ -40,7 +31,7 @@ class Application(object):
         '''commands: python module path to commands module'''
         self.argv = argv
         self.prog_name = os.path.basename(argv[0])
-        if isinstance(command_modules, basestring_type):
+        if isinstance(command_modules, six.string_types):
             command_modules = [command_modules]
         self._command_modules = command_modules
         self._commands = None
@@ -133,7 +124,7 @@ class Application(object):
                 'Available subcommands:',
             ]
             commands_dict = collections.defaultdict(lambda: [])
-            for name, command in self.get_commands(config).iteritems():
+            for name, command in self.get_commands(config).items():
                 commands_dict[command['app']].append(name)
             for app in sorted(commands_dict.keys()):
                 usage.append('')

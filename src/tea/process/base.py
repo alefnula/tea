@@ -3,9 +3,10 @@ __date__      = '01 August 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import abc
+from tea.utils import six
 
 
-class Process(object):
+class Process(six.with_metaclass(abc.ABCMeta)):
     '''Abstract base class for the Process class that is implemented for every
     platform in it's own module.
 
@@ -24,7 +25,6 @@ class Process(object):
         ''
 
     '''
-    __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def __init__(self, command, arguments=None, environment=None, redirect_output=True):

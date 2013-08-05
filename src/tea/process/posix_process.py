@@ -164,7 +164,6 @@ class PosixProcess(Process):
     def Kill(cls, pid=None, process=None):
         if process is not None:
             pid = process.pid
-        print pid
         if pid == posix.getpgid(pid):
             os.killpg(pid, signal.SIGKILL)  # @UndefinedVariable
         else:

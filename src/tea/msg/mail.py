@@ -21,8 +21,9 @@ from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate, parseaddr, formataddr
+from tea.utils import six
 from tea.utils.html import strip_tags
-from tea.utils.encoding import smart_unicode, smart_str
+from tea.utils.encoding import smart_text, smart_bytes
 
 
 logger = logging.getLogger(__name__)
@@ -91,7 +92,7 @@ class BadHeaderError(ValueError):
 
 def forbid_multi_line_headers(name, val):
     '''Forbids multi-line headers, to prevent header injection.'''
-    val = smart_unicode(val)
+    val = smart_text(val)
     if '\n' in val or '\r' in val:
         raise BadHeaderError("Header values can't contain newlines (got %r for header %r)" % (val, name))
     try:
@@ -154,7 +155,7 @@ class SMTPConnection(object):
             if self.username and self.password:
                 self.connection.login(self.username, self.password)
             return True
-        except Exception, e:
+        except Exception as e:
             logger.error('Error trying to connect to server %s:%s: %s', self.host, self.port, e)
             if not self.fail_silently:
                 raise
@@ -168,7 +169,7 @@ class SMTPConnection(object):
                 # This happens when calling quit() on a TLS connection
                 # sometimes.
                 self.connection.close()
-            except Exception, e:
+            except Exception as e:
                 logger.error('Error trying to close connection to server %s:%s: %s', self.host, self.port, e)
                 if self.fail_silently:
                     return
@@ -203,7 +204,7 @@ class SMTPConnection(object):
             self.connection.sendmail(message.sender,
                                      message.recipients(),
                                      message.message().as_string())
-        except Exception, e:
+        except Exception as e:
             logger.error('Error sending a message to server %s:%s: %s', self.host, self.port, e)
             if not self.fail_silently:
                 raise
@@ -227,17 +228,17 @@ class EmailMessage(object):
         conversions.
         '''
         if to:
-            assert not isinstance(to, basestring), '"to" argument must be a list or tuple'
+            assert not isinstance(to, six.string_types), '"to" argument must be a list or tuple'
             self.to = list(to)
         else:
             self.to = []
         if cc:
-            assert not isinstance(cc, basestring), '"cc" argument must be a list or tuple'
+            assert not isinstance(cc, six.string_types), '"cc" argument must be a list or tuple'
             self.cc = list(cc)
         else:
             self.cc = []
         if bcc:
-            assert not isinstance(bcc, basestring), '"bcc" argument must be a list or tuple'
+            assert not isinstance(bcc, six.string_types), '"bcc" argument must be a list or tuple'
             self.bcc = list(bcc)
         else:
             self.bcc = []
@@ -260,7 +261,7 @@ class EmailMessage(object):
 
     def message(self):
         encoding = self.encoding or DEFAULT_CHARSET
-        msg = SafeMIMEText(smart_str(self.body, DEFAULT_CHARSET), self.content_subtype, encoding)
+        msg = SafeMIMEText(smart_bytes(self.body, DEFAULT_CHARSET), self.content_subtype, encoding)
         if self.attachments:
             body_msg = msg
             msg = SafeMIMEMultipart(_subtype=self.multipart_subtype)
@@ -329,7 +330,7 @@ class EmailMessage(object):
                 mimetype = DEFAULT_ATTACHMENT_MIME_TYPE
         basetype, subtype = mimetype.split('/', 1)
         if basetype == 'text':
-            attachment = SafeMIMEText(smart_str(content, DEFAULT_CHARSET), subtype, DEFAULT_CHARSET)
+            attachment = SafeMIMEText(smart_bytes(content, DEFAULT_CHARSET), subtype, DEFAULT_CHARSET)
         else:
             # Encode non-text attachments with base64.
             attachment = MIMEBase(basetype, subtype)
@@ -368,7 +369,7 @@ def send_mail(subject, sender, to, message, html_message=None, cc=None, bcc=None
     connection = SMTPConnection(host=host, port=port, username=auth_user, password=auth_password,
                                 use_tls=use_tls, fail_silently=fail_silently)
     # Convert the to field just for easier usage
-    if isinstance(to, basestring):
+    if isinstance(to, six.string_types):
         to = [to]
     if html_message is None:
         email = EmailMessage(subject=subject, body=message, sender=sender, to=to, cc=cc, bcc=bcc,

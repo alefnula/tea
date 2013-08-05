@@ -69,7 +69,7 @@ class ConfigCommand(BaseCommand):
                     for key in item:
                         self.ui.message(key)
                 elif isinstance(item, list):
-                    self.ui.message(', '.join(range(len(item))))
+                    self.ui.message(', '.join(map(str, range(len(item)))))
         # Get
         elif l == 2 and command == 'get':
             value = self.config.get(args[1])

@@ -1,10 +1,11 @@
 import re
 from calendar import monthrange
+from tea.utils import six
 
 
 def asint(value):
     if value is not None:
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             return int(value, 10)
         return int(value)
     return None

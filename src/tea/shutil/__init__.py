@@ -15,22 +15,14 @@ import shlex
 import shutil
 import fnmatch
 import logging
+from tea.utils import six
 
 logger = logging.getLogger(__name__)
-
-if type('') is not type(b''):
-    bytes_type = bytes
-    unicode_type = str
-    basestring_type = str
-else:
-    bytes_type = str
-    unicode_type = unicode
-    basestring_type = basestring
 
 
 def split(s, posix=True):
     '''Split the string s using shell-like syntax'''
-    if isinstance(s, bytes_type):
+    if isinstance(s, six.binary_type):
         s = s.decode('utf-8')
     return shlex.split(s, posix=posix)
 

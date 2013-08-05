@@ -12,18 +12,12 @@ import logging
 import functools
 import threading
 from tea import shutil
+from tea.utils import six
 try:
     import yaml
     has_yaml = True
 except ImportError:
     has_yaml = False
-
-if str is bytes:
-    bytes_type = str
-    unicode_type = unicode
-else:
-    bytes_type = bytes
-    unicode_type = str
 
 
 logger = logging.getLogger(__name__)
@@ -83,7 +77,7 @@ class Config(object):
             if isinstance(data, dict):
                 self.format = Config.DICT
                 self.data = copy.deepcopy(data)
-            elif isinstance(data, (bytes_type, unicode_type)):
+            elif isinstance(data, six.string_types):
                 self.data = self._read_string(data)
             else:
                 self.data = {}

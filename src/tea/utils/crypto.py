@@ -6,19 +6,10 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
 import random
+from tea.utils import six
 from tea.system import platform
 
 __all__ = ['CryptError', 'encrypt', 'decrypt']
-
-
-if type('') is not type(b''):
-    bytes_type = bytes
-    unicode_type = str
-    basestring_type = str
-else:
-    bytes_type = str
-    unicode_type = unicode
-    basestring_type = basestring
 
 
 class CryptError(Exception):
@@ -80,7 +71,7 @@ def _generate_key(length=32):
 
 def _to_hex_digest(bts):
     ''' Converts sequence of bytes to hex digest.'''
-    return ''.join(map(lambda x: '%02x' % x, map(ord, bts)))
+    return ''.join(['%02x' % x for x in map(ord, bts)])
 
 
 def _from_hex_digest(digest):
@@ -136,7 +127,7 @@ if platform.is_only(platform.WINDOWS):
 
         @encrypter('win')
         def Win32CryptProtectData(data, key=None):
-            if isinstance(data, unicode_type):
+            if isinstance(data, six.text_type):
                 data = data.encode('utf-8')
             buffer_in = ctypes.c_buffer(data, len(data))
             blob_in = DATA_BLOB(len(data), buffer_in)
@@ -152,7 +143,7 @@ if platform.is_only(platform.WINDOWS):
 
         @decrypter('win')
         def Win32CryptUnprotectData(data, key=None):
-            if isinstance(data, unicode_type):
+            if isinstance(data, six.text_type):
                 data = data.encode('utf-8')
             buffer_in = ctypes.c_buffer(data, len(data))
             blob_in = DATA_BLOB(len(data), buffer_in)
@@ -225,7 +216,7 @@ if platform.is_only(platform.WINDOWS):
         def get_key():
             key = _vault_retrieve('tea', 'tea-crypt')
             if key:
-                return map(ord, key)
+                return [ord(k) for k in key]
             else:
                 key = _generate_key()
                 _vault_store('tea', 'tea-crypt', ''.join(map(chr, key)))
@@ -312,7 +303,7 @@ elif platform.is_a(platform.DOTNET):
             with open(key_path, 'rb') as f:
                 cr_key = Array[Byte](map(ord, f.read()))
                 key = ProtectedData.Unprotect(cr_key, None, DataProtectionScope.CurrentUser)
-                return map(int, key)
+                return [int(k, 10) for k in key]
         else:
             mkdir(dir_path)
             key = _generate_key()

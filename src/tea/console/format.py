@@ -7,7 +7,6 @@ __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 import os
 import re
 import sys
-import string
 from textwrap import TextWrapper
 
 # tea imports
@@ -50,10 +49,10 @@ def table(text):
     @rtype:  string
     @return: Formated string.
     '''
-    table_bar = lambda col_lengths: '+-%s-+%s' % ('-+-'.join(map(lambda length: '-' * length, col_lengths)), os.linesep)
+    table_bar = lambda col_lengths: '+-%s-+%s' % ('-+-'.join(['-' * length for length in col_lengths]), os.linesep)
     rows  = []
     for line in text.splitlines():
-        rows.append(map(string.strip, line.split('|')))
+        rows.append([part.strip() for part in line.split('|')])
     max_cols = max(map(len, rows))
     col_lengths = [0] * max_cols
     for row in rows:
@@ -95,7 +94,7 @@ def print_page(text):
         My [BG_BLUE]blue background[NORMAL] text.
     '''
     color_re = re.compile(r'\[(?P<color>[FB]G_[A-Z_]+|NORMAL)\]')
-    width = max(map(lambda x: len(strip_colors(x)), text.splitlines()))
+    width = max([len(strip_colors(x)) for x in text.splitlines()])
     print('\n' + hbar(width))
     for line in text.splitlines():
         if line == '[HBAR]':

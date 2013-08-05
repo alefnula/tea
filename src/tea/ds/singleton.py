@@ -2,6 +2,8 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '18 February 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
+from tea.utils import six
+
 
 class SingletonMetaclass(type):
     '''Singleton Metaclass
@@ -13,14 +15,13 @@ class SingletonMetaclass(type):
 
     Usage::
 
-        >>> class MySingleton(object):
+        >>> class MySingleton(object, meta=SingletonMetaclass):
         ...     """Real singleton class.
         ...
-        ...     You have to set the __metaclass__ attribute to SingletonMetaclass,
-        ...     and define the __init__ function. Everything else will be done by
-        ...     metaclass.
+        ...     You have to set the metaclass to SingletonMetaclass,
+        ...     and define the __init__ function. Everything else will
+        ...     be done by metaclass.
         ...     """
-        ...     __metaclass__ = SingletonMetaclass
         ...     def __init__(self, data):
         ...         print 'Initializing'
         ...         self.data = data
@@ -44,7 +45,7 @@ class SingletonMetaclass(type):
         return cls._instance
 
 
-class Singleton(object):
+class Singleton(six.with_metaclass(SingletonMetaclass)):
     '''Singleton class
 
     Inherit from this class if you want to have a singleton class.
@@ -73,8 +74,6 @@ class Singleton(object):
     >>> assert first.data == second.data
     >>>
     '''
-    __metaclass__ = SingletonMetaclass
-
 
 if __name__ == '__main__':
     import doctest

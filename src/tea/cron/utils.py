@@ -1,5 +1,7 @@
 import re
 from datetime import datetime, date, timedelta
+from tea.utils import six
+
 
 _DATE_REGEX = re.compile(
     r'(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2})'
@@ -23,7 +25,7 @@ def convert_to_datetime(value):
         return value
     elif isinstance(value, date):
         return datetime.fromordinal(value.toordinal())
-    elif isinstance(value, basestring):
+    elif isinstance(value, six.string_types):
         m = _DATE_REGEX.match(value)
         if not m:
             raise ValueError('Invalid date string')
