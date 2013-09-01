@@ -64,17 +64,20 @@ class UserInterface(six.with_metaclass(abc.ABCMeta)):
         does some amount of work. This work can be represented in steps.
         Command should report to the user interface on every finished
         step so the user can have a live stream of information from the
-        command. Every report contains three parts::
+        command. Every report contains three parts:
 
-        :param obj     The object on which the operation is performed. The
-                       object should be either a dictionary or have a
-                       __serialize__ method that serializes it to dict
-        :param status  Status of the operation. No status is considered to
-                       be successful or unsuccessful. It's just an integer
-                       that represents the status of the operation.
-        :param data    Custom data provided by the command. This also has to
-                       be either dict or has a __serialize__ method, that
-                       serializes it to dict.
+        :param obj:
+            The object on which the operation is performed. The
+            object should be either a dictionary or have a
+            __serialize__ method that serializes it to dict
+        :param status:
+            Status of the operation. No status is considered to
+            be successful or unsuccessful. It's just an integer
+            that represents the status of the operation.
+        :param data:
+            Custom data provided by the command. This also has to
+            be either dict or has a __serialize__ method, that
+            serializes it to dict.
         '''
 
 

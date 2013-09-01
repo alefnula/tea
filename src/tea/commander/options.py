@@ -104,7 +104,7 @@ def parse_arguments(args, options, description='', defaults=None, app_config=Non
     :param options:  dictionary of configurations
     :param defaults: default values
     :param inifile:  ini file with default values for this user
-    check_and_set_func: function that receives options, and checks and sets additional values
+    :param check_and_set_func: function that receives options, and checks and sets additional values
     '''
     parser = create_parser(options, description, defaults, app_config)
     if args is None:
