@@ -15,7 +15,7 @@ setup(
     author_email='alefnula@gmail.com',
     maintainer='Viktor Kerkez',
     maintainer_email='alefnula@gmail.com',
-    url='https://bitbucket.org/alefnula/tea',
+    url='https://github.com/alefnula/tea',
     license='BSD',
     packages=[
         'tea',
