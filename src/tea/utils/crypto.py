@@ -216,7 +216,7 @@ if platform.is_only(platform.WINDOWS):
         def get_key():
             key = _vault_retrieve('tea', 'tea-crypt')
             if key:
-                return [ord(k) for k in key]
+                return [ord(k) % 256 for k in key]
             else:
                 key = _generate_key()
                 _vault_store('tea', 'tea-crypt', ''.join(map(chr, key)))
