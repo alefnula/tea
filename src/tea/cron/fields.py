@@ -1,5 +1,6 @@
 from calendar import monthrange
-from tea.cron.expressions import AllExpression, RangeExpression, LastDayOfMonthExpression, WeekdayRangeExpression
+from tea.cron.expressions import (AllExpression, RangeExpression, LastDayOfMonthExpression,
+                                  WeekdayRangeExpression)
 
 
 MIN_VALUES = {'year': 1970, 'month': 1, 'day': 1,

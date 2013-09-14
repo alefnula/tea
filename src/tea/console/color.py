@@ -41,20 +41,24 @@ if platform.is_a(platform.WINDOWS | platform.DOTNET):
         # COLORS[fg or bg][is dark][color]
         COLORS = {
             'fg': {
-                True:  {Color.black: 0x00, Color.blue:   0x01, Color.green:  0x02, Color.cyan:  0x03,
-                        Color.red:   0x04, Color.purple: 0x05, Color.yellow: 0x06, Color.white: 0x07,
-                        Color.gray:  0x08, Color.normal: 0x07},
-                False: {Color.black: 0x00, Color.blue:   0x09, Color.green:  0x0A, Color.cyan:  0x0B,
-                        Color.red:   0x0C, Color.purple: 0x0D, Color.yellow: 0x0E, Color.white: 0x0F,
-                        Color.gray:  0x07, Color.normal: 0x07}
+                True:  {Color.black:  0x00, Color.blue:   0x01, Color.green:  0x02,
+                        Color.cyan:   0x03, Color.red:    0x04, Color.purple: 0x05,
+                        Color.yellow: 0x06, Color.white:  0x07, Color.gray:   0x08,
+                        Color.normal: 0x07},
+                False: {Color.black:  0x00, Color.blue:   0x09, Color.green:  0x0A,
+                        Color.cyan:   0x0B, Color.red:    0x0C, Color.purple: 0x0D,
+                        Color.yellow: 0x0E, Color.white:  0x0F, Color.gray:   0x07,
+                        Color.normal: 0x07}
             },
             'bg': {
-                True:  {Color.black: 0x00, Color.blue:   0x10, Color.green:  0x20, Color.cyan:  0x30,
-                        Color.red:   0x40, Color.purple: 0x50, Color.yellow: 0x60, Color.white: 0x70,
-                        Color.gray:  0x80, Color.normal: 0x00},
-                False: {Color.black: 0x00, Color.blue:   0x90, Color.green:  0xA0, Color.cyan:  0xB0,
-                        Color.red:   0xC0, Color.purple: 0xD0, Color.yellow: 0xE0, Color.white: 0xF0,
-                        Color.gray:  0x70, Color.normal: 0x00}
+                True:  {Color.black:  0x00, Color.blue:   0x10, Color.green:  0x20,
+                        Color.cyan:   0x30, Color.red:    0x40, Color.purple: 0x50,
+                        Color.yellow: 0x60, Color.white:  0x70, Color.gray:   0x80,
+                        Color.normal: 0x00},
+                False: {Color.black:  0x00, Color.blue:   0x90, Color.green:  0xA0,
+                        Color.cyan:   0xB0, Color.red:    0xC0, Color.purple: 0xD0,
+                        Color.yellow: 0xE0, Color.white:  0xF0, Color.gray:   0x70,
+                        Color.normal: 0x00}
             }
         }
         std_out_handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)  # @UndefinedVariable
@@ -122,7 +126,8 @@ def strip_colors(text):
     return Color.color_re().sub('', text)
 
 
-def cprint(text, fg=Color.normal, bg=Color.normal, fg_dark=False, bg_dark=False, underlined=False, parse=False):
+def cprint(text, fg=Color.normal, bg=Color.normal, fg_dark=False, bg_dark=False,
+           underlined=False, parse=False):
     '''Prints string in to stdout using colored font.
 
     See L{set_color} for more details about colors.
@@ -146,7 +151,8 @@ def cprint(text, fg=Color.normal, bg=Color.normal, fg_dark=False, bg_dark=False,
                 d = match.groupdict()
                 set_color(d['color'], fg_dark=False if d['dark'] is None else True)
                 previous = match.end()
-            sys.stdout.write(line[previous:end] + ('\n' if (i < (count - 1) or text[-1] == '\n') else ''))
+            sys.stdout.write(line[previous:end] + ('\n' if (i < (count - 1) or
+                             text[-1] == '\n') else ''))
     else:
         set_color(fg, bg, fg_dark, bg_dark, underlined)
         sys.stdout.write(text)

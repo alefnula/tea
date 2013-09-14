@@ -23,7 +23,8 @@ def anotate(name):
 
 def load_plugins(modules, cls=None, annotation=None, subclasses=False):
     if cls is None and annotation is None:
-        logger.warning('Either the cls or the annotation has to be provided to the load_plugins function.')
+        logger.warning('Either the cls or the annotation has to be provided to '
+                       'the load_plugins function.')
         return []
     if not isinstance(modules, (list, tuple)):
         modules = [modules]

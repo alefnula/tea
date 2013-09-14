@@ -16,7 +16,7 @@ class Font(object):
     Sans      = 4
 
     # Decoration
-    Bold      =  8
+    Bold      = 8
     Italic    = 16
     Underline = 32
 

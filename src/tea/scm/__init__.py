@@ -5,3 +5,5 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 from .hg import Hg
 from .git import Git
 from .repository import Repository
+
+__all__ = ['Hg', 'Git', 'Repository']

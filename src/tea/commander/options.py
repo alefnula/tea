@@ -97,7 +97,8 @@ def create_parser(options, description='', defaults=None, app_config=None):
     return parser
 
 
-def parse_arguments(args, options, description='', defaults=None, app_config=None, check_and_set_func=None):
+def parse_arguments(args, options, description='', defaults=None,
+                    app_config=None, check_and_set_func=None):
     '''Create a options parser form configuration and parse arguments
 
     :param args:     arguments to parse

@@ -41,7 +41,8 @@ class Git(SCM):
 
         Same as _hg but adds --repository %(path) to the command line,
         '''
-        return self._hg(operation, '--work-tree', '%(path)s', '--git-dir', os.path.join('%(path)s', '.git'), *args)
+        return self._hg(operation, '--work-tree', '%(path)s', '--git-dir',
+                        os.path.join('%(path)s', '.git'), *args)
 
     def clone(self):
         '''Clone repository'''

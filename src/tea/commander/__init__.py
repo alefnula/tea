@@ -6,3 +6,6 @@ from .base import BaseCommand
 from .exceptions import CommandError
 from .application import Application
 from .ui import UserInterface, ConsoleUserInterface
+
+__all__ = ['BaseCommand', 'CommandError', 'Application',
+           'UserInterface', 'ConsoleUserInterface']

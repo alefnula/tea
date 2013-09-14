@@ -2,7 +2,8 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
-__all__ = ['SMTPConnection', 'EmailMessage', 'EmailMultiAlternatives', 'send_mail', 'send_mass_mail']
+__all__ = ['SMTPConnection', 'EmailMessage', 'EmailMultiAlternatives',
+           'send_mail', 'send_mass_mail']
 
 '''
 Simple and complete library for sending emails
@@ -94,7 +95,8 @@ def forbid_multi_line_headers(name, val):
     '''Forbids multi-line headers, to prevent header injection.'''
     val = smart_text(val)
     if '\n' in val or '\r' in val:
-        raise BadHeaderError("Header values can't contain newlines (got %r for header %r)" % (val, name))
+        raise BadHeaderError("Header values can't contain newlines (got %r for header %r)" %
+                             (val, name))
     try:
         val = val.encode('ascii')
     except UnicodeEncodeError:
@@ -170,7 +172,8 @@ class SMTPConnection(object):
                 # sometimes.
                 self.connection.close()
             except Exception as e:
-                logger.error('Error trying to close connection to server %s:%s: %s', self.host, self.port, e)
+                logger.error('Error trying to close connection to server %s:%s: %s',
+                             self.host, self.port, e)
                 if self.fail_silently:
                     return
                 raise
@@ -330,7 +333,8 @@ class EmailMessage(object):
                 mimetype = DEFAULT_ATTACHMENT_MIME_TYPE
         basetype, subtype = mimetype.split('/', 1)
         if basetype == 'text':
-            attachment = SafeMIMEText(smart_bytes(content, DEFAULT_CHARSET), subtype, DEFAULT_CHARSET)
+            attachment = SafeMIMEText(smart_bytes(content, DEFAULT_CHARSET),
+                                      subtype, DEFAULT_CHARSET)
         else:
             # Encode non-text attachments with base64.
             attachment = MIMEBase(basetype, subtype)
@@ -375,8 +379,9 @@ def send_mail(subject, sender, to, message, html_message=None, cc=None, bcc=None
         email = EmailMessage(subject=subject, body=message, sender=sender, to=to, cc=cc, bcc=bcc,
                              attachments=attachments, connection=connection)
     else:
-        email = EmailMultiAlternatives(subject=subject, body=message, sender=sender, to=to, cc=cc, bcc=bcc,
-                                       attachments=attachments, connection=connection)
+        email = EmailMultiAlternatives(subject=subject, body=message, sender=sender,
+                                       to=to, cc=cc, bcc=bcc, attachments=attachments,
+                                       connection=connection)
         email.attach_alternative(html_message, 'text/html')
     return email.send()
 
@@ -390,6 +395,8 @@ def send_mass_mail(datatuple, fail_silently=False, auth_user=None, auth_password
     Note: The API for this method is frozen. New code wanting to extend the
     functionality should use the EmailMessage class directly.
     '''
-    connection = SMTPConnection(username=auth_user, password=auth_password, fail_silently=fail_silently)
-    messages = [EmailMessage(subject, message, sender, recipient) for subject, message, sender, recipient in datatuple]
+    connection = SMTPConnection(username=auth_user, password=auth_password,
+                                fail_silently=fail_silently)
+    messages = [EmailMessage(subject, message, sender, recipient)
+                for subject, message, sender, recipient in datatuple]
     return connection.send_messages(messages)
