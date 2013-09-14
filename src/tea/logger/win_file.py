@@ -32,8 +32,9 @@ class WindowsFile(object):
         dwFlagsAndAttributes = win32con.FILE_FLAG_WRITE_THROUGH
 
         self.encoding = encoding or 'utf-8'
-        self.handle = win32file.CreateFile(filename, desiredAccess, shareMode, attributes, creationDisposition,
-                                      dwFlagsAndAttributes, 0)
+        self.handle = win32file.CreateFile(filename, desiredAccess, shareMode,
+                                           attributes, creationDisposition,
+                                           dwFlagsAndAttributes, 0)
         win32api.SetHandleInformation(self.handle, win32con.HANDLE_FLAG_INHERIT, 0)
         if mode in ('a', 'a+'):
             self.seek(0, 2)

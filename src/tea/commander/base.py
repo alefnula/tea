@@ -92,7 +92,8 @@ class BaseCommand(object):
         '''Create and return the ``OptionParser`` which will be used to
         parse the arguments to this command.
         '''
-        parser = argparse.ArgumentParser(prog=os.path.basename(prog_name), usage=self.usage(subcommand))
+        parser = argparse.ArgumentParser(prog=os.path.basename(prog_name),
+                                         usage=self.usage(subcommand))
         for name, conf in self.option_list:
             add_option(parser, name, conf)
         return parser

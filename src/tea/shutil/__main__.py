@@ -22,7 +22,8 @@ commands = {
 
 
 def print_help():
-    print('Usage: python -m tea.shutil [command] [params]\nCommands: %s' % ', '.join(commands.keys()))
+    print('Usage: python -m tea.shutil [command] [params]\nCommands: %s' %
+          ', '.join(commands.keys()))
     return 1
 
 

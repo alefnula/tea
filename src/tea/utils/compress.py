@@ -30,7 +30,8 @@ def _extract_file(archive, destination, filename):
                 break
         return True
     except:
-        logger.exception('Error while unzipping filename %s from archive %s' % (filename, archive.filename))
+        logger.exception('Error while unzipping filename %s from archive %s' %
+                         (filename, archive.filename))
         return False
 
 

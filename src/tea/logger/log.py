@@ -24,9 +24,9 @@ logging.basicConfig(stream=sys.stderr, format=FMT_SHORT,
 
 
 def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
-                     fmt=FMT, stdout_fmt=FMT_STDOUT, level=logging.DEBUG,
-                     stdout_level=logging.WARNING, initial_file_message='',
-                     max_size=1048576, rotations_number=5, remove_handlers=True):
+                      fmt=FMT, stdout_fmt=FMT_STDOUT, level=logging.DEBUG,
+                      stdout_level=logging.WARNING, initial_file_message='',
+                      max_size=1048576, rotations_number=5, remove_handlers=True):
     '''Configure logging module
 
     :param str filename: Specifies a filename to log to.

@@ -27,7 +27,8 @@ class Application(object):
     A ManagementUtility has a number of commands, which can be manipulated
     by editing the self.commands dictionary.
     '''
-    def __init__(self, argv, command_modules, preparser=None, app_config=None, config=None, ui=None):
+    def __init__(self, argv, command_modules, preparser=None,
+                 app_config=None, config=None, ui=None):
         '''commands: python module path to commands module'''
         self.argv = argv
         self.prog_name = os.path.basename(argv[0])
@@ -98,7 +99,8 @@ class Application(object):
                 },
             }
             # Add additional commands if available
-            command_modules = set(self._command_modules[:] + config.get('options.commands', []) + config.get('commands', []))
+            command_modules = set(self._command_modules[:] + config.get('options.commands', []) +
+                                  config.get('commands', []))
             for module in command_modules:
                 package = get_object(module)
                 for loader, module_name, is_pkg in pkgutil.walk_packages(package.__path__):  # @UnusedVariable
@@ -140,8 +142,8 @@ class Application(object):
         try:
             command = self.get_commands(config)[subcommand]
         except KeyError:
-            sys.stderr.write("Unknown command: %r\nType '%s help' for usage.\n" % \
-                (subcommand, self.prog_name))
+            sys.stderr.write("Unknown command: %r\nType '%s help' for usage.\n" %
+                             (subcommand, self.prog_name))
             sys.exit(1)
         return command['klass']
 
@@ -157,7 +159,8 @@ class Application(object):
 
         # First search in aliases
         if subcommand in config.get('alias', {}):
-            args = [args[0]] + shutil.split(config.get('alias.%s' % subcommand).encode('utf-8')) + args[2:]
+            alias = shutil.split(config.get('alias.%s' % subcommand).encode('utf-8'))
+            args = [args[0]] + alias + args[2:]
             subcommand = args[1]
 
         if subcommand == 'help':

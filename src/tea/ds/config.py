@@ -98,7 +98,8 @@ class Config(object):
                 logger.error('Unsupported configuration format: %s', self.format)
                 return {}
         except Exception as e:
-            logger.error('Failed to load file "%s" in format "%s". %s', self.filename, self.format, e)
+            logger.error('Failed to load file "%s" in format "%s". %s',
+                         self.filename, self.format, e)
             return {}
 
     def _read_string(self, data):
@@ -239,7 +240,8 @@ class Config(object):
             self.save()
 
     def __repr__(self):
-        return 'Config(filename="%(filename)s", format="%(format)s", encoding="%(encoding)s", autosave=%(autosave)s)' % self.__dict__
+        return ('Config(filename="%(filename)s", format="%(format)s", '
+                'encoding="%(encoding)s", autosave=%(autosave)s)') % self.__dict__
 
 
 class MultiConfig(object):
@@ -253,7 +255,8 @@ class MultiConfig(object):
         self.attach(filename, data, fmt, encoding, autosave)
 
     @locked
-    def attach(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True, index=None):
+    def attach(self, filename=None, data=None, fmt=None, encoding='utf-8',
+               autosave=True, index=None):
         config = Config(filename, data, fmt, encoding, autosave)
         if index is None:
             self.__configs.insert(0, config)

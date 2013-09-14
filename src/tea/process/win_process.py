@@ -31,8 +31,8 @@ def create_file(filename, mode='rw'):
     creationDisposition = win32con.OPEN_ALWAYS
     flagsAndAttributes = win32con.FILE_ATTRIBUTE_NORMAL
 
-    handle = win32file.CreateFile(filename, desiredAccess, shareMode, attributes, creationDisposition,
-                                  flagsAndAttributes, 0)
+    handle = win32file.CreateFile(filename, desiredAccess, shareMode, attributes,
+                                  creationDisposition, flagsAndAttributes, 0)
     return handle
 
 

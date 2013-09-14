@@ -20,7 +20,7 @@ def get_object(path='', obj=None):
         path = path[1:]
     for item in path:
         if item != '':
-            if type(obj) == types.ModuleType:
+            if isinstance(obj, types.ModuleType):
                 try:
                     __import__('%s.%s' % (obj.__name__, item))
                 except:
