@@ -2,18 +2,16 @@ __author__    = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__      = '20 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
+import os
 from tea.system import platform
 
 if platform.is_a(platform.WINDOWS | platform.DOTNET):
-    import os
-    import ctypes
+    import msvcrt
 
     def _clear_screen(numlines):
         os.system('cls')
 
-    def _getch():
-        msvcrt = ctypes.cdll.msvcrt
-        return chr(msvcrt._getch())
+    _getch = msvcrt.getch
 
 elif platform.is_a(platform.POSIX):
     import sys
