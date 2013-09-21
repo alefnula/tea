@@ -4,27 +4,44 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import sys
 import types
+import importlib
 import traceback
 
 
 def get_object(path='', obj=None):
+    '''Returns an object from a dot path.
+
+    Path can either be a full path, in which case the `get_object`
+    function will try to import the module and follow the path. Or
+    it can be a path relative to the object passed in as the second
+    argument.
+
+    Example for full paths::
+
+        >>> get_object('os.path.join')
+        <function join at 0x1002d9ed8>
+        >>> get_object('tea.process')
+        <module 'tea.process' from 'tea/process/__init__.pyc'>
+
+    Example for relative paths when an object is passed in::
+
+        >>> import os
+        >>> get_object('path.join', os)
+        <function join at 0x1002d9ed8>
+    '''
     if not path:
         return obj
-    if path.startswith('.'):
-        if not obj:
-            raise TypeError('relative imports require the "obj" argument')
     path = path.split('.')
     if obj is None:
-        __import__(path[0])
-        obj = sys.modules[path[0]]
+        obj = importlib.import_module(path[0])
         path = path[1:]
     for item in path:
-        if item != '':
-            if isinstance(obj, types.ModuleType):
-                try:
-                    __import__('%s.%s' % (obj.__name__, item))
-                except:
-                    pass
+        if isinstance(obj, types.ModuleType):
+            try:
+                obj = importlib.import_module('%s.%s' % (obj.__name__, item))
+            except ImportError:
+                obj = getattr(obj, item)
+        else:
             obj = getattr(obj, item)
     return obj
 
