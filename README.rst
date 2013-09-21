@@ -1,6 +1,9 @@
 tea
 ===
 
+.. image:: https://travis-ci.org/alefnula/tea.png
+  :target: https://travis-ci.org/alefnula/tea
+
 ``tea`` is a set of cross-platform (Windows, POSIX, Mac OSX),
 cross-interpreter (CPython 2.7, CPython 3.3, IronPython) libraries developed
 for common tasks like executing and manipulating processes, sending emails,
