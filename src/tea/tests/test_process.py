@@ -5,16 +5,22 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 import sys
 import time
 import unittest
+from tea.utils import six
 from tea.process import Process, execute, execute_and_report
 
 
 class TestProcess(unittest.TestCase):
     def setUp(self):
         self.command = 'sleep'
-        self.timeout = '2'
+        self.args = ['2']
+        self.timeout = 2
+        if six.PY3:
+            self.input = 'input'
+        else:
+            self.input = 'raw_input'
 
     def test_start(self):
-        p = Process(self.command, [self.timeout])
+        p = Process(self.command, self.args)
         self.assertFalse(p.is_running)
         p.start()
         self.assertTrue(p.is_running)
@@ -22,7 +28,7 @@ class TestProcess(unittest.TestCase):
         self.assertFalse(p.is_running)
 
     def test_kill(self):
-        p = Process(self.command, [self.timeout])
+        p = Process(self.command, self.args)
         self.assertFalse(p.is_running)
         start = time.time()
         p.start()
@@ -33,32 +39,33 @@ class TestProcess(unittest.TestCase):
         self.assertTrue(end - start < self.timeout)
 
     def test_write(self):
-        p = Process(sys.executable, ['-c', '''a = raw_input(); print('Said: ' + a)'''])
+        p = Process(sys.executable,
+                    ['-c', '''a = %s(); print('Said: ' + a)''' % self.input])
         p.start()
-        p.write('my hello text')
+        p.write(b'my hello text')
         p.wait()
-        self.assertRegexpMatches(p.read(), '^Said: my hello text\s+$')
-        self.assertRegexpMatches(p.eread(), '^$')
+        self.assertRegexpMatches(p.read().decode('ascii'), '^Said: my hello text\s+$')
+        self.assertRegexpMatches(p.eread().decode('ascii'), '^$')
 
     def test_read(self):
         p = Process(sys.executable, ['-c', '''import sys, time; sys.stdout.write('foo'); sys.stdout.flush(); time.sleep(2); sys.stdout.write('bar')'''])
         p.start()
         time.sleep(1)
-        self.assertEqual(p.read(), 'foo')
-        self.assertEqual(p.eread(), '')
+        self.assertEqual(p.read(), b'foo')
+        self.assertEqual(p.eread(), b'')
         p.wait()
-        self.assertEqual(p.read(), 'bar')
-        self.assertEqual(p.eread(), '')
+        self.assertEqual(p.read(), b'bar')
+        self.assertEqual(p.eread(), b'')
 
     def test_eread(self):
         p = Process(sys.executable, ['-c', '''import sys, time; sys.stderr.write('foo'); sys.stderr.flush(); time.sleep(2); sys.stderr.write('bar')'''])
         p.start()
         time.sleep(1)
-        self.assertEqual(p.read(), '')
-        self.assertEqual(p.eread(), 'foo')
+        self.assertEqual(p.read(), b'')
+        self.assertEqual(p.eread(), b'foo')
         p.wait()
-        self.assertEqual(p.read(), '')
-        self.assertEqual(p.eread(), 'bar')
+        self.assertEqual(p.read(), b'')
+        self.assertEqual(p.eread(), b'bar')
 
     def test_environment(self):
         env = {'MY_VAR': 'My value'}
@@ -66,22 +73,22 @@ class TestProcess(unittest.TestCase):
         p.start()
         p.wait()
         self.assertEqual(p.exit_code, 0)
-        self.assertRegexpMatches(p.read(), '^My value\s+$')
-        self.assertRegexpMatches(p.eread(), '^$')
+        self.assertRegexpMatches(p.read(), b'^My value\s+$')
+        self.assertRegexpMatches(p.eread(), b'^$')
 
 
 class TestWrapper(unittest.TestCase):
     def test_execute_with_error(self):
         status, output, error = execute(sys.executable, '-c', 'import sys; sys.exit(2)')
         self.assertEqual(status, 2)
-        self.assertRegexpMatches(output, '^$')
-        self.assertRegexpMatches(error, '^$')
+        self.assertRegexpMatches(output.decode('ascii'), '^$')
+        self.assertRegexpMatches(error.decode('ascii'), '^$')
 
     def test_execute_with_success(self):
         status, output, error = execute('echo', 'Hello world')
         self.assertEqual(status, 0)
-        self.assertRegexpMatches(output, '^Hello world\s+$')
-        self.assertRegexpMatches(error, '^$')
+        self.assertRegexpMatches(output.decode('ascii'), '^Hello world\s+$')
+        self.assertRegexpMatches(error.decode('ascii'), '^$')
 
     def test_execute_and_report(self):
         self.assertTrue(execute_and_report(sys.executable, '-c', 'import sys; sys.exit(0)'))

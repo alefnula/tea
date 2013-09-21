@@ -16,16 +16,25 @@ import random
 import smtplib
 import logging
 import mimetypes
-from email.Header import Header
-from email import Charset, Encoders
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.MIMEMultipart import MIMEMultipart
-from email.Utils import formatdate, parseaddr, formataddr
 from tea.utils import six
 from tea.utils.html import strip_tags
 from tea.utils.encoding import smart_text, smart_bytes
-
+if six.PY3:
+    from email.header import Header  # @UnusedImport
+    from email import charset as Charset  # @UnusedImport
+    from email.encoders import encode_base64  # @UnusedImport
+    from email.mime.text import MIMEText  # @UnusedImport
+    from email.mime.base import MIMEBase  # @UnusedImport
+    from email.mime.multipart import MIMEMultipart  # @UnusedImport
+    from email.utils import formatdate, parseaddr, formataddr  # @UnusedImport
+else:
+    from email.Header import Header  # @Reimport
+    from email import Charset  # @Reimport
+    from email.Encoders import encode_base64  # @Reimport @UnusedImport
+    from email.MIMEText import MIMEText  # @Reimport
+    from email.MIMEBase import MIMEBase  # @Reimport
+    from email.MIMEMultipart import MIMEMultipart  # @Reimport
+    from email.Utils import formatdate, parseaddr, formataddr  # @Reimport
 
 logger = logging.getLogger(__name__)
 
@@ -339,7 +348,7 @@ class EmailMessage(object):
             # Encode non-text attachments with base64.
             attachment = MIMEBase(basetype, subtype)
             attachment.set_payload(content)
-            Encoders.encode_base64(attachment)
+            encode_base64(attachment)
         if filename:
             attachment.add_header('Content-Disposition', 'attachment', filename=filename)
         return attachment

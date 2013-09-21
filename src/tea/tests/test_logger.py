@@ -17,7 +17,7 @@ class TestLogger(unittest.TestCase):
         self.output_filename = tempfile.mktemp()
         configure_logging(self.output_filename, level=logging.DEBUG)
         self.logger = logging.getLogger(__name__)
-        self.output_test_file = file(self.output_filename)
+        self.output_test_file = open(self.output_filename)
 
     def tearDown(self):
         self.output_test_file.close()
@@ -52,7 +52,12 @@ class TestLogger(unittest.TestCase):
         self.assert_(re.match(regexp, self.output_test_file.readline()))
 
     def test_exception(self):
-        self.logger.exception('Exception #08')
+        try:
+            raise Exception('Error')
+        except:
+            self.logger.exception('Exception #08')
         regexp = DATE + r'\s+ ERROR: Exception #08 \[[\w\.]+:\d{2,3}\]'
-        self.assert_(re.match(regexp, self.output_test_file.readline()))
-        self.assertEqual(self.output_test_file.readline(), 'None\n')
+        self.assert_(re.search(regexp, self.output_test_file.readline()))
+        traceback = self.output_test_file.read().strip()
+        self.assertTrue(traceback.startswith('Traceback (most recent call last):'))
+        self.assertTrue(traceback.endswith('Exception: Error'))

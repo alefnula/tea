@@ -102,8 +102,8 @@ class PosixProcess(Process):
 
     def write(self, string):
         if self._redirect_output:
-            if string[-1] != '\n':
-                string = string + '\n'
+            if string[-1] != b'\n':
+                string = string + b'\n'
             self._process.stdin.write(string)
             self._process.stdin.flush()
 
