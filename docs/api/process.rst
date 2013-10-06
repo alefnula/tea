@@ -2,10 +2,7 @@ tea.process
 ===========
 
 .. automodule:: tea.process
-    :members:
+    :members: execute, execute_and_report, get_processes, find, kill
 
-.. automodule:: tea.process.base
-    :members:
-
-.. automodule:: tea.process.wrapper
+.. autoclass:: tea.process.base.Process
     :members:

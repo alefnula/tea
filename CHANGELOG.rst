@@ -4,6 +4,8 @@ v0.0.5 (August XX, 2013)
   - Porting everything to work with Python 2.7 and Python 3.3
   - Adding ``six`` library to ``utils`` module
   - Adding ``docstring`` decorator
+  - Refactoring the ``process`` module. Removing duplicate functions and merging
+    all ``execute_`` functions to a single ``execute``.
 
 
 v0.0.4 (August 04, 2013)

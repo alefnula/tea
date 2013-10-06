@@ -4,6 +4,7 @@ dist
 build
 MANIFEST
 docs/_build
+.idea
 .settings
 .project
 .pydevproject

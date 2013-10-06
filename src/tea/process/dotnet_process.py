@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '01 January 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
@@ -7,18 +7,89 @@ import re
 import sys
 import time
 import threading
-from tea.process.base import Process
+from tea.process import base
+from tea.decorators import docstring
 
 import clr  # @UnresolvedImport
 clr.AddReference('System.Management')
-from System.Diagnostics import Process as CSharpProcess  # @UnresolvedImport
-from System.Management import ManagementObjectSearcher  # @UnresolvedImport
+from System.Diagnostics import Process as CSharpProcess
+from System.Management import ManagementObjectSearcher
 
 
-class DotnetProcess(Process):
-    def __init__(self, command, arguments=None, environment=None, redirect_output=True):
-        self._process  = CSharpProcess()
-        self._process.StartInfo.FileName, self._process.StartInfo.Arguments = self._get_cmd(command, [] if arguments is None else arguments)
+
+@docstring(base.doc_get_processes)
+def get_processes(sort_by_name=True, cmdline=False):
+    processes = []
+    if cmdline:
+        searcher = ManagementObjectSearcher(
+            'SELECT ProcessID, Caption, CommandLine FROM Win32_Process'
+        )
+        for process in searcher.Get():
+            processes.append((int(process['ProcessID']), process['Caption'],
+                              process['CommandLine'] or ''))
+    else:
+        searcher = ManagementObjectSearcher(
+            'SELECT ProcessID, Caption FROM Win32_Process'
+        )
+        for process in searcher.Get():
+            processes.append((int(process['ProcessID']), process['Caption']))
+    if sort_by_name:
+        return sorted(processes, lambda t1, t2: (cmp(t1[1], t2[1]) or
+                                                 cmp(t1[0], t2[0])))
+    else:
+        return sorted(processes, lambda t1, t2: (cmp(t1[0], t2[0]) or
+                                                 cmp(t1[1], t2[1])))
+
+
+@docstring(base.doc_find)
+def find(name, arg=None):
+    if arg is None:
+        for pid, process in get_processes():
+            if process.lower().find(name.lower()) != -1:
+                return pid, process
+    else:
+        for pid, process, cmdline in get_processes(cmdline=True):
+            if process.lower().find(name.lower()) != -1:
+                if (cmdline is not None and
+                        cmdline.lower().find(arg.lower()) != -1):
+                    return pid, process
+    return None
+
+
+@docstring(base.doc_kill)
+def kill(pid=None, process=None):
+    if process is not None:
+        process.kill()
+    else:
+        process = CSharpProcess.GetProcessById(pid)
+        process.Kill()
+
+
+def _get_cmd(command, arguments):
+    if command.endswith('.py'):
+        arguments = [command] + list(arguments)
+        command = os.path.join(sys.prefix, 'ipy.exe')
+    elif command.endswith('.pyw'):
+        arguments = [command] + list(arguments)
+        command = os.path.join(sys.prefix, 'ipyw.exe')
+    args = []
+    for argument in arguments:
+        if re.search(r'\s', argument):
+            args.append(r'"%s"' % argument)
+        else:
+            args.append(argument)
+    arguments = ' '.join(args)
+    return command, arguments
+
+
+class DotnetProcess(base.Process):
+    def __init__(self, command, arguments=None, environment=None,
+                 redirect_output=True):
+        self._process = CSharpProcess()
+        (self._process.StartInfo.FileName,
+         self._process.StartInfo.Arguments) = _get_cmd(command,
+                                                       [] if arguments is None
+                                                       else arguments)
         if environment is not None:
             process_env = self._process.StartInfo.EnvironmentVariables
             process_env.Clear()
@@ -27,32 +98,16 @@ class DotnetProcess(Process):
         self._redirect_output = redirect_output
         self._process.StartInfo.UseShellExecute = False
         self._process.StartInfo.CreateNoWindow = True
-        self._process.StartInfo.RedirectStandardInput  = redirect_output
+        self._process.StartInfo.RedirectStandardInput = redirect_output
         self._process.StartInfo.RedirectStandardOutput = redirect_output
-        self._process.StartInfo.RedirectStandardError  = redirect_output
+        self._process.StartInfo.RedirectStandardError = redirect_output
         self._process.OutputDataReceived += self._stdout_handler
-        self._process.ErrorDataReceived  += self._stderr_handler
+        self._process.ErrorDataReceived += self._stderr_handler
 
         self._stdout = ''
         self._stdout_lock = threading.Lock()
         self._stderr = ''
         self._stderr_lock = threading.Lock()
-
-    def _get_cmd(self, command, arguments):
-        if command.endswith('.py'):
-            arguments = [command] + list(arguments)
-            command = os.path.join(sys.prefix, 'ipy.exe')
-        elif command.endswith('.pyw'):
-            arguments = [command] + list(arguments)
-            command = os.path.join(sys.prefix, 'ipyw.exe')
-        args = []
-        for argument in arguments:
-            if re.search(r'\s', argument):
-                args.append(r'"%s"' % argument)
-            else:
-                args.append(argument)
-        arguments = ' '.join(args)
-        return command, arguments
 
     def _stdout_handler(self, sender, outline):
         data = outline.Data
@@ -118,40 +173,3 @@ class DotnetProcess(Process):
                 self._stderr = ''
                 return result
         return ''
-
-    @classmethod
-    def GetProcesses(cls, sort_by_name=True, cmdline=False):
-        processes = []
-        if cmdline:
-            searcher = ManagementObjectSearcher('select ProcessID, Caption, CommandLine from Win32_Process')
-            for process in searcher.Get():
-                processes.append((int(process['ProcessID']), process['Caption'], process['CommandLine'] or ''))
-        else:
-            searcher = ManagementObjectSearcher('select ProcessID, Caption from Win32_Process')
-            for process in searcher.Get():
-                processes.append((int(process['ProcessID']), process['Caption']))
-        if sort_by_name:
-            return sorted(processes, lambda t1, t2: cmp(t1[1], t2[1]) or cmp(t1[0], t2[0]))
-        else:
-            return sorted(processes, lambda t1, t2: cmp(t1[0], t2[0]) or cmp(t1[1], t2[1]))
-
-    @classmethod
-    def Find(cls, name, arg=None):
-        if arg is None:
-            for pid, process in cls.GetProcesses():
-                if process.lower().find(name.lower()) != -1:
-                    return process, pid
-        else:
-            for pid, process, cmdline in cls.GetProcesses(cmdline=True):
-                if process.lower().find(name.lower()) != -1:
-                    if cmdline is not None and cmdline.lower().find(arg.lower()) != -1:
-                        return process, pid
-        return None
-
-    @classmethod
-    def Kill(cls, pid=None, process=None):
-        if process is not None:
-            process.kill()
-        else:
-            process = CSharpProcess.GetProcessById(pid)
-            process.Kill()
