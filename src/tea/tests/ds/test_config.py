@@ -89,7 +89,7 @@ class TestConfigCreation(Checker):
 
     def test_data_yaml(self):
         if platform.is_a(platform.DOTNET):
-            self.skipTest('YAML not supported on .NET')
+            self.skipTest('YAML is not supported on .NET')
         self.c = Config(data=YAML_DATA, fmt=Config.YAML)
         self.safe_check_values()
 

@@ -3,6 +3,7 @@ __date__ = '25 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import unittest
+from tea.system import platform
 from tea.ds.config import MultiConfig, Config
 
 
@@ -39,6 +40,8 @@ class TestMultiConfig(unittest.TestCase):
         self.check_structure(c)
 
     def test_dict_yaml(self):
+        if platform.is_a(platform.DOTNET):
+            self.skipTest('YAML is not supported on .NET')
         c = MultiConfig(data=self.dict_first)
         c.attach(data=self.yaml_second, fmt=Config.YAML)
         self.check_structure(c)
@@ -54,21 +57,29 @@ class TestMultiConfig(unittest.TestCase):
         self.check_structure(c)
 
     def test_json_yaml(self):
+        if platform.is_a(platform.DOTNET):
+            self.skipTest('YAML is not supported on .NET')
         c = MultiConfig(data=self.json_first, fmt=Config.JSON)
         c.attach(data=self.yaml_second, fmt=Config.YAML)
         self.check_structure(c)
 
     def test_yaml_dict(self):
+        if platform.is_a(platform.DOTNET):
+            self.skipTest('YAML is not supported on .NET')
         c = MultiConfig(data=self.yaml_first, fmt=Config.YAML)
         c.attach(data=self.dict_second)
         self.check_structure(c)
 
     def test_yaml_json(self):
+        if platform.is_a(platform.DOTNET):
+            self.skipTest('YAML is not supported on .NET')
         c = MultiConfig(data=self.yaml_first, fmt=Config.YAML)
         c.attach(data=self.json_second, fmt=Config.JSON)
         self.check_structure(c)
 
     def test_yaml_yaml(self):
+        if platform.is_a(platform.DOTNET):
+            self.skipTest('YAML is not supported on .NET')
         c = MultiConfig(data=self.yaml_first, fmt=Config.YAML)
         c.attach(data=self.yaml_second, fmt=Config.YAML)
         self.check_structure(c)
