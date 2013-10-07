@@ -56,12 +56,11 @@ def find(name, arg=None):
 
 
 @docstring(base.doc_kill)
-def kill(pid=None, process=None):
-    if process is not None:
-        process.kill()
-    else:
-        process = CSharpProcess.GetProcessById(pid)
-        process.Kill()
+def kill(pid):
+    process = CSharpProcess.GetProcessById(pid)
+    process.Kill()
+    while not process.HasExited:
+        time.sleep(0.1)
 
 
 def _get_cmd(command, arguments):
@@ -91,11 +90,10 @@ class DotnetProcess(base.Process):
                                                        else arguments)
         if environment is not None:
             process_env = self._process.StartInfo.EnvironmentVariables
-            process_env.Clear()
             for key, value in environment.items():
-                process_env[str(key)] = str(value)
+                process_env[unicode(key)] = unicode(value)
         self._redirect_output = redirect_output
-        self._process.StartInfo.UseShellExecute = False
+        self._process.StartInfo.UseShellExecute = not redirect_output
         self._process.StartInfo.CreateNoWindow = True
         self._process.StartInfo.RedirectStandardInput = redirect_output
         self._process.StartInfo.RedirectStandardOutput = redirect_output
@@ -103,9 +101,10 @@ class DotnetProcess(base.Process):
         self._process.OutputDataReceived += self._stdout_handler
         self._process.ErrorDataReceived += self._stderr_handler
 
-        self._stdout = ''
+        self._started = False
+        self._stdout = b''
         self._stdout_lock = threading.Lock()
-        self._stderr = ''
+        self._stderr = b''
         self._stderr_lock = threading.Lock()
 
     def _stdout_handler(self, sender, outline):
@@ -127,29 +126,34 @@ class DotnetProcess(base.Process):
         if self._redirect_output:
             self._process.BeginOutputReadLine()
             self._process.BeginErrorReadLine()
+        self._started = True
 
     def kill(self):
-        self._process.Kill()
+        if self._started:
+            self._process.Kill()
+        self.wait()
 
     def wait(self, timeout=None):
-        if timeout is not None:
-            return self._process.WaitForExit(timeout)
-        else:
-            while self.is_running:
-                time.sleep(1)
-            return True
+        if self._started:
+            if timeout is not None:
+                return self._process.WaitForExit(timeout)
+            else:
+                while self.is_running:
+                    time.sleep(1)
+                return True
+        return False
 
     @property
     def is_running(self):
-        return not self._process.HasExited
+        return not self._process.HasExited if self._started else False
 
     @property
     def pid(self):
-        return self._process.Id
+        return self._process.Id if self._started else 0
 
     @property
     def exit_code(self):
-        if self._process.HasExited:
+        if self._started and self._process.HasExited:
             return self._process.ExitCode
         return None
 
@@ -161,14 +165,14 @@ class DotnetProcess(base.Process):
         if self._redirect_output:
             with self._stdout_lock:
                 result = self._stdout
-                self._stdout = ''
+                self._stdout = b''
                 return result
-        return ''
+        return b''
 
     def eread(self):
         if self._redirect_output:
             with self._stderr_lock:
                 result = self._stderr
-                self._stderr = ''
+                self._stderr = b''
                 return result
-        return ''
+        return b''

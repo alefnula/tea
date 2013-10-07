@@ -72,7 +72,7 @@ def find(name, arg=None):
 
 
 @docstring(base.doc_kill)
-def kill(pid=None):
+def kill(pid):
     if pid == posix.getpgid(pid):
         os.killpg(pid, signal.SIGKILL)
     else:

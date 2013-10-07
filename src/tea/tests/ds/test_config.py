@@ -3,7 +3,9 @@ __date__ = '25 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import unittest
+from tea.system import platform
 from tea.ds.config import Config
+
 
 DICT_DATA = {
     'foo': {
@@ -86,6 +88,8 @@ class TestConfigCreation(Checker):
         self.safe_check_values()
 
     def test_data_yaml(self):
+        if platform.is_a(platform.DOTNET):
+            self.skipTest('YAML not supported on .NET')
         self.c = Config(data=YAML_DATA, fmt=Config.YAML)
         self.safe_check_values()
 

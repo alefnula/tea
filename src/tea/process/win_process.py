@@ -50,9 +50,7 @@ def find(name, arg=None):
 
 
 @docstring(base.doc_kill)
-def kill(pid=None, process=None):
-    if process is not None:
-        pid = process.pid
+def kill(pid):
     process = WinProcess(
         os.path.join(os.environ['windir'], 'system32', 'taskkill.exe'),
         ['/PID', str(pid), '/F', '/T']
@@ -149,8 +147,7 @@ class WinProcess(base.Process):
             self._startupinfo.hStdOutput = self._stdout_handle
             self._startupinfo.hStdError = self._stderr_handle
             self._startupinfo.dwFlags |= win32process.STARTF_USESTDHANDLES
-        (
-            self._hProcess, self._hThread, self._dwProcessId. self._dwThreadId
+        (self._hProcess, self._hThread, self._dwProcessId, self._dwThreadId
         ) = win32process.CreateProcess(
             self._appName, self._commandline, self._processAttributes,
             self._threadAttributes, self._bInheritHandles,
@@ -159,7 +156,7 @@ class WinProcess(base.Process):
         )
 
     def kill(self):
-        return self.Kill(self.pid)
+        return kill(self.pid)
 
     def wait(self, timeout=None):
         if timeout is None:

@@ -6,6 +6,7 @@ import sys
 import time
 import unittest
 from tea.utils import six
+from tea.system import platform
 from tea.process import Process, execute, execute_and_report
 
 
@@ -45,7 +46,7 @@ class TestProcess(unittest.TestCase):
         p.write(b'my hello text')
         p.wait()
         self.assertRegexpMatches(p.read().decode('ascii'),
-                                 '^Said: my hello text\s+$')
+                                 '^Said: my hello text\s*$')
         self.assertRegexpMatches(p.eread().decode('ascii'), '^$')
 
     def test_read(self):
@@ -56,12 +57,18 @@ time.sleep(2)
 sys.stdout.write('bar')
 '''])
         p.start()
-        time.sleep(1)
-        self.assertEqual(p.read(), b'foo')
-        self.assertEqual(p.eread(), b'')
-        p.wait()
-        self.assertEqual(p.read(), b'bar')
-        self.assertEqual(p.eread(), b'')
+        if platform.is_a(platform.DOTNET):
+            # TODO: .NET does not flush the outputs
+            p.wait()
+            self.assertEqual(p.read(), b'foobar')
+            self.assertEqual(p.eread(), b'')
+        else:
+            time.sleep(1)
+            self.assertEqual(p.read(), b'foo')
+            self.assertEqual(p.eread(), b'')
+            p.wait()
+            self.assertEqual(p.read(), b'bar')
+            self.assertEqual(p.eread(), b'')
 
     def test_eread(self):
         p = Process(sys.executable, ['-c', '''import sys, time
@@ -71,12 +78,18 @@ time.sleep(2)
 sys.stderr.write('bar')
 '''])
         p.start()
-        time.sleep(1)
-        self.assertEqual(p.read(), b'')
-        self.assertEqual(p.eread(), b'foo')
-        p.wait()
-        self.assertEqual(p.read(), b'')
-        self.assertEqual(p.eread(), b'bar')
+        if platform.is_a(platform.DOTNET):
+            # TODO: .NET does not flush the outputs
+            p.wait()
+            self.assertEqual(p.read(), b'')
+            self.assertEqual(p.eread(), b'foobar')
+        else:
+            time.sleep(1)
+            self.assertEqual(p.read(), b'')
+            self.assertEqual(p.eread(), b'foo')
+            p.wait()
+            self.assertEqual(p.read(), b'')
+            self.assertEqual(p.eread(), b'bar')
 
     def test_environment(self):
         env = {'MY_VAR': 'My value'}
@@ -86,8 +99,8 @@ print(os.environ.get('MY_VAR', ''))
         p.start()
         p.wait()
         self.assertEqual(p.exit_code, 0)
-        self.assertRegexpMatches(p.read(), b'^My value\s+$')
-        self.assertRegexpMatches(p.eread(), b'^$')
+        self.assertRegexpMatches(p.read().decode('ascii'), '^My value\s*$')
+        self.assertRegexpMatches(p.eread().decode('ascii'), '^$')
 
 
 class TestWrapper(unittest.TestCase):
@@ -101,7 +114,7 @@ class TestWrapper(unittest.TestCase):
     def test_execute_with_success(self):
         status, output, error = execute('echo', 'Hello world')
         self.assertEqual(status, 0)
-        self.assertRegexpMatches(output.decode('ascii'), '^Hello world\s+$')
+        self.assertRegexpMatches(output.decode('ascii'), '^Hello world\s*$')
         self.assertRegexpMatches(error.decode('ascii'), '^$')
 
     def test_execute_and_report(self):
