@@ -33,10 +33,14 @@ def execute(command, *args, **kwargs):
 
     Example::
 
-        >>> code = 'import sys;sys.stdout.write('out');sys.stderr.write('err');sys.exit(1)'
-        >>> status, output, error = execute('python', '-c', code)
-        >>> print('status: %s, output: %s, error: %s' % (status, output, error))
-        status: 1, output: out, error: err
+        >>> code = 'import sys;sys.stdout.write('out');sys.exit(0)'
+        >>> status, out, err = execute('python', '-c', code)
+        >>> print('status: %s, output: %s, error: %s' % (status, out, err))
+        status: 0, output: out, error:
+        >>> code = 'import sys;sys.stderr.write('out');sys.exit(1)'
+        >>> status, out, err = execute('python', '-c', code)
+        >>> print('status: %s, output: %s, error: %s' % (status, out, err))
+        status: 1, output: , error: err
     """
     environment = kwargs.pop('environment', None)
     if environment is not None:

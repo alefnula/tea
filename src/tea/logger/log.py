@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
@@ -14,10 +14,11 @@ else:
     from logging.handlers import RotatingFileHandler  # @Reimport
 
 # Constants
-FMT        = '%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'
-FMT_SHORT  = '%(asctime)s %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'
+FMT = ('%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s '
+       '[%(name)s:%(lineno)d]')
+FMT_SHORT = '%(asctime)s %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'
 FMT_STDOUT = '%(levelname)-11s - %(message)s [%(name)s:%(lineno)d]'
-FMT_DATE   = '%Y.%m.%d %H:%M:%S'
+FMT_DATE = '%Y.%m.%d %H:%M:%S'
 
 logging.basicConfig(stream=sys.stderr, format=FMT_SHORT,
                     datefmt=FMT_DATE, level=logging.DEBUG)
@@ -26,8 +27,9 @@ logging.basicConfig(stream=sys.stderr, format=FMT_SHORT,
 def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
                       fmt=FMT, stdout_fmt=FMT_STDOUT, level=logging.DEBUG,
                       stdout_level=logging.WARNING, initial_file_message='',
-                      max_size=1048576, rotations_number=5, remove_handlers=True):
-    '''Configure logging module
+                      max_size=1048576, rotations_number=5,
+                      remove_handlers=True):
+    """Configure logging module.
 
     :param str filename: Specifies a filename to log to.
     :param str filemode: Specifies the mode to open the log file. Values:
@@ -48,7 +50,7 @@ def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
     :param int rotations_number: Number of rotations to save
     :param bool remove_handlers: Remove all existing handlers
     :rtype: None
-    '''
+    """
     logger = logging.getLogger()
     logger.level = logging.NOTSET
     # Remove all handlers
@@ -59,12 +61,12 @@ def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
             logger.removeHandler(hdlr)
     # Create stdout handler
     if stdout_level is not None:
-        stdoutHandler = logging.StreamHandler(sys.stdout)
-        stdoutHandler.setLevel(stdout_level)
-        stdoutFormatter = logging.Formatter(stdout_fmt, datefmt)
+        stdout_handler = logging.StreamHandler(sys.stdout)
+        stdout_handler.setLevel(stdout_level)
+        stdout_formatter = logging.Formatter(stdout_fmt, datefmt)
         #stdoutFormatter.converter = time.gmtime
-        stdoutHandler.setFormatter(stdoutFormatter)
-        logger.addHandler(stdoutHandler)
+        stdout_handler.setFormatter(stdout_formatter)
+        logger.addHandler(stdout_handler)
     # Create file handler if filename is provided
     if filename is not None:
         # Check if filename directory exists and creates it if it doesn't
@@ -72,12 +74,13 @@ def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
         if not os.path.isdir(directory):
             os.makedirs(directory)
         # Create file handler
-        fileHandler = RotatingFileHandler(filename, filemode, max_size, rotations_number)
-        fileHandler.setLevel(level)
-        fileFormatter = logging.Formatter(fmt, datefmt)
-        fileFormatter.converter = time.gmtime
-        fileHandler.setFormatter(fileFormatter)
-        logger.addHandler(fileHandler)
+        file_handler = RotatingFileHandler(filename, filemode, max_size,
+                                           rotations_number)
+        file_handler.setLevel(level)
+        file_formatter = logging.Formatter(fmt, datefmt)
+        file_formatter.converter = time.gmtime
+        file_handler.setFormatter(file_formatter)
+        logger.addHandler(file_handler)
         if initial_file_message:
             message = ' %s ' % initial_file_message
-            fileHandler.stream.write('\n' + message.center(100, '=') + '\n\n')
+            file_handler.stream.write('\n' + message.center(100, '=') + '\n\n')

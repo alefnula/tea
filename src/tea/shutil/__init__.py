@@ -1,12 +1,11 @@
-'''
-This module mimics the behavior of the builtin :mod:`shutil` module from the
+"""This module mimics the behavior of the builtin :mod:`shutil` module from the
 standard python library, adding logging to all operations.
 
 Also, it adds a few useful additional functions to the module.
-'''
+"""
 
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
@@ -21,19 +20,20 @@ logger = logging.getLogger(__name__)
 
 
 def split(s, posix=True):
-    '''Split the string s using shell-like syntax'''
+    """Split the string s using shell-like syntax"""
     if isinstance(s, six.binary_type):
         s = s.decode('utf-8')
     return shlex.split(s, posix=posix)
 
 
 def search(path, matcher='*', dirs=False, files=True):
-    '''Recursive search function.
+    """Recursive search function.
 
     :param path: path to search recursively
-    :param matcher: string pattern to search for or function that returns True/False for a file argument
+    :param matcher: string pattern to search for or function that returns
+        True/False for a file argument
     :param dirs: if True returns also directories that match the pattern
-    '''
+    """
     if callable(matcher):
         fnmatcher = lambda items: list(filter(matcher, items))
     else:
@@ -49,12 +49,13 @@ def search(path, matcher='*', dirs=False, files=True):
 
 
 def chdir(directory):
-    '''Change the current working directory'''
+    """Change the current working directory"""
     directory = os.path.abspath(directory)
     logger.info('chdir -> %s' % directory)
     try:
         if not os.path.isdir(directory):
-            logger.error('chdir -> %s failed! Directory does not exist!' % directory)
+            logger.error('chdir -> %s failed! Directory does not exist!',
+                         directory)
             return False
         os.chdir(directory)
         return True
@@ -64,7 +65,7 @@ def chdir(directory):
 
 
 class goto(object):
-    '''Context object for changing directory.
+    """Context object for changing directory.
 
     Usage::
 
@@ -73,21 +74,24 @@ class goto(object):
         ...         print 'Error'
         ...     else:
         ...         print 'All OK'
-    '''
+    """
     def __init__(self, directory, create=False):
-        self.current   = os.getcwd()
+        self.current = os.getcwd()
         self.directory = os.path.abspath(directory)
-        self.create    = create
+        self.create = create
 
     def __enter__(self):
         if not os.path.isdir(self.directory):
             if self.create:
-                logger.info('goto(%s) Directory does not exist, creating.' % self.directory)
+                logger.info('goto(%s) Directory does not exist, creating.',
+                            self.directory)
                 if not mkdir(self.directory):
-                    logger.error('goto(%s) Could not create directory.' % self.directory)
+                    logger.error('goto(%s) Could not create directory.',
+                                 self.directory)
                     return False
             else:
-                logger.error('goto(%s) failed! Directory does not exist!' % self.directory)
+                logger.error('goto(%s) failed! Directory does not exist!',
+                             self.directory)
                 return False
         logger.info('goto -> %s' % self.directory)
         os.chdir(self.directory)
@@ -99,7 +103,7 @@ class goto(object):
 
 
 def mkdir(path, mode=0o777, delete=False):
-    '''mkdir(path [, mode=0777])
+    """mkdir(path [, mode=0777])
 
     Create a leaf directory and all intermediate ones.
     Works like mkdir, except that any intermediate path segment (not
@@ -111,7 +115,7 @@ def mkdir(path, mode=0o777, delete=False):
     :param bool delete: delete directory/file if exists
     :rtype: :obj:`bool`
     :return: True if succeeded else False
-    '''
+    """
     logger.info('mkdir: %s' % path)
     if os.path.isdir(path):
         if not delete:
@@ -134,7 +138,7 @@ def __create_destdir(destination):
 
 
 def copyfile(source, destination):
-    '''Copy data and mode bits ("cp source destination").
+    """Copy data and mode bits ("cp source destination").
 
     The destination may be a directory.
 
@@ -142,19 +146,20 @@ def copyfile(source, destination):
     :param str destination: Destination file or directory (where to copy).
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
-    '''
+    """
     logger.info('copyfile: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copy(source, destination)
         return True
     except Exception as e:
-        logger.error('copyfile: %s -> %s failed! Error: %s' % (source, destination, e))
+        logger.error('copyfile: %s -> %s failed! Error: %s',
+                     source, destination, e)
         return False
 
 
 def copyfile2(source, destination):
-    '''Copy data and all stat info ("cp -p source destination").
+    """Copy data and all stat info ("cp -p source destination").
 
     The destination may be a directory.
 
@@ -162,19 +167,20 @@ def copyfile2(source, destination):
     :param str destination: Destination file or directory (where to copy).
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
-    '''
+    """
     logger.info('copyfile2: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copy2(source, destination)
         return True
     except Exception as e:
-        logger.error('copyfile2: %s -> %s failed! Error: %s' % (source, destination, e))
+        logger.error('copyfile2: %s -> %s failed! Error: %s',
+                     source, destination, e)
         return False
 
 
 def copytree(source, destination, symlinks=False):
-    '''Recursively copy a directory tree using copy2().
+    """Recursively copy a directory tree using copy2().
 
     The destination directory must not already exist.
 
@@ -188,19 +194,20 @@ def copytree(source, destination, symlinks=False):
     :param bool symlinks: Follow symbolic links.
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
-    '''
+    """
     logger.info('copytree: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copytree(source, destination, symlinks)
         return True
     except Exception as e:
-        logger.exception('copytree: %s -> %s failed! Error: %s' % (source, destination, e))
+        logger.exception('copytree: %s -> %s failed! Error: %s',
+                         source, destination, e)
         return False
 
 
 def copy(source, destination):
-    '''Copy file or directory'''
+    """Copy file or directory"""
     if os.path.isdir(source):
         return copytree(source, destination)
     else:
@@ -208,7 +215,7 @@ def copy(source, destination):
 
 
 def gcopy(pattern, destination):
-    '''Copy all file found by glob.glob(pattern) to destination directory'''
+    """Copy all file found by glob.glob(pattern) to destination directory"""
     for item in glob.glob(pattern):
         if not copy(item, destination):
             return False
@@ -216,7 +223,7 @@ def gcopy(pattern, destination):
 
 
 def move(source, destination):
-    '''Recursively move a file or directory to another location.
+    """Recursively move a file or directory to another location.
 
     If the destination is on our current file system, then simply use
     rename. Otherwise, copy source to the destination and then remove
@@ -226,7 +233,7 @@ def move(source, destination):
     :param str destination: Destination file or directory (where to move).
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
-    '''
+    """
     logger.info('Move: %s -> %s' % (source, destination))
     try:
         __create_destdir(destination)
@@ -238,7 +245,7 @@ def move(source, destination):
 
 
 def gmove(pattern, destination):
-    '''Move all file found by glob.glob(pattern) to destination directory'''
+    """Move all file found by glob.glob(pattern) to destination directory"""
     for item in glob.glob(pattern):
         if not move(item, destination):
             return False
@@ -246,12 +253,12 @@ def gmove(pattern, destination):
 
 
 def rmfile(path):
-    '''Delete a file
+    """Delete a file
 
     :param str path: Path to the file that needs to be deleted.
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
-    '''
+    """
     logger.info('rmfile: %s' % path)
     try:
         os.remove(path)
@@ -262,12 +269,12 @@ def rmfile(path):
 
 
 def rmtree(path):
-    '''Recursively delete a directory tree.
+    """Recursively delete a directory tree.
 
     :param str path: Path to the directory that needs to be deleted.
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
-    '''
+    """
     logger.info('rmtree: %s' % path)
     try:
         shutil.rmtree(path)
@@ -278,12 +285,12 @@ def rmtree(path):
 
 
 def remove(path):
-    '''Delete a file or directory
+    """Delete a file or directory
 
     :param str path: Path to the file or directory that needs to be deleted.
     :rtype: :obj:`bool`
     :return: True if the operation is successful, False otherwise.
-    '''
+    """
     if os.path.isdir(path):
         return rmtree(path)
     else:

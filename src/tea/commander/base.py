@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '18 January 2013'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '18 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
@@ -19,8 +19,7 @@ LEADING_WHITESPACE_REMOVER_RE = re.compile('^    ', re.MULTILINE)
 
 
 class BaseCommand(object):
-    '''
-    The base class from which all management commands ultimately derive.
+    """The base class from which all management commands ultimately derive.
 
     Use this class if you want access to all of the mechanisms which
     parse the command-line arguments and work out what code to call in
@@ -60,28 +59,29 @@ class BaseCommand(object):
      ``option_list``
         This is the list of ``optparse`` options which will be fed
         into the command's ``OptionParser`` for parsing arguments.
-    '''
+    """
     # Metadata about this command.
     option_list = tuple()
-    args        = ''
+    args = ''
 
     def __init__(self, config, ui):
-        self.id       = str(self).split('.')[-1]
-        self.config   = config
-        self.ui       = ui
+        self.id = str(self).split('.')[-1]
+        self.config = config
+        self.ui = ui
 
     def __str__(self):
         return self.__class__.__module__
 
     def usage(self, subcommand=None):
-        '''Return a brief description of how to use this command, by
+        """Return a brief description of how to use this command, by
         default from the attribute ``self.__doc__``.
-        '''
+        """
         if subcommand is None:
             subcommand = self.id
         usage = '%s [options] %s' % (subcommand, self.args)
         if self.__doc__:
-            return '%s\n\n%s' % (usage, LEADING_WHITESPACE_REMOVER_RE.sub('', self.__doc__))
+            return '%s\n\n%s' % (
+                usage, LEADING_WHITESPACE_REMOVER_RE.sub('', self.__doc__))
         else:
             return usage
 
@@ -89,9 +89,9 @@ class BaseCommand(object):
         self.ui.info(self.usage())
 
     def create_parser(self, prog_name, subcommand):
-        '''Create and return the ``OptionParser`` which will be used to
+        """Create and return the ``OptionParser`` which will be used to
         parse the arguments to this command.
-        '''
+        """
         parser = argparse.ArgumentParser(prog=os.path.basename(prog_name),
                                          usage=self.usage(subcommand))
         for name, conf in self.option_list:
@@ -99,24 +99,26 @@ class BaseCommand(object):
         return parser
 
     def print_help(self, prog_name, subcommand):
-        '''Print the help message for this command, derived from ``self.usage()``. '''
+        """Print the help message for this command, derived from
+        ``self.usage()``.
+        """
         parser = self.create_parser(prog_name, subcommand)
         parser.print_help()
 
     def run_from_argv(self, argv):
-        '''Set up any environment changes requested (e.g., Python path,
+        """Set up any environment changes requested (e.g., Python path,
         then run this command.
-        '''
+        """
         parser = self.create_parser(argv[0], argv[1])
         options, args = parser.parse_known_args(argv[2:])
         self.execute(*args, **options.__dict__)
 
     def execute(self, *args, **options):
-        '''Try to execute this command, performing validations if
+        """Try to execute this command, performing validations if
         needed (as controlled by the attributes. If the command
         raises a ``CommandError``, intercept it and print it sensibly
         to stderr.
-        '''
+        """
         try:
             # FIXME: Why do I need this?!
             self.stdout = options.get('stdout', sys.stdout)
@@ -154,22 +156,24 @@ class BaseCommand(object):
             sys.exit(1)
 
     def validate(self):
-        '''Validates the given command, raising CommandError for any errors.'''
+        """Validates the given command, raising CommandError for any errors."""
         pass
 
     def handle(self, *args, **options):
-        '''The actual logic of the command. Subclasses must implement this method.'''
+        """The actual logic of the command. Subclasses must implement this
+        method.
+        """
         raise NotImplementedError()
 
 
 class LabelCommand(BaseCommand):
-    '''A management command which takes one or more arbitrary arguments
+    """A management command which takes one or more arbitrary arguments
     (labels) on the command line, and does something with each of
     them.
 
     Rather than implementing ``handle()``, subclasses must implement
     ``handle_label()``, which will be called once for each label.
-    '''
+    """
     args = '<label label ...>'
     label = 'label'
 
@@ -185,22 +189,21 @@ class LabelCommand(BaseCommand):
         return '\n'.join(output)
 
     def handle_label(self, label, **options):
-        '''Perform the command's actions for ``label``, which will be the
+        """Perform the command's actions for ``label``, which will be the
         string as given on the command line.
-        '''
+        """
         raise NotImplementedError()
 
 
 class NoArgsCommand(BaseCommand):
-    '''
-    A command which takes no arguments on the command line.
+    """A command which takes no arguments on the command line.
 
     Rather than implementing ``handle()``, subclasses must implement
     ``handle_noargs()``; ``handle()`` itself is overridden to ensure
     no arguments are passed to the command.
 
     Attempting to pass arguments will raise ``CommandError``.
-    '''
+    """
     args = ''
 
     def handle(self, *args, **options):
@@ -209,5 +212,5 @@ class NoArgsCommand(BaseCommand):
         return self.handle_noargs(**options)
 
     def handle_noargs(self, **options):
-        '''Perform this command's actions.'''
+        """Perform this command's actions."""
         raise NotImplementedError()

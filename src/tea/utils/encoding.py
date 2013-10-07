@@ -1,16 +1,16 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 from tea.utils import six
 
 
 def smart_text(s, encoding='utf-8', strings_only=False, errors='strict'):
-    '''Returns a unicode object representing 's'. Treats bytes using the
+    """Returns a unicode object representing 's'. Treats bytes using the
     'encoding' codec.
 
     If strings_only is True, don't convert (some) non-string-like objects.
-    '''
+    """
     if isinstance(s, six.text_type):
         return s
     if strings_only and not isinstance(s, six.string_types):
@@ -35,10 +35,10 @@ def smart_text(s, encoding='utf-8', strings_only=False, errors='strict'):
 
 
 def smart_bytes(s, encoding='utf-8', strings_only=False, errors='strict'):
-    '''Returns a bytes version of 's', encoded as specified in 'encoding'.
+    """Returns a bytes version of 's', encoded as specified in 'encoding'.
 
     If strings_only is True, don't convert (some) non-string-like objects.
-    '''
+    """
     if isinstance(s, six.binary_type):
         if encoding == 'utf-8':
             return s

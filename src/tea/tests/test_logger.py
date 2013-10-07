@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <viktor.kerkez@gmail.com>'
-__date__      = '20 January 2010'
+__author__ = 'Viktor Kerkez <viktor.kerkez@gmail.com>'
+__date__ = '20 January 2010'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import re
@@ -21,7 +21,8 @@ class TestLogger(unittest.TestCase):
 
     def tearDown(self):
         self.output_test_file.close()
-        # FIXME: You cannot delete open file on windows, and the file remains open
+        # TODO: You cannot delete open file on windows, and the file
+        # remains open
         # because the logging is holding it.
         #os.remove(self.output_filename)
 
@@ -48,7 +49,8 @@ class TestLogger(unittest.TestCase):
 
     def test_critical(self):
         self.logger.critical('Critical message #06')
-        regexp = DATE + r'\s+ CRITICAL: Critical message #06 \[[\w\.]+:\d{2,3}\]'
+        regexp = (DATE +
+                  r'\s+ CRITICAL: Critical message #06 \[[\w\.]+:\d{2,3}\]')
         self.assert_(re.match(regexp, self.output_test_file.readline()))
 
     def test_exception(self):
@@ -59,5 +61,7 @@ class TestLogger(unittest.TestCase):
         regexp = DATE + r'\s+ ERROR: Exception #08 \[[\w\.]+:\d{2,3}\]'
         self.assert_(re.search(regexp, self.output_test_file.readline()))
         traceback = self.output_test_file.read().strip()
-        self.assertTrue(traceback.startswith('Traceback (most recent call last):'))
+        self.assertTrue(
+            traceback.startswith('Traceback (most recent call last):')
+        )
         self.assertTrue(traceback.endswith('Exception: Error'))

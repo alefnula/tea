@@ -1,7 +1,7 @@
 from __future__ import print_function, unicode_literals
 
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '25 July 2013'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '25 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
@@ -40,9 +40,9 @@ def _get_format(filename):
 
 
 def _ensure_exists(filename, encoding='utf-8'):
-    '''Ensures that the configuration file exists and that it produces a
+    """Ensures that the configuration file exists and that it produces a
     correct empty configuration.
-    '''
+    """
     filename = os.path.abspath(filename)
     if not os.path.isfile(filename):
         dirname = os.path.dirname(filename)
@@ -56,24 +56,26 @@ def _ensure_exists(filename, encoding='utf-8'):
 
 
 class Config(object):
-    '''Configuration class'''
+    """Configuration class"""
     DICT = 'dict'
     JSON = 'json'
     YAML = 'yaml'
 
     ensure_exists = staticmethod(_ensure_exists)
 
-    def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
+    def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8',
+                 autosave=True):
         self.lock = threading.Lock()
         self.encoding = encoding
         self.autosave = autosave
         if filename is not None:
             self.filename = os.path.abspath(filename)
-            self.format = fmt if fmt is not None else _get_format(self.filename)
+            self.format = (fmt if fmt is not None
+                           else _get_format(self.filename))
             self.data = self._read_file()
         else:
             self.filename = filename
-            self.format   = Config.JSON if fmt is None else fmt
+            self.format = Config.JSON if fmt is None else fmt
             if isinstance(data, dict):
                 self.format = Config.DICT
                 self.data = copy.deepcopy(data)
@@ -89,13 +91,15 @@ class Config(object):
                     return json.load(f, encoding=self.encoding)
             elif self.format == Config.YAML:
                 if has_yaml:
-                    with io.open(self.filename, 'r', encoding=self.encoding) as f:
+                    with io.open(self.filename, 'r',
+                                 encoding=self.encoding) as f:
                         return yaml.safe_load(f)
                 else:
-                    logger.error('YAML is not installed, cannot load .yaml files.')
+                    logger.error('YAML is not installed.')
                     return {}
             else:
-                logger.error('Unsupported configuration format: %s', self.format)
+                logger.error('Unsupported configuration format: %s',
+                             self.format)
                 return {}
         except Exception as e:
             logger.error('Failed to load file "%s" in format "%s". %s',
@@ -112,10 +116,11 @@ class Config(object):
                 if has_yaml:
                     return yaml.safe_load(data)
                 else:
-                    logger.error('YAML is not installed, cannot load .yaml files.')
+                    logger.error('YAML is not installed.')
                     return {}
             else:
-                logger.error('Unsupported configuration format: %s', self.format)
+                logger.error('Unsupported configuration format: %s',
+                             self.format)
                 return {}
         except:
             logger.exception('Failed to load data in format "%s"', self.format)
@@ -128,12 +133,14 @@ class Config(object):
                     json.dump(self.data, f, indent=2, encoding=self.encoding)
             elif self.format == Config.YAML:
                 if has_yaml:
-                    with io.open(self.filename, 'w', encoding=self.encoding) as f:
+                    with io.open(self.filename, 'w',
+                                 encoding=self.encoding) as f:
                         yaml.safe_dump(self.data, f, default_flow_style=False)
                 else:
-                    logger.error('YAML is not installed, cannot save .yaml files.')
+                    logger.error('YAML is not installed,')
             else:
-                logger.error('Unsupported configuration format: %s', self.format)
+                logger.error('Unsupported configuration format: %s',
+                             self.format)
 
     def __get(self, var, create=False):
         current = self.data
@@ -187,12 +194,12 @@ class Config(object):
 
     @locked
     def keys(self):
-        '''Returns a set of top level keys in this configuration'''
+        """Returns a set of top level keys in this configuration"""
         return set(self.data.keys())
 
     @locked
     def __getitem__(self, item):
-        '''Unsafe version, may raise KeyError or IndexError'''
+        """Unsafe version, may raise KeyError or IndexError"""
         return self.__get(item)
 
     @locked
@@ -201,12 +208,12 @@ class Config(object):
 
     @locked
     def __delitem__(self, item):
-        '''Unsafe version, may raise KeyError or IndexError'''
+        """Unsafe version, may raise KeyError or IndexError"""
         return self.__del(item)
 
     @locked
     def get(self, var, default=None):
-        '''Safe version which always returns a default value'''
+        """Safe version which always returns a default value"""
         try:
             return self.__get(var)
         except (KeyError, IndexError):
@@ -218,7 +225,7 @@ class Config(object):
 
     @locked
     def delete(self, var):
-        '''Safe version, never, raises an error'''
+        """Safe version, never, raises an error"""
         try:
             return self.__del(var)
         except:
@@ -226,9 +233,9 @@ class Config(object):
 
     @locked
     def insert(self, var, value, index=None):
-        '''Inserts at the index, and if the index is not provided
+        """Inserts at the index, and if the index is not provided
         appends to the end of the list
-        '''
+        """
         current = self.__get(var)
         if not isinstance(current, list):
             raise KeyError('%s: is not a list' % var)
@@ -241,15 +248,17 @@ class Config(object):
 
     def __repr__(self):
         return ('Config(filename="%(filename)s", format="%(format)s", '
-                'encoding="%(encoding)s", autosave=%(autosave)s)') % self.__dict__
+                'encoding="%(encoding)s", autosave=%(autosave)s)' %
+                self.__dict__)
 
 
 class MultiConfig(object):
-    '''Base class for configuration management'''
+    """Base class for configuration management"""
 
     ensure_exists = staticmethod(_ensure_exists)
 
-    def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8', autosave=True):
+    def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8',
+                 autosave=True):
         self.lock = threading.Lock()
         self.__configs = []
         self.attach(filename, data, fmt, encoding, autosave)
@@ -301,7 +310,9 @@ class MultiConfig(object):
 
     @locked
     def keys(self):
-        '''Returns a merged set of top level keys from all the configuration files'''
+        """Returns a merged set of top level keys from all the configuration
+        files
+        """
         s = set()
         for config in self.__configs:
             s |= config.keys()
@@ -309,7 +320,7 @@ class MultiConfig(object):
 
     @locked
     def __getitem__(self, item):
-        '''Unsafe version, may raise KeyError or IndexError'''
+        """Unsafe version, may raise KeyError or IndexError"""
         return self.__get(item)
 
     @locked
@@ -318,12 +329,12 @@ class MultiConfig(object):
 
     @locked
     def __delitem(self, item):
-        '''Unsafe version, may raise KeyError or IndexError'''
+        """Unsafe version, may raise KeyError or IndexError"""
         self.__del(item)
 
     @locked
     def get(self, var, default=None):
-        '''Safe version always returns a default value'''
+        """Safe version always returns a default value"""
         try:
             return self.__get(var)
         except (KeyError, IndexError):
@@ -335,7 +346,7 @@ class MultiConfig(object):
 
     @locked
     def delete(self, var):
-        '''Safe version, never raises an error'''
+        """Safe version, never raises an error"""
         try:
             self.__del(var)
         except (KeyError, IndexError):
@@ -346,4 +357,5 @@ class MultiConfig(object):
         self.current.insert(var, value, index)
 
     def __repr__(self):
-        return 'MultiConfig(\n  %s\n)' % (',\n  '.join(reversed(map(repr, self._configs))))
+        return ('MultiConfig(\n  %s\n)' %
+                (',\n  '.join(reversed(map(repr, self._configs)))))

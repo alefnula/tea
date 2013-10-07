@@ -1,5 +1,6 @@
 from calendar import monthrange
-from tea.cron.expressions import (AllExpression, RangeExpression, LastDayOfMonthExpression,
+from tea.cron.expressions import (AllExpression, RangeExpression,
+                                  LastDayOfMonthExpression,
                                   WeekdayRangeExpression)
 
 

@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '19 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '19 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import sys
@@ -8,17 +8,19 @@ _names = sys.builtin_module_names
 
 class __platform(object):
 
-    POSIX, MAC, DARWIN, WINDOWS, WINDOWS_CE, DOTNET, OS2, RISCOS = (1, 2, 4, 8, 16, 32, 64, 128)
+    (POSIX, MAC, DARWIN, WINDOWS, WINDOWS_CE, DOTNET, OS2, RISCOS) = (
+        1, 2, 4, 8, 16, 32, 64, 128
+    )
 
     NAMES = {
-        POSIX      : 'POSIX',
-        MAC        : 'MAC',
-        DARWIN     : 'DARWIN',
-        WINDOWS    : 'Windows NT',
-        WINDOWS_CE : 'Windows CE',
-        DOTNET     : '.NET',
-        OS2        : 'OS2',
-        RISCOS     : 'RISC OS'
+        POSIX: 'POSIX',
+        MAC: 'MAC',
+        DARWIN: 'DARWIN',
+        WINDOWS: 'Windows NT',
+        WINDOWS_CE: 'Windows CE',
+        DOTNET: '.NET',
+        OS2: 'OS2',
+        RISCOS: 'RISC OS'
     }
 
     ORDER = [DOTNET, DARWIN, POSIX, WINDOWS, OS2, MAC, WINDOWS_CE, RISCOS]
@@ -26,15 +28,17 @@ class __platform(object):
     class PlatformNotSupportedError(Exception):
         def __init__(self, platform, message):
             self.platform = platform
-            self.message  = message
+            self.message = message
 
         def __repr__(self):
-            return 'PlatformNotSupportedError [%s]: %s' % (__platform.NAMES[self.platform], self.message)
+            return 'PlatformNotSupportedError [%s]: %s' % (
+                __platform.NAMES[self.platform], self.message
+            )
         __str__ = __repr__
 
     def __init__(self):
         self.__platforms = 0
-        self.__default   = 0
+        self.__default = 0
 
         if 'posix' in _names:
             self.__platforms |= self.POSIX
@@ -81,7 +85,10 @@ class __platform(object):
         return self.__default
 
     def not_supported(self, module):
-        return self.PlatformNotSupportedError(self.__default, '"%s" module is not supported on this platform!' % module)
+        return self.PlatformNotSupportedError(
+            self.__default,
+            '"%s" module is not supported on this platform!' % module
+        )
 
 
 platform = __platform()

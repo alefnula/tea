@@ -1,17 +1,14 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '25 October 2010'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '25 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 from re import sub
-try:
-    from HTMLParser import HTMLParser   # py2
-except ImportError:
-    from html.parser import HTMLParser  # py3
+from tea.utils.six.moves import html_parser
 
 
-class _StripTagsParser(HTMLParser):
+class _StripTagsParser(html_parser.HTMLParser):
     def __init__(self):
-        HTMLParser.__init__(self)
+        super(_StripTagsParser, self).__init__()
         self.__text = []
 
     def handle_data(self, data):

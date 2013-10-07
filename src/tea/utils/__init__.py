@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import sys
@@ -9,7 +9,7 @@ import traceback
 
 
 def get_object(path='', obj=None):
-    '''Returns an object from a dot path.
+    """Returns an object from a dot path.
 
     Path can either be a full path, in which case the `get_object`
     function will try to import the module and follow the path. Or
@@ -28,7 +28,7 @@ def get_object(path='', obj=None):
         >>> import os
         >>> get_object('path.join', os)
         <function join at 0x1002d9ed8>
-    '''
+    """
     if not path:
         return obj
     path = path.split('.')
@@ -49,7 +49,8 @@ def get_object(path='', obj=None):
 def get_exception():
     trace = ''
     exception = ''
-    exc_list = traceback.format_exception_only(sys.exc_info()[0], sys.exc_info()[1])
+    exc_list = traceback.format_exception_only(sys.exc_info()[0],
+                                               sys.exc_info()[1])
     for entry in exc_list:
         exception += entry
     tb_list = traceback.format_tb(sys.exc_info()[2])

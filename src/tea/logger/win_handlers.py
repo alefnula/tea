@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
@@ -8,9 +8,11 @@ from .win_file import WindowsFile
 
 
 class FileHandler(logging.StreamHandler):
-    '''A handler class which writes formatted logging records to disk files.'''
+    """A handler class which writes formatted logging records to disk
+    files.
+    """
     def __init__(self, filename, mode='a', encoding=None):
-        '''Open the specified file and use it as the stream for logging.'''
+        """Open the specified file and use it as the stream for logging."""
         stream = WindowsFile(filename, mode, encoding)
         logging.StreamHandler.__init__(self, stream)
         #keep the absolute path, otherwise derived classes which use this
@@ -19,29 +21,30 @@ class FileHandler(logging.StreamHandler):
         self.mode = mode
 
     def close(self):
-        '''Closes the stream.'''
+        """Closes the stream."""
         self.flush()
         self.stream.close()
         logging.StreamHandler.close(self)
 
 
 class BaseRotatingHandler(FileHandler):
-    '''Base class for handlers that rotate log files at a certain point.
-    Not meant to be instantiated directly.  Instead, use RotatingFileHandler
-    or TimedRotatingFileHandler.
-    '''
+    """Base class for handlers that rotate log files at a certain point.
+
+    Not meant to be instantiated directly. Instead, use
+    :ref:`RotatingFileHandler` or :ref:`TimedRotatingFileHandler`.
+    """
     def __init__(self, filename, mode, encoding=None):
-        '''Use the specified filename for streamed logging'''
+        """Use the specified filename for streamed logging"""
         FileHandler.__init__(self, filename, mode, encoding)
         self.mode = mode
         self.encoding = encoding
 
     def emit(self, record):
-        '''Emit a record.
+        """Emit a record.
 
         Output the record to the file, catering for rollover as described
         in doRollover().
-        '''
+        """
         try:
             if self.shouldRollover(record):
                 self.doRollover()
@@ -53,11 +56,12 @@ class BaseRotatingHandler(FileHandler):
 
 
 class RotatingFileHandler(BaseRotatingHandler):
-    '''Handler for logging to a set of files, which switches from one file
+    """Handler for logging to a set of files, which switches from one file
     to the next when the current file reaches a certain size.
-    '''
-    def __init__(self, filename, mode='a', maxBytes=0, backupCount=0, encoding=None):
-        '''Open the specified file and use it as the stream for logging.
+    """
+    def __init__(self, filename, mode='a', maxBytes=0, backupCount=0,
+                 encoding=None):
+        """Open the specified file and use it as the stream for logging.
 
         By default, the file grows indefinitely. You can specify particular
         values of maxBytes and backupCount to allow the file to rollover at
@@ -75,7 +79,7 @@ class RotatingFileHandler(BaseRotatingHandler):
         respectively.
 
         If maxBytes is zero, rollover never occurs.
-        '''
+        """
         if maxBytes > 0:
             mode = 'a'  # doesn't make sense otherwise!
         BaseRotatingHandler.__init__(self, filename, mode, encoding)
@@ -83,7 +87,7 @@ class RotatingFileHandler(BaseRotatingHandler):
         self.backupCount = backupCount
 
     def doRollover(self):
-        '''Do a rollover, as described in __init__().'''
+        """Do a rollover, as described in __init__()."""
         self.stream.close()
         try:
             if self.backupCount > 0:
@@ -106,14 +110,14 @@ class RotatingFileHandler(BaseRotatingHandler):
             self.stream = WindowsFile(self.baseFilename, 'a', self.encoding)
 
     def shouldRollover(self, record):
-        '''Determine if rollover should occur.
+        """Determine if rollover should occur.
 
         Basically, see if the supplied record would cause the file to exceed
         the size limit we have.
-        '''
-        if self.maxBytes > 0:                   # are we rolling over?
+        """
+        if self.maxBytes > 0:  # are we rolling over?
             msg = "%s\n" % self.format(record)
-            self.stream.seek(0, 2)  # due to non-posix-compliant Windows feature
+            self.stream.seek(0, 2)  # due to non-posix-compliant win feature
             if self.stream.tell() + len(msg) >= self.maxBytes:
                 return 1
         return 0

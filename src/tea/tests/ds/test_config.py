@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '25 July 2013'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '25 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import unittest
@@ -53,7 +53,8 @@ class Checker(unittest.TestCase):
 
     def safe_check_values(self, foo=True, bar=True):
         if foo:
-            self.assertDictContainsSubset({'bar': {'baz': 1}, 'baz': 2}, self.c.get('foo'))
+            self.assertDictContainsSubset({'bar': {'baz': 1}, 'baz': 2},
+                                          self.c.get('foo'))
             self.assertDictContainsSubset({'baz': 1}, self.c.get('foo.bar'))
             self.assertEqual(1, self.c.get('foo.bar.baz'))
             self.assertEqual(2, self.c.get('foo.baz'))
@@ -64,7 +65,8 @@ class Checker(unittest.TestCase):
 
     def unsafe_check_values(self, foo=True, bar=True):
         if foo:
-            self.assertDictContainsSubset({'bar': {'baz': 1}, 'baz': 2}, self.c['foo'])
+            self.assertDictContainsSubset({'bar': {'baz': 1}, 'baz': 2},
+                                          self.c['foo'])
             self.assertDictContainsSubset({'baz': 1}, self.c['foo.bar'])
             self.assertEqual(1, self.c['foo.bar.baz'])
             self.assertEqual(2, self.c['foo.baz'])
@@ -120,7 +122,8 @@ class TestSafeConfigAddition(Checker):
 
     def test_add_in_existing_second_level_one_level(self):
         self.c.set('foo.bar.first', 9)
-        self.assertDictEqual(self.c.get('foo'), {'bar': {'baz': 1, 'first': 9}, 'baz': 2})
+        self.assertDictEqual(self.c.get('foo'),
+                             {'bar': {'baz': 1, 'first': 9}, 'baz': 2})
         self.assertDictEqual(self.c.get('foo.bar'), {'baz': 1, 'first': 9})
         self.assertEqual(self.c.get('foo.bar.first'), 9)
         # the rest should be untouched
@@ -128,8 +131,11 @@ class TestSafeConfigAddition(Checker):
 
     def test_add_in_existing_second_level_two_levels(self):
         self.c.set('foo.bar.first.second', 10)
-        self.assertDictEqual(self.c.get('foo'), {'bar': {'baz': 1, 'first': {'second': 10}}, 'baz': 2})
-        self.assertDictEqual(self.c.get('foo.bar'), {'baz': 1, 'first': {'second': 10}})
+        self.assertDictEqual(self.c.get('foo'),
+                             {'bar': {'baz': 1, 'first': {'second': 10}},
+                              'baz': 2})
+        self.assertDictEqual(self.c.get('foo.bar'),
+                             {'baz': 1, 'first': {'second': 10}})
         self.assertDictEqual(self.c.get('foo.bar.first'), {'second': 10})
         self.assertEqual(self.c.get('foo.bar.first.second'), 10)
         # the rest should be untouched

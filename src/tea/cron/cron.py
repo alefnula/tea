@@ -1,10 +1,12 @@
 from datetime import datetime
-from tea.cron.fields import BaseField, DayOfMonthField, DEFAULT_VALUES, DayOfWeekField
+from tea.cron.fields import (BaseField, DayOfMonthField, DEFAULT_VALUES,
+                             DayOfWeekField)
 from tea.cron.utils import convert_to_datetime, datetime_ceil
 
 
 class Cron(object):
-    FIELD_NAMES = ('year', 'month', 'day', 'day_of_week', 'hour', 'minute', 'second')
+    FIELD_NAMES = ('year', 'month', 'day', 'day_of_week', 'hour', 'minute',
+                   'second')
     FIELDS_MAP = {'year': BaseField,
                   'month': BaseField,
                   'day': DayOfMonthField,

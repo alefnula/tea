@@ -1,32 +1,32 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '19 January 2013'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '19 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 from tea.console.color import Color
 
 
 class Font(object):
-    '''Font properties'''
+    """Font properties"""
 
-    Defalt    = 0
+    Defalt = 0
 
     # Style
-    Mono      = 1
-    Roman     = 2
-    Sans      = 4
+    Mono = 1
+    Roman = 2
+    Sans = 4
 
     # Decoration
-    Bold      = 8
-    Italic    = 16
+    Bold = 8
+    Italic = 16
     Underline = 32
 
     REPRS = {
-        'mono'      : Mono,
-        'roman'     : Roman,
-        'sans'      : Sans,
-        'bold'      : Bold,
-        'italic'    : Italic,
-        'underline' : Underline,
+        'mono': Mono,
+        'roman': Roman,
+        'sans': Sans,
+        'bold': Bold,
+        'italic': Italic,
+        'underline': Underline,
     }
 
 
@@ -43,10 +43,10 @@ class Style(object):
     @staticmethod
     def _parse_style(style):
         s = {
-            'fg'     : None,
-            'bg'     : None,
-            'font'   : Font.Defalt,
-            'border' : None
+            'fg': None,
+            'bg': None,
+            'font': Font.Defalt,
+            'border': None
         }
         for part in style.split():
             if part[:3] == 'fg:':
@@ -63,10 +63,10 @@ class Style(object):
 
     @classmethod
     def get(cls, token):
-        '''Searches the whole inheritance three for a token style.
+        """Searches the whole inheritance three for a token style.
 
         If it doesn't find it return an empty style.
-        '''
+        """
         # First look into the cache
         if token not in cls._cache:
             for klass in cls.mro()[:-1]:  # Do not search in object
@@ -79,18 +79,18 @@ class Style(object):
 
 
 class StyleAdapter(object):
-    '''Style adapter is a helper class for adapting a style for restricted
+    """Style adapter is a helper class for adapting a style for restricted
     environments, where not all colors or font styles are available.
 
     For example the terminal console doesn't have the full range of colors
     and also doesn't have font styles. Look in the ConsoleStyleAdapter for
     example implementation.
-    '''
+    """
     def __init__(self, style):
         self.style = style
 
     def adapt(self, style):
-        '''Override this method to implement the adaptation logic'''
+        """Override this method to implement the adaptation logic"""
         return style
 
     def get(self, token):
@@ -98,7 +98,7 @@ class StyleAdapter(object):
 
 
 class ConsoleStyleAdapter(StyleAdapter):
-    '''Simple hex color to console color adapter'''
+    """Simple hex color to console color adapter"""
 
     def __init__(self, *args, **kwargs):
         super(ConsoleStyleAdapter, self).__init__(*args, **kwargs)
@@ -161,8 +161,8 @@ class ConsoleStyleAdapter(StyleAdapter):
 
     def adapt(self, style):
         return {
-            'fg'     : self._get_color(style['fg']),
-            'bg'     : self._get_color(style['bg']),
-            'font'   : Font.Defalt,
-            'border' : None,
+            'fg': self._get_color(style['fg']),
+            'bg': self._get_color(style['bg']),
+            'font': Font.Defalt,
+            'border': None,
         }

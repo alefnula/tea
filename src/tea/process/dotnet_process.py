@@ -16,7 +16,6 @@ from System.Diagnostics import Process as CSharpProcess
 from System.Management import ManagementObjectSearcher
 
 
-
 @docstring(base.doc_get_processes)
 def get_processes(sort_by_name=True, cmdline=False):
     processes = []

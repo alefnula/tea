@@ -1,13 +1,13 @@
-'''
+"""
 Logging module
 ==============
-This logging module is designed as a wrapper around the python I{logging}
-module.
+This logging module is designed as a wrapper around the python
+:ref:`logging` module.
 
-When the module is loaded it configure the logging object with some default
-parameters (log to stderr with DEBUG level).
-After that, user can call the L{configure_logger} function and configure logging
-to file and stderr.
+When the module is loaded it configure the logging object with some
+default parameters (log to stderr with DEBUG level).
+After that, user can call the L{configure_logger} function and
+configure logging to file and stderr.
 
 Usage
 =====
@@ -32,10 +32,10 @@ ERROR       - Error level log entry with stack trace [test:4]
 Traceback (most recent call last):
   ...
 Exception: Test exception
-'''
+"""
 
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 from .log import configure_logging

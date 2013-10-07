@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '18 January 2013'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '18 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import sys
@@ -9,15 +9,16 @@ import sys
 b = lambda x: x.lower() in ('true', 't')
 
 commands = {
-    # Function name : (Iterable result, [Param types], Number of required arguments)])
-    'search' : (True,  [str, str, b, b], 2),
-    'chdir'  : (False, [str],            1),
-    'mkdir'  : (False, [str],            1),
-    'copy'   : (False, [str, str],       2),
-    'gcopy'  : (False, [str, str],       2),
-    'move'   : (False, [str, str],       2),
-    'gmove'  : (False, [str, str],       2),
-    'remove' : (False, [str],            1),
+    # Function name : (Iterable result, [Param types],
+    #                  Number of required arguments)])
+    'search': (True,  [str, str, b, b], 2),
+    'chdir': (False, [str], 1),
+    'mkdir': (False, [str], 1),
+    'copy': (False, [str, str], 2),
+    'gcopy': (False, [str, str], 2),
+    'move': (False, [str, str], 2),
+    'gmove': (False, [str, str], 2),
+    'remove': (False, [str], 1),
 }
 
 

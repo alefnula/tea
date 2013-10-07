@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '01 January 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
@@ -21,20 +21,28 @@ def setup(module, target='zip', output_path=None, data_dir=None):
             assert er('setup.py', 'install', '--no-compile',
                       '--install-lib',     os.path.join(dist, 'lib'),
                       '--install-scripts', os.path.join(dist),
-                   *(['--install-data',    os.path.join(dist, data_dir)] if data_dir is not None else []))
+                      *(['--install-data',    os.path.join(dist, data_dir)]
+                        if data_dir is not None else []))
             with shutil.goto(dist) as ok:
                 assert ok
-                assert compress.mkzip('%s.zip' % module, glob.glob(os.path.join('lib', '*')))
+                assert compress.mkzip('%s.zip' % module,
+                                      glob.glob(os.path.join('lib', '*')))
                 assert shutil.remove('lib')
         elif target == 'exe':
             assert er('setup.py', 'install', '--no-compile',
                       '--install-lib',     os.path.join(dist, 'lib', 'python'),
                       '--install-scripts', os.path.join(dist, 'scripts'),
-                   *(['--install-data',    os.path.join(dist, data_dir)] if data_dir is not None else []))
+                      *(['--install-data',    os.path.join(dist, data_dir)]
+                        if data_dir is not None else []))
             with shutil.goto(dist) as ok:
                 assert ok
-                modules = list(filter(os.path.exists, ['lib', 'scripts'] + ([data_dir] if data_dir is not None else [])))
-                assert compress.seven_zip('%s.exe' % module, modules, self_extracting=True)
+
+                modules = list(filter(os.path.exists,
+                                      ['lib', 'scripts'] + (
+                                          [data_dir] if data_dir is not None
+                                          else [])))
+                assert compress.seven_zip('%s.exe' % module, modules,
+                                          self_extracting=True)
                 # Cleanup
                 for module in modules:
                     assert shutil.remove(module)
@@ -44,7 +52,10 @@ def setup(module, target='zip', output_path=None, data_dir=None):
                 if not os.path.isdir(output_path):
                     assert shutil.mkdir(output_path)
                 for filename in shutil.search(dist, '*'):
-                    assert shutil.move(filename, os.path.join(output_path, filename.replace(dist, '', 1).strip('\\/')))
+                    output = os.path.join(output_path,
+                                          filename.replace(dist, '', 1)
+                                                  .strip('\\/'))
+                    assert shutil.move(filename, output)
         return 0
     except AssertionError as e:
         print(e)
@@ -58,11 +69,20 @@ def setup(module, target='zip', output_path=None, data_dir=None):
 
 
 def create_parser():
-    parser = optparse.OptionParser(usage='python -m tea.utils.setup [options] MODULE_NAME')
-    parser.add_option('-e', '--zip', action='store_const', dest='target', const='zip', help='build egg file and scripts',       default='zip')
-    parser.add_option('-x', '--exe', action='store_const', dest='target', const='exe', help='build self extracting executable', default='zip')
-    parser.add_option('-o', '--output-path', action='store', type='string', dest='output_path', help='destination directory for files', default=None)
-    parser.add_option('-d', '--data-dir', action='store', type='string', dest='data_dir', help='data dir relative path', default=None)
+    parser = optparse.OptionParser(
+        usage='python -m tea.utils.setup [options] MODULE_NAME')
+    parser.add_option('-e', '--zip', action='store_const', dest='target',
+                      const='zip', help='build egg file and scripts',
+                      default='zip')
+    parser.add_option('-x', '--exe', action='store_const', dest='target',
+                      const='exe', help='build self extracting executable',
+                      default='zip')
+    parser.add_option('-o', '--output-path', action='store', type='string',
+                      dest='output_path', help='destination directory',
+                      default=None)
+    parser.add_option('-d', '--data-dir', action='store', type='string',
+                      dest='data_dir', help='data dir relative path',
+                      default=None)
     return parser
 
 
@@ -74,7 +94,8 @@ def main(args):
         return 1
     else:
         module = args[0]
-        return setup(module, options.target, options.output_path, options.data_dir)
+        return setup(module, options.target, options.output_path,
+                     options.data_dir)
 
 
 if __name__ == '__main__':

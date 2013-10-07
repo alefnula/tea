@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '02 August 2012'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '02 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 
 import json
@@ -28,7 +28,8 @@ STATUS_MESSAGES = defaultdict(lambda: 'UNKNOWN', **{
 class JsonHandler(web.RequestHandler):
     def prepare(self):
         try:
-            self.request.json_body = json.loads(self.request.body) if self.request.body else None
+            self.request.json_body = (json.loads(self.request.body)
+                                      if self.request.body else None)
         except Exception:
             self.send_error(400, message='Error parsing JSON')
 
@@ -49,9 +50,10 @@ class JsonHandler(web.RequestHandler):
         self.set_status(status_code)
         content_type = 'application/json'
         data = json.dumps({
-            'status'  : STATUS_MESSAGES[status_code],
-            'message' : obj
-        }, default=lambda obj: obj.__json__() if hasattr(obj, '__json__') else obj)
+            'status': STATUS_MESSAGES[status_code],
+            'message': obj
+        }, default=lambda obj: (obj.__json__() if hasattr(obj, '__json__')
+                                else obj))
         # Check if it's jsonp request
         callback = self.get_argument('callback', None)
         if callback is not None:

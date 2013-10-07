@@ -36,7 +36,7 @@ class Process(six.with_metaclass(abc.ABCMeta)):
     Simple example of Process class usage can be::
 
         >>> from tea.process import Process
-        >>> p = Process('python', ['-c', 'import time; time.sleep(5); print 3'])
+        >>> p = Process('python', ['-c', 'import time;time.sleep(5);print 3'])
         >>> p.start()
         >>> p.is_running
         True

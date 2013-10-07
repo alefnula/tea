@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '19 January 2013'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '19 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import re
@@ -27,7 +27,7 @@ class Lexer(six.with_metaclass(abc.ABCMeta)):
         return data
 
     def tokenize(self, data):
-        '''This methods receives an arbitrary data and returns an iterable
+        """This methods receives an arbitrary data and returns an iterable
         of (token, text) pairs generated from data.
 
         For example it can receive text:
@@ -46,33 +46,33 @@ class Lexer(six.with_metaclass(abc.ABCMeta)):
         Or it can receive an arbitrary data
 
         >>> lexer = MyStatusLexer()
-        >>> data = [{'status': 0, 'text': 'My OK data'}, {'status': 1, 'text': 'My not OK data'}]
+        >>> data = [{'status': 0, 'text': 'My OK data'},
+                    {'status': 1, 'text': 'My not OK data'}]
         >>> for token, text in lexer.tokenize(data):
                 print '%-7s %s' % (token, repr(text))
 
         Ok      'My OK data'
         Fail    'My not OK data'
         >>>
-        '''
+        """
         data = self.preprocess(data)
         for t, v in self.lex(data):
             yield t, v
 
     @abc.abstractmethod
     def lex(self, data):
-        '''
-        Return an iterable of (token, text) pairs.
+        """Return an iterable of (token, text) pairs.
+
         In subclasses, implement this method as a generator to
         maximize effectiveness.
-        '''
+        """
 
 
 class RegexLexer(Lexer):
-    '''
-    Base for simple stateful regular expression-based lexers.
+    """Base for simple stateful regular expression-based lexers.
     Simplifies the lexing process so that you need only
     provide a list of states and regular expressions.
-    '''
+    """
 
     # Flags for compiling the regular expressions.
     # Defaults to MULTILINE.
@@ -95,11 +95,11 @@ class RegexLexer(Lexer):
         return tokens
 
     def lex(self, text):
-        '''Do the lexical analisys'''
+        """Do the lexical analysis"""
         tokens = self._get_tokens()
         state = 'root'
         pos = 0
-        l   = len(text)
+        l = len(text)
         statetokens = tokens[state]
         while pos < l:
             for matcher, t, new_state in statetokens:

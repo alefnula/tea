@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '27 November 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import win32api  # @UnresolvedImport
@@ -25,8 +25,10 @@ class WindowsFile(object):
         else:
             raise ValueError('Invalid access mode')
         self.filename = filename
-        #shareMode = win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE | win32con.FILE_SHARE_DELETE
-        shareMode = win32con.shareMode = win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE
+        #shareMode = (win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE |
+        #             win32con.FILE_SHARE_DELETE)
+        shareMode = win32con.shareMode = (win32con.FILE_SHARE_READ |
+                                          win32con.FILE_SHARE_WRITE)
         attributes = win32security.SECURITY_ATTRIBUTES()
         #dwFlagsAndAttributes = win32con.FILE_ATTRIBUTE_NORMAL
         dwFlagsAndAttributes = win32con.FILE_FLAG_WRITE_THROUGH
@@ -35,7 +37,8 @@ class WindowsFile(object):
         self.handle = win32file.CreateFile(filename, desiredAccess, shareMode,
                                            attributes, creationDisposition,
                                            dwFlagsAndAttributes, 0)
-        win32api.SetHandleInformation(self.handle, win32con.HANDLE_FLAG_INHERIT, 0)
+        win32api.SetHandleInformation(self.handle,
+                                      win32con.HANDLE_FLAG_INHERIT, 0)
         if mode in ('a', 'a+'):
             self.seek(0, 2)
         self.file_size = win32file.GetFileSize(self.handle)
@@ -56,8 +59,10 @@ class WindowsFile(object):
     def __exit__(self, *exc_info):
         self.close()
 
-    def write(self, string):
-        status, written = win32file.WriteFile(self.handle, string.replace('\n', '\r\n').encode(self.encoding), None)  # @UnusedVariable
+    def write(self, s):
+        status, written = win32file.WriteFile(self.handle,
+                                              s.replace('\n', '\r\n')
+                                               .encode(self.encoding), None)
         #win32file.FlushFileBuffers(self.handle)
         return status
 
@@ -92,7 +97,7 @@ class WindowsFile(object):
     def read(self, bytesToRead=None):
         if bytesToRead is None:
             bytesToRead = self.file_size
-        hr, data = win32file.ReadFile(self.handle, bytesToRead, None)  # @UnusedVariable
+        hr, data = win32file.ReadFile(self.handle, bytesToRead, None)
         return data.replace('\r', '')
 
     def readline(self, bytesToRead=None):

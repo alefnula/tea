@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <viktor.kerkez@gmail.com>'
-__date__      = '20 January 2010'
+__author__ = 'Viktor Kerkez <viktor.kerkez@gmail.com>'
+__date__ = '20 January 2010'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import sys
@@ -44,11 +44,17 @@ class TestProcess(unittest.TestCase):
         p.start()
         p.write(b'my hello text')
         p.wait()
-        self.assertRegexpMatches(p.read().decode('ascii'), '^Said: my hello text\s+$')
+        self.assertRegexpMatches(p.read().decode('ascii'),
+                                 '^Said: my hello text\s+$')
         self.assertRegexpMatches(p.eread().decode('ascii'), '^$')
 
     def test_read(self):
-        p = Process(sys.executable, ['-c', '''import sys, time; sys.stdout.write('foo'); sys.stdout.flush(); time.sleep(2); sys.stdout.write('bar')'''])
+        p = Process(sys.executable, ['-c', '''import sys, time
+sys.stdout.write('foo')
+sys.stdout.flush()
+time.sleep(2)
+sys.stdout.write('bar')
+'''])
         p.start()
         time.sleep(1)
         self.assertEqual(p.read(), b'foo')
@@ -58,7 +64,12 @@ class TestProcess(unittest.TestCase):
         self.assertEqual(p.eread(), b'')
 
     def test_eread(self):
-        p = Process(sys.executable, ['-c', '''import sys, time; sys.stderr.write('foo'); sys.stderr.flush(); time.sleep(2); sys.stderr.write('bar')'''])
+        p = Process(sys.executable, ['-c', '''import sys, time
+sys.stderr.write('foo')
+sys.stderr.flush()
+time.sleep(2)
+sys.stderr.write('bar')
+'''])
         p.start()
         time.sleep(1)
         self.assertEqual(p.read(), b'')
@@ -69,7 +80,9 @@ class TestProcess(unittest.TestCase):
 
     def test_environment(self):
         env = {'MY_VAR': 'My value'}
-        p = Process(sys.executable, ['-c', '''import os; print(os.environ.get('MY_VAR', ''))'''], environment=env)
+        p = Process(sys.executable, ['-c', '''import os
+print(os.environ.get('MY_VAR', ''))
+'''], environment=env)
         p.start()
         p.wait()
         self.assertEqual(p.exit_code, 0)
@@ -79,7 +92,8 @@ class TestProcess(unittest.TestCase):
 
 class TestWrapper(unittest.TestCase):
     def test_execute_with_error(self):
-        status, output, error = execute(sys.executable, '-c', 'import sys; sys.exit(2)')
+        status, output, error = execute(sys.executable, '-c',
+                                        'import sys; sys.exit(2)')
         self.assertEqual(status, 2)
         self.assertRegexpMatches(output.decode('ascii'), '^$')
         self.assertRegexpMatches(error.decode('ascii'), '^$')
@@ -91,10 +105,15 @@ class TestWrapper(unittest.TestCase):
         self.assertRegexpMatches(error.decode('ascii'), '^$')
 
     def test_execute_and_report(self):
-        self.assertTrue(execute_and_report(sys.executable, '-c', 'import sys; sys.exit(0)'))
-        self.assertFalse(execute_and_report(sys.executable, '-c', 'import sys; sys.exit(1)'))
-        self.assertFalse(execute_and_report(sys.executable, '-c', 'import sys; sys.exit(-1)'))
-        self.assertFalse(execute_and_report(sys.executable, '-c', 'import sys; sys.exit(2)'))
+        self.assertTrue(execute_and_report(sys.executable, '-c',
+                                           'import sys; sys.exit(0)'))
+        self.assertFalse(execute_and_report(sys.executable, '-c',
+                                            'import sys; sys.exit(1)'))
+        self.assertFalse(execute_and_report(sys.executable, '-c',
+                                            'import sys; sys.exit(-1)'))
+        self.assertFalse(execute_and_report(sys.executable, '-c',
+                                            'import sys; sys.exit(2)'))
 
     def test_not_existing_command(self):
-        self.assertRaises(Exception, lambda: execute('non_existing_command', '-e', 'something'))
+        self.assertRaises(Exception, lambda: execute('non_existing_command',
+                                                     '-e', 'something'))

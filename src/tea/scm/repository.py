@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '01 January 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import re
@@ -15,7 +15,9 @@ except ImportError:
 from tea.scm.hg import Hg
 from tea.scm.git import Git
 
-NETLOC_RE = re.compile('^(?:(?P<username>[^:]+)(?:\:(?P<password>[^@]+))?@)?(?P<netloc>.*)$')
+NETLOC_RE = re.compile(
+    '^(?:(?P<username>[^:]+)(?:\:(?P<password>[^@]+))?@)?(?P<netloc>.*)$'
+)
 
 
 def set_uri(uri, **kwargs):
@@ -42,7 +44,8 @@ class Repository(object):
     HG = 'hg'
     GIT = 'git'
 
-    def __init__(self, name, path=None, source=None, username=None, password=None, repo_type=HG):
+    def __init__(self, name, path=None, source=None, username=None,
+                 password=None, repo_type=HG):
         self.name = name
         self.path = path
         self.source = source
@@ -58,16 +61,18 @@ class Repository(object):
 
     @property
     def uri(self):
-        '''Returns the full URI with username and password'''
+        """Returns the full URI with username and password"""
         if self._uri is None:
-            self._uri = set_uri(self.source, username=self.username, password=self.password)
+            self._uri = set_uri(self.source, username=self.username,
+                                password=self.password)
         return self._uri
 
     @property
     def muri(self):
-        '''Returns a full URI with username, but password is massked'''
+        """Returns a full URI with username, but password is massked"""
         if self._muri is None:
-            self._muri = set_uri(self.source, username=self.username, password='*****')
+            self._muri = set_uri(self.source, username=self.username,
+                                 password='*****')
         return self._muri
 
     def __str__(self):
@@ -78,10 +83,10 @@ class Repository(object):
 
     def __serialize__(self):
         return {
-            'name'   : self.name,
-            'type'   : 'Repository',
-            'path'   : self.path,
-            'source' : self.source,
+            'name': self.name,
+            'type': 'Repository',
+            'path': self.path,
+            'source': self.source,
         }
 
     def __getattr__(self, attr):

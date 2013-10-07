@@ -1,5 +1,5 @@
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '07 January 2009'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '07 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
@@ -36,7 +36,7 @@ def _extract_file(archive, destination, filename):
 
 
 def unzip(archive, destination, filenames=None):
-    '''Unzip the a complete zip archive into destination directory,
+    """Unzip the a complete zip archive into destination directory,
     or unzip a specific file(s) from the archive.
 
     Usage:
@@ -58,8 +58,9 @@ def unzip(archive, destination, filenames=None):
     :type  destination: str
     :param destination: Path to the output directory
     :type  filenames: str, list or None
-    :param filenames: Path(s) to the filename(s) inside the zip archive that you want to extract.
-    '''
+    :param filenames: Path(s) to the filename(s) inside the zip archive that
+        you want to extract.
+    """
     close = False
     try:
         if not isinstance(archive, zipfile.ZipFile):
@@ -87,37 +88,40 @@ def unzip(archive, destination, filenames=None):
 
 
 def mkzip(archive, items, mode='w', save_full_paths=False):
-    '''Recursively zip a directory
+    """Recursively zip a directory
 
     :type  archive: :class:`zipfile.ZipFile` or :obj:`str`
     :param archive: ZipFile object add to or path to the output zip archive.
     :type  items: str or list
-    :param items: Single item or list of items (files and directories) to be added to zipfile
+    :param items: Single item or list of items (files and directories) to be
+        added to zipfile
     :type  mode: str
     :param mode: w for create new and write a for append to
     :type  save_full_paths: bool
     :param save_full_paths: preserve full paths
-    '''
+    """
     close = False
     try:
         if not isinstance(archive, zipfile.ZipFile):
             archive = zipfile.ZipFile(archive, mode, allowZip64=True)
             close = True
-        logger.info('mkdzip: Creating %s, from: %s' % (archive.filename, items))
+        logger.info('mkdzip: Creating %s, from: %s', archive.filename, items)
         if isinstance(items, str):
             items = [items]
         for item in items:
             item = os.path.abspath(item)
             basename = os.path.basename(item)
             if os.path.isdir(item):
-                for root, directoires, filenames in os.walk(item):  # @UnusedVariable
+                for root, directoires, filenames in os.walk(item):
                     for filename in filenames:
                         path = os.path.join(root, filename)
                         if save_full_paths:
                             archive_path = path.encode('utf-8')
                         else:
-                            archive_path = os.path.join(basename, path.replace(item, '').strip('\\/')).encode('utf-8')
-                        archive.write(path, archive_path)  # , zipfile.ZIP_DEFLATED)
+                            archive_path = os.path.join(
+                                basename, path.replace(item, '').strip('\\/')
+                            ).encode('utf-8')
+                        archive.write(path, archive_path)
             elif os.path.isfile(item):
                 if save_full_paths:
                     archive_name = item.encode('utf-8')
@@ -142,7 +146,8 @@ def _get_sz():
         _SZ_EXECUTABLE = '7z'
         if platform.is_a(platform.WINDOWS):
             for pf in ('ProgramFiles', 'ProgramFiles(x86)', 'ProgramW6432'):
-                executable = os.path.join(os.environ.get(pf, ''), '7-Zip', '7z.exe')
+                executable = os.path.join(os.environ.get(pf, ''), '7-Zip',
+                                          '7z.exe')
                 if os.path.exists(executable):
                     _SZ_EXECUTABLE = executable
                     break
@@ -150,7 +155,7 @@ def _get_sz():
 
 
 def seven_zip(archive, items, self_extracting=False):
-    '''Create a 7z archive'''
+    """Create a 7z archive"""
     if not isinstance(items, (list, tuple)):
         items = [items]
     if self_extracting:
@@ -160,5 +165,5 @@ def seven_zip(archive, items, self_extracting=False):
 
 
 def seven_unzip(archive, output):
-    '''Extract a 7z archive'''
+    """Extract a 7z archive"""
     return er(_get_sz(), 'x', archive, '-o%s' % output, '-aoa')

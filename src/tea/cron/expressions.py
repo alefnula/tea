@@ -46,7 +46,9 @@ class AllExpression(object):
 
 
 class RangeExpression(AllExpression):
-    value_re = re.compile(r'(?P<first>\d+)(?:-(?P<last>\d+))?(?:/(?P<step>\d+))?$')
+    value_re = re.compile(
+        r'(?P<first>\d+)(?:-(?P<last>\d+))?(?:/(?P<step>\d+))?$'
+    )
 
     def __init__(self, first, last=None, step=None):
         super(RangeExpression, self).__init__(step)

@@ -145,9 +145,9 @@ class WinProcess(base.Process):
         if self._redirect_output:
             # Create pipes
             self._create_pipes()
-            self._startupinfo.hStdInput  = self._stdin_read
+            self._startupinfo.hStdInput = self._stdin_read
             self._startupinfo.hStdOutput = self._stdout_handle
-            self._startupinfo.hStdError  = self._stderr_handle
+            self._startupinfo.hStdError = self._stderr_handle
             self._startupinfo.dwFlags |= win32process.STARTF_USESTDHANDLES
         (
             self._hProcess, self._hThread, self._dwProcessId. self._dwThreadId
@@ -166,7 +166,9 @@ class WinProcess(base.Process):
             while self.is_running:
                 win32api.Sleep(1000)
         else:
-            if win32event.WaitForSingleObject(self._hProcess, timeout * 1000) != win32event.WAIT_OBJECT_0:
+            result = win32event.WaitForSingleObject(self._hProcess,
+                                                    timeout * 1000)
+            if result != win32event.WAIT_OBJECT_0:
                 return False
         return True
 

@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '20 October 2010'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '20 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 import os
@@ -14,13 +14,13 @@ from .color import strip_colors, set_color
 
 
 def format_page(text):
-    '''Formats the text for output adding ASCII frame around the text.
+    """Formats the text for output adding ASCII frame around the text.
 
     @type  text: string
-    @param text: Text that needs to be formated.
+    @param text: Text that needs to be formatted.
     @rtype:  string
-    @return: Formated string.
-    '''
+    @return: Formatted string.
+    """
     width = max(map(len, text.splitlines()))
     page = '+-' + '-' * width + '-+\n'
     for line in text.splitlines():
@@ -30,14 +30,14 @@ def format_page(text):
 
 
 def table(text):
-    '''Formats the text as a table
+    """Formats the text as a table
 
     Text in format:
 
     first | second
     row 2 col 1 | 4
 
-    Will be formated as
+    Will be formatted as
     +-------------+--------+
     | first       | second |
     +-------------+--------+
@@ -45,12 +45,15 @@ def table(text):
     +-------------+--------+
 
     @type  text: string
-    @param text: Text that needs to be formated.
+    @param text: Text that needs to be formatted.
     @rtype:  string
-    @return: Formated string.
-    '''
-    table_bar = lambda col_lengths: '+-%s-+%s' % ('-+-'.join(['-' * length for length in col_lengths]), os.linesep)
-    rows  = []
+    @return: Formatted string.
+    """
+    table_bar = (lambda col_lengths:
+                 '+-%s-+%s' % ('-+-'.join(['-' * length
+                                           for length in col_lengths]),
+                               os.linesep))
+    rows = []
     for line in text.splitlines():
         rows.append([part.strip() for part in line.split('|')])
     max_cols = max(map(len, rows))
@@ -74,25 +77,25 @@ def table(text):
 
 
 def hbar(width):
-    '''Returns ASCII HBar +---+ with the specified width.
+    """Returns ASCII HBar +---+ with the specified width.
 
     @type  width: integer
     @param width: Width of the central part of the bar.
     @rtype:  string
     @return: ASCII HBar.
-    '''
+    """
     return '+-' + '-' * width + '-+'
 
 
 def print_page(text):
-    '''Formats the text and prints it on stdout.
+    """Formats the text and prints it on stdout.
 
     Text is formated by adding a ASCII frame around it and coloring the text.
     Colors can be added to text using color tags, for example:
 
         My [FG_BLUE]blue[NORMAL] text.
         My [BG_BLUE]blue background[NORMAL] text.
-    '''
+    """
     color_re = re.compile(r'\[(?P<color>[FB]G_[A-Z_]+|NORMAL)\]')
     width = max([len(strip_colors(x)) for x in text.splitlines()])
     print('\n' + hbar(width))
@@ -103,7 +106,7 @@ def print_page(text):
         tail = width - len(strip_colors(line))
         sys.stdout.write('| ')
         previous = 0
-        end      = len(line)
+        end = len(line)
         for match in color_re.finditer(line):
             sys.stdout.write(line[previous:match.start()])
             set_color(match.groupdict()['color'])
@@ -114,7 +117,7 @@ def print_page(text):
 
 
 def wrap_text(text, width=80):
-    '''Wraps text lines to maximum *width* characters.
+    """Wraps text lines to maximum *width* characters.
 
     Wrapped text is aligned against the left text border.
 
@@ -124,7 +127,7 @@ def wrap_text(text, width=80):
     @param width: Maximum number of characters per line.
     @rtype:  string
     @return: Wrapped text.
-    '''
+    """
     text = re.sub('\s+', ' ', text).strip()
     wrapper = TextWrapper(width=width, break_long_words=False,
                           replace_whitespace=True)
@@ -132,7 +135,7 @@ def wrap_text(text, width=80):
 
 
 def rjust_text(text, width=80, indent=0, subsequent=None):
-    '''Same as L{wrap_text} with the difference that the text is aligned
+    """Same as L{wrap_text} with the difference that the text is aligned
     against the right text border.
 
     @type  text: string
@@ -144,7 +147,7 @@ def rjust_text(text, width=80, indent=0, subsequent=None):
     @type  subsequent: integer or None
     @param subsequent: Indentation of all other lines, if it is None, then the
         indentation will be same as for the first line.
-    '''
+    """
     text = re.sub('\s+', ' ', text).strip()
     if subsequent is None:
         subsequent = indent
@@ -156,7 +159,7 @@ def rjust_text(text, width=80, indent=0, subsequent=None):
 
 
 def center_text(text, width=80):
-    '''Center all lines of the text.
+    """Center all lines of the text.
 
     It is assumed that all lines width is smaller then B{width}, because the
     line width will not be checked.
@@ -167,7 +170,7 @@ def center_text(text, width=80):
     @param width: Maximum number of characters per line.
     @rtype:  string
     @return: Centered text.
-    '''
+    """
     centered = []
     for line in text.splitlines():
         centered.append(line.center(width))

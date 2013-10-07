@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-__author__    = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__      = '07 August 2012'
+__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
+__date__ = '07 August 2012'
 __copyright__ = 'Copyright (c) 2012 Viktor Kerkez'
 
 from .base import BaseCommand
@@ -9,12 +9,12 @@ from .base import BaseCommand
 
 # Management commands
 class AliasCommand(BaseCommand):
-    '''Alias management
+    """Alias management
 
     Usage:
     alias ALIAS        # get alias value
     alias ALIAS VALUE  # set alias value
-    '''
+    """
     id = 'alias'
 
     def get_alias(self, alias):
@@ -39,16 +39,16 @@ class AliasCommand(BaseCommand):
 
 
 class ConfigCommand(BaseCommand):
-    '''Configuration management
+    """Configuration management
 
     Usage:
     config list [VAR]             # lists the sub-keys of a var
     config get  VAR               # prints a var
     config set  VAR VALUE         # sets a value to var
     config del  VAR               # deletes a var
-    config add  VAR VALUE [INDEX] # add value into list associated with the var (at index)
+    config add  VAR VALUE [INDEX] # add value into list at index
     config rem  VAR INDEX         # removes a value from list by index
-    '''
+    """
 
     id = 'config'
 
