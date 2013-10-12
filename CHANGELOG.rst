@@ -1,4 +1,8 @@
-v0.0.5 (August XX, 2013)
+v0.0.6 (November XX, 2013)
+--------------------------
+
+
+v0.0.5 (October 12, 2013)
 ------------------------
 
   - Porting everything to work with Python 2.7 and Python 3.3

@@ -102,6 +102,15 @@ print(os.environ.get('MY_VAR', ''))
         self.assertRegexpMatches(p.read().decode('ascii'), '^My value\s*$')
         self.assertRegexpMatches(p.eread().decode('ascii'), '^$')
 
+    def test_override_environment(self):
+        env = {'PATH': 'PATH'}
+        status, output, error = execute(sys.executable, '-c', '''import os
+print(os.environ.get('PATH', ''))
+''', environment=env)
+        self.assertEqual(status, 0)
+        self.assertRegexpMatches(output.decode('ascii'), '^PATH\s*$')
+        self.assertRegexpMatches(error.decode('ascii'), '^$')
+
 
 class TestWrapper(unittest.TestCase):
     def test_execute_with_error(self):
