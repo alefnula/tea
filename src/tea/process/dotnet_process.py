@@ -81,17 +81,12 @@ def _get_cmd(command, arguments):
 
 
 class DotnetProcess(base.Process):
-    def __init__(self, command, arguments=None, environment=None,
-                 redirect_output=True):
+    def __init__(self, command, arguments=None, env=None, redirect_output=True):
         self._process = CSharpProcess()
         (self._process.StartInfo.FileName,
-         self._process.StartInfo.Arguments) = _get_cmd(command,
-                                                       [] if arguments is None
-                                                       else arguments)
-        if environment is not None:
-            process_env = self._process.StartInfo.EnvironmentVariables
-            for key, value in environment.items():
-                process_env[unicode(key)] = unicode(value)
+         self._process.StartInfo.Arguments
+        ) = _get_cmd(command, [] if arguments is None else arguments)
+        self._env = env
         self._redirect_output = redirect_output
         self._process.StartInfo.UseShellExecute = not redirect_output
         self._process.StartInfo.CreateNoWindow = True
@@ -122,6 +117,10 @@ class DotnetProcess(base.Process):
             self._stderr += outline.Data
 
     def start(self):
+        # Setup environment variables
+        process_env = self._process.StartInfo.EnvironmentVariables
+        for key, value in self._create_env(self._env).items():
+            process_env[unicode(key)] = unicode(value)
         self._process.Start()
         if self._redirect_output:
             self._process.BeginOutputReadLine()

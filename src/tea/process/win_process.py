@@ -98,14 +98,11 @@ def _get_cmd(command, arguments):
 
 
 class WinProcess(base.Process):
-    def __init__(self, command, arguments=None, environment=None,
-                 redirect_output=True):
+    def __init__(self, command, arguments=None, env=None, redirect_output=True):
         # Parse and generate the command line
         self._commandline = _get_cmd(command,
                                      [] if arguments is None else arguments)
-        self._environment = ({str(key): str(value)
-                              for key, value in environment.items()}
-                             if environment else None)
+        self._env = env
         self._redirect_output = redirect_output
         self._appName = None
         self._bInheritHandles = 1
@@ -151,7 +148,7 @@ class WinProcess(base.Process):
         ) = win32process.CreateProcess(
             self._appName, self._commandline, self._processAttributes,
             self._threadAttributes, self._bInheritHandles,
-            self._dwCreationFlags, self._environment,
+            self._dwCreationFlags, self._create_env(self._env),
             self._currentDirectory, self._startupinfo
         )
 

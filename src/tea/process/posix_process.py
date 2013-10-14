@@ -88,14 +88,12 @@ def _get_cmd(command, args):
 
 
 class PosixProcess(base.Process):
-    def __init__(self, command, arguments=None, environment=None,
+    def __init__(self, command, arguments=None, env=None,
                  redirect_output=True):
         self._commandline = _get_cmd(command,
                                      [] if arguments is None else arguments)
         # will be created on start
-        self._environment = ({str(key): str(value)
-                              for key, value in environment.items()}
-                             if environment else None)
+        self._env = env
         self._process = None
         self._wait_thread = None
         self._redirect_output = redirect_output
@@ -110,17 +108,14 @@ class PosixProcess(base.Process):
             self._stderr_named = tempfile.NamedTemporaryFile()
             self._stdout_reader = open(self._stdout_named.name, 'rb')
             self._stderr_reader = open(self._stderr_named.name, 'rb')
-            self._process = subprocess.Popen(self._commandline,
-                                             stdin=subprocess.PIPE,
-                                             stdout=self._stdout_named.file,
-                                             stderr=self._stderr_named.file,
-                                             env=self._environment)
+            self._process = subprocess.Popen(
+                self._commandline, stdin=subprocess.PIPE,
+                stdout=self._stdout_named.file, stderr=self._stderr_named.file,
+                env=self._create_env(self._env))
         else:
-            self._process = subprocess.Popen(self._commandline,
-                                             stdin=None,
-                                             stdout=open(os.devnull, 'wb'),
-                                             stderr=subprocess.STDOUT,
-                                             env=self._environment)
+            self._process = subprocess.Popen(
+                self._commandline, stdin=None, stdout=open(os.devnull, 'wb'),
+                stderr=subprocess.STDOUT, env=self._create_env(self._env))
         self._wait_thread = threading.Thread(target=self._process.wait)
         self._wait_thread.setDaemon(True)
         self._wait_thread.start()

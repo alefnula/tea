@@ -2,6 +2,7 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '01 August 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
+import os
 import abc
 from tea.utils import six
 
@@ -48,9 +49,16 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         ''
     """
 
+    @staticmethod
+    def _create_env(env):
+        full_env = {str(key): str(value) for key, value in os.environ.items()}
+        if env is not None:
+            full_env.update({str(key): str(value)
+                             for key, value in env.items()})
+        return full_env
+
     @abc.abstractmethod
-    def __init__(self, command, arguments=None, environment=None,
-                 redirect_output=True):
+    def __init__(self, command, arguments=None, env=None, redirect_output=True):
         """Creates the Process object providing the command and it's
         command line arguments.
 
@@ -62,8 +70,9 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         :param str command: Path to the executable file.
         :param list arguments: list of command line arguments passed
             to the command
-        :param dict environment: Optional additional environment
-            variables that will be added to the subprocess environment.
+        :param dict env: Optional additional environment variables that
+            will be added to the subprocess environment or that override
+            currently set environment variables.
         :param bool redirect_output: True if you want to be able to get
             the standard output and the standard error of the
             subprocess, otherwise it will be redirected to /dev/null

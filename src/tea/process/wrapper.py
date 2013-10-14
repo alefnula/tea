@@ -31,7 +31,7 @@ def execute(command, *args, **kwargs):
 
     Keyword arguments:
 
-    :param dict environment: Dictionary of additional environment variables.
+    :param dict env: Dictionary of additional environment variables.
     :param bool wait: Wait for the process to finish.
 
     Example::
@@ -45,14 +45,8 @@ def execute(command, *args, **kwargs):
         >>> print('status: %s, output: %s, error: %s' % (status, out, err))
         status: 1, output: , error: err
     """
-    environment = kwargs.pop('environment', None)
-    if environment is not None:
-        e = os.environ.copy()
-        e.update(environment)
-    else:
-        e = None
     wait = kwargs.pop('wait', True)
-    process = Process(command, args, environment=e)
+    process = Process(command, args, env=kwargs.pop('env', None))
     process.start()
     if not wait:
         return process

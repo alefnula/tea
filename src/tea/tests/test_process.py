@@ -2,6 +2,7 @@ __author__ = 'Viktor Kerkez <viktor.kerkez@gmail.com>'
 __date__ = '20 January 2010'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
+import os
 import sys
 import time
 import unittest
@@ -95,7 +96,7 @@ sys.stderr.write('bar')
         env = {'MY_VAR': 'My value'}
         p = Process(sys.executable, ['-c', '''import os
 print(os.environ.get('MY_VAR', ''))
-'''], environment=env)
+'''], env=env)
         p.start()
         p.wait()
         self.assertEqual(p.exit_code, 0)
@@ -106,9 +107,22 @@ print(os.environ.get('MY_VAR', ''))
         env = {'PATH': 'PATH'}
         status, output, error = execute(sys.executable, '-c', '''import os
 print(os.environ.get('PATH', ''))
-''', environment=env)
+''', env=env)
         self.assertEqual(status, 0)
         self.assertRegexpMatches(output.decode('ascii'), '^PATH\s*$')
+        self.assertRegexpMatches(error.decode('ascii'), '^$')
+        os.environ['FOO'] = 'foo'
+        status, output, error = execute(sys.executable, '-c', '''import os
+print(os.environ.get('FOO', ''))
+''')
+        self.assertEqual(status, 0)
+        self.assertRegexpMatches(output.decode('ascii'), '^foo\s*$')
+        self.assertRegexpMatches(error.decode('ascii'), '^$')
+        status, output, error = execute(sys.executable, '-c', '''import os
+print(os.environ.get('FOO', ''))
+''', env={'FOO': 'bar'})
+        self.assertEqual(status, 0)
+        self.assertRegexpMatches(output.decode('ascii'), '^bar\s*$')
         self.assertRegexpMatches(error.decode('ascii'), '^$')
 
 
