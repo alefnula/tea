@@ -22,6 +22,7 @@ setup(
         'tea.commander',
         'tea.console',
         'tea.cron',
+        'tea.decorators',
         'tea.ds',
         'tea.logger',
         'tea.msg',
