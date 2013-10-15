@@ -3,6 +3,7 @@ v0.0.6 (November XX, 2013)
 
   - ``environment`` parameter in the ``process`` module changed to ``env``.
     Creation of full environment moved to the base ``Process`` class.
+  - Adding ``working_dir`` parameter to the ``Process`` class constructor.
 
 
 v0.0.5 (October 12, 2013)

@@ -82,6 +82,8 @@ def create_file(filename, mode='rw'):
 
 
 def _get_cmd(command, arguments):
+    if arguments is None:
+        arguments = []
     if command.endswith('.py'):
         arguments = ['%s\\python.exe' % sys.prefix, command] + list(arguments)
     elif command.endswith('.pyw'):
@@ -98,10 +100,9 @@ def _get_cmd(command, arguments):
 
 
 class WinProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, redirect_output=True):
-        # Parse and generate the command line
-        self._commandline = _get_cmd(command,
-                                     [] if arguments is None else arguments)
+    def __init__(self, command, arguments=None, env=None, redirect_output=True,
+                 working_dir=None):
+        self._commandline = _get_cmd(command, arguments)
         self._env = env
         self._redirect_output = redirect_output
         self._appName = None
@@ -115,7 +116,7 @@ class WinProcess(base.Process):
         self._dwCreationFlags = win32con.CREATE_NO_WINDOW
         # TODO: Which one of these is best?
         #self._dwCreationFlags=win32con.NORMAL_PRIORITY_CLASS
-        self._currentDirectory = None  # string or None
+        self._currentDirectory = working_dir
         # This will be created during the start
         self._hProcess = None
         self._hThread = None

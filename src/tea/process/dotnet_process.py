@@ -64,6 +64,8 @@ def kill(pid):
 
 
 def _get_cmd(command, arguments):
+    if arguments is None:
+        arguments = []
     if command.endswith('.py'):
         arguments = [command] + list(arguments)
         command = os.path.join(sys.prefix, 'ipy.exe')
@@ -81,18 +83,20 @@ def _get_cmd(command, arguments):
 
 
 class DotnetProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, redirect_output=True):
+    def __init__(self, command, arguments=None, env=None, redirect_output=True,
+                 working_dir=None):
         self._process = CSharpProcess()
-        (self._process.StartInfo.FileName,
-         self._process.StartInfo.Arguments
-        ) = _get_cmd(command, [] if arguments is None else arguments)
+        start_info = self._process.StartInfo
+        start_info.FileName, start_info.Arguments = _get_cmd(command, arguments)
+        start_info.CreateNoWindow = True
+        start_info.UseShellExecute = not redirect_output
+        start_info.RedirectStandardInput = redirect_output
+        start_info.RedirectStandardOutput = redirect_output
+        start_info.RedirectStandardError = redirect_output
+        if working_dir is not None:
+            start_info.WorkingDirectory = working_dir
         self._env = env
         self._redirect_output = redirect_output
-        self._process.StartInfo.UseShellExecute = not redirect_output
-        self._process.StartInfo.CreateNoWindow = True
-        self._process.StartInfo.RedirectStandardInput = redirect_output
-        self._process.StartInfo.RedirectStandardOutput = redirect_output
-        self._process.StartInfo.RedirectStandardError = redirect_output
         self._process.OutputDataReceived += self._stdout_handler
         self._process.ErrorDataReceived += self._stderr_handler
 

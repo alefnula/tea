@@ -12,8 +12,8 @@ import tempfile
 import threading
 import subprocess
 
-from tea.system import platform
 from tea.process import base
+from tea.system import platform
 from tea.decorators import docstring
 
 logger = logging.getLogger(__name__)
@@ -79,24 +79,25 @@ def kill(pid):
         os.kill(pid, signal.SIGKILL)
 
 
-def _get_cmd(command, args):
+def _get_cmd(command, arguments):
     """Helper function for merging command with arguments"""
+    if arguments is None:
+        arguments = []
     if command.endswith('.py') or command.endswith('.pyw'):
-        return [sys.executable, command] + list(args)
+        return [sys.executable, command] + list(arguments)
     else:
-        return [command] + list(args)
+        return [command] + list(arguments)
 
 
 class PosixProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None,
-                 redirect_output=True):
-        self._commandline = _get_cmd(command,
-                                     [] if arguments is None else arguments)
-        # will be created on start
+    def __init__(self, command, arguments=None, env=None, redirect_output=True,
+                 working_dir=None):
+        self._commandline = _get_cmd(command, arguments)
         self._env = env
         self._process = None
         self._wait_thread = None
         self._redirect_output = redirect_output
+        self._working_dir = working_dir
         self._stdout_named = None
         self._stderr_named = None
         self._stdout_reader = None
@@ -109,13 +110,22 @@ class PosixProcess(base.Process):
             self._stdout_reader = open(self._stdout_named.name, 'rb')
             self._stderr_reader = open(self._stderr_named.name, 'rb')
             self._process = subprocess.Popen(
-                self._commandline, stdin=subprocess.PIPE,
-                stdout=self._stdout_named.file, stderr=self._stderr_named.file,
-                env=self._create_env(self._env))
+                self._commandline,
+                stdin=subprocess.PIPE,
+                stdout=self._stdout_named.file,
+                stderr=self._stderr_named.file,
+                env=self._create_env(self._env),
+                cwd=self._working_dir
+            )
         else:
             self._process = subprocess.Popen(
-                self._commandline, stdin=None, stdout=open(os.devnull, 'wb'),
-                stderr=subprocess.STDOUT, env=self._create_env(self._env))
+                self._commandline,
+                stdin=None,
+                stdout=open(os.devnull, 'wb'),
+                stderr=subprocess.STDOUT,
+                env=self._create_env(self._env),
+                cwd=self._working_dir
+            )
         self._wait_thread = threading.Thread(target=self._process.wait)
         self._wait_thread.setDaemon(True)
         self._wait_thread.start()

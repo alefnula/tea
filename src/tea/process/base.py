@@ -58,7 +58,8 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         return full_env
 
     @abc.abstractmethod
-    def __init__(self, command, arguments=None, env=None, redirect_output=True):
+    def __init__(self, command, arguments=None, env=None, redirect_output=True,
+                 working_dir=None):
         """Creates the Process object providing the command and it's
         command line arguments.
 
@@ -76,6 +77,8 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         :param bool redirect_output: True if you want to be able to get
             the standard output and the standard error of the
             subprocess, otherwise it will be redirected to /dev/null
+        :param str working_dir: Set the working directory from which the
+            process will be started.
         """
 
     @abc.abstractmethod

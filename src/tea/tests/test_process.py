@@ -125,6 +125,14 @@ print(os.environ.get('FOO', ''))
         self.assertRegexpMatches(output.decode('ascii'), '^bar\s*$')
         self.assertRegexpMatches(error.decode('ascii'), '^$')
 
+    def test_working_dir(self):
+        working_dir = sys.exec_prefix.strip(os.pathsep)
+        p = Process(sys.executable, ['-c', '''import os; print(os.getcwd())'''],
+                    working_dir=working_dir)
+        p.start()
+        p.wait()
+        self.assertEqual(p.read().decode('ascii').strip(), working_dir)
+
 
 class TestWrapper(unittest.TestCase):
     def test_execute_with_error(self):
