@@ -85,6 +85,10 @@ class Config(object):
                 self.data = {}
 
     def _read_file(self):
+        if not os.path.isfile(self.filename):
+            logger.warning('Configuration file "%s" does not exist',
+                           self.filename)
+            return {}
         try:
             if self.format == Config.JSON:
                 with io.open(self.filename, 'r+b') as f:
