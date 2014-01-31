@@ -27,7 +27,7 @@ API Documentation
    api/parsing.rst
    api/process.rst
    api/scm.rst
-   api/shutil.rst
+   api/shell.rst
    api/system.rst
    api/tornado.rst
    api/utils.rst

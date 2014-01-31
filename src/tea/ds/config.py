@@ -11,7 +11,7 @@ import copy
 import logging
 import functools
 import threading
-from tea import shutil
+from tea import shell
 from tea.utils import six
 try:
     import yaml
@@ -47,7 +47,7 @@ def _ensure_exists(filename, encoding='utf-8'):
     if not os.path.isfile(filename):
         dirname = os.path.dirname(filename)
         if not os.path.isdir(dirname):
-            shutil.mkdir(dirname)
+            shell.mkdir(dirname)
         with io.open(filename, 'w', encoding=encoding) as f:
             fmt = _get_format(filename)
             if fmt in (Config.JSON, Config.YAML):

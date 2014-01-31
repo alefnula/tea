@@ -1,7 +1,6 @@
-"""This module mimics the behavior of the builtin :mod:`shutil` module from the
-standard python library, adding logging to all operations.
-
-Also, it adds a few useful additional functions to the module.
+"""This module mimics some of the behaviors of the builtin :mod:`shutil`
+module, adding logging to all operations and abstracting some other useful
+shell commands (functions).
 """
 
 __author__ = 'Viktor Kerkez <alefnula@gmail.com>'

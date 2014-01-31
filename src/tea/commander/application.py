@@ -7,7 +7,7 @@ import sys
 import pkgutil
 import logging
 import collections
-from tea import shutil
+from tea import shell
 from tea.utils import six
 from tea.utils import get_object
 from tea.ds.config import MultiConfig
@@ -166,7 +166,7 @@ class Application(object):
 
         # First search in aliases
         if subcommand in config.get('alias', {}):
-            alias = shutil.split(config.get('alias.%s' %
+            alias = shell.split(config.get('alias.%s' %
                                             subcommand).encode('utf-8'))
             args = [args[0]] + alias + args[2:]
             subcommand = args[1]

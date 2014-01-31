@@ -29,7 +29,7 @@ setup(
         'tea.parsing',
         'tea.process',
         'tea.scm',
-        'tea.shutil',
+        'tea.shell',
         'tea.system',
         'tea.tests',
         'tea.tornado',

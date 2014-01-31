@@ -23,7 +23,7 @@ commands = {
 
 
 def print_help():
-    print('Usage: python -m tea.shutil [command] [params]\nCommands: %s' %
+    print('Usage: python -m tea.shell [command] [params]\nCommands: %s' %
           ', '.join(commands.keys()))
     return 1
 
@@ -56,8 +56,8 @@ def main(args):
             # get specs
             iterable, params, required = commands[command]
             # import function
-            from tea import shutil
-            func = getattr(shutil, command)
+            from tea import shell
+            func = getattr(shell, command)
             if not (required <= len(args) <= len(params)):
                 return print_func_help(func, required)
             parsed_args = []

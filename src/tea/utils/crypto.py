@@ -299,7 +299,7 @@ elif platform.is_a(platform.DOTNET):
     @keygetter
     def get_key():
         from tea.system import get_appdata
-        from tea.shutil import mkdir
+        from tea.shell import mkdir
         dir_path = os.path.join(get_appdata(), 'Tea')
         key_path = os.path.join(dir_path, 'key.bin')
         if os.path.exists(dir_path) and os.path.exists(key_path):

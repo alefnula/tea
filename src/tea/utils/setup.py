@@ -9,7 +9,7 @@ import sys
 import glob
 import optparse
 
-from tea import shutil
+from tea import shell
 from tea.utils import compress
 from tea.process import execute_and_report as er
 
@@ -23,18 +23,18 @@ def setup(module, target='zip', output_path=None, data_dir=None):
                       '--install-scripts', os.path.join(dist),
                       *(['--install-data',    os.path.join(dist, data_dir)]
                         if data_dir is not None else []))
-            with shutil.goto(dist) as ok:
+            with shell.goto(dist) as ok:
                 assert ok
                 assert compress.mkzip('%s.zip' % module,
                                       glob.glob(os.path.join('lib', '*')))
-                assert shutil.remove('lib')
+                assert shell.remove('lib')
         elif target == 'exe':
             assert er('setup.py', 'install', '--no-compile',
                       '--install-lib',     os.path.join(dist, 'lib', 'python'),
                       '--install-scripts', os.path.join(dist, 'scripts'),
                       *(['--install-data',    os.path.join(dist, data_dir)]
                         if data_dir is not None else []))
-            with shutil.goto(dist) as ok:
+            with shell.goto(dist) as ok:
                 assert ok
 
                 modules = list(filter(os.path.exists,
@@ -45,17 +45,17 @@ def setup(module, target='zip', output_path=None, data_dir=None):
                                           self_extracting=True)
                 # Cleanup
                 for module in modules:
-                    assert shutil.remove(module)
+                    assert shell.remove(module)
         if output_path is not None:
             output_path = os.path.abspath(output_path)
             if output_path != dist:
                 if not os.path.isdir(output_path):
-                    assert shutil.mkdir(output_path)
-                for filename in shutil.search(dist, '*'):
+                    assert shell.mkdir(output_path)
+                for filename in shell.search(dist, '*'):
                     output = os.path.join(output_path,
                                           filename.replace(dist, '', 1)
                                                   .strip('\\/'))
-                    assert shutil.move(filename, output)
+                    assert shell.move(filename, output)
         return 0
     except AssertionError as e:
         print(e)
@@ -63,9 +63,9 @@ def setup(module, target='zip', output_path=None, data_dir=None):
     finally:
         # Cleanup
         if output_path != dist:
-            shutil.remove(dist)
+            shell.remove(dist)
         if os.path.isdir('build'):
-            shutil.remove('build')
+            shell.remove('build')
 
 
 def create_parser():

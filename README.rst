@@ -17,7 +17,7 @@ a module, which eventually, if it grows and become large enough to become a
 library itself, gets extracted as a separate project.
 
 Modules like ``ds`` (data structures), ``logger``, ``msg``, ``process``,
-``shutil``, ``system``, ``utils``... will always remain a part of ``tea``.
+``shell``, ``system``, ``utils``... will always remain a part of ``tea``.
 
 Other modules, like ``commander`` (library for creating command line
 applications) will eventually be extracted to it's own projects. 
