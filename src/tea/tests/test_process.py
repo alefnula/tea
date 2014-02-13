@@ -127,8 +127,9 @@ print(os.environ.get('FOO', ''))
 
     def test_working_dir(self):
         working_dir = sys.exec_prefix.strip(os.pathsep)
-        p = Process(sys.executable, ['-c', '''import os; print(os.getcwd())'''],
-                    working_dir=working_dir)
+        p = Process(sys.executable, [
+            '-c', '''import os; print(os.getcwd())'''
+        ], working_dir=working_dir)
         p.start()
         p.wait()
         self.assertEqual(p.read().decode('ascii').strip(), working_dir)

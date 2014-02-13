@@ -184,7 +184,7 @@ class Hg(SCM):
         return self._hgr('branch', *([] if name is None else [name]))
 
     def branches(self):
-        """Perfrom hg branches"""
+        """Perform hg branches"""
         return self._hgr('branches')
 
     def heads(self):

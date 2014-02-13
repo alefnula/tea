@@ -87,7 +87,8 @@ class DotnetProcess(base.Process):
                  working_dir=None):
         self._process = CSharpProcess()
         start_info = self._process.StartInfo
-        start_info.FileName, start_info.Arguments = _get_cmd(command, arguments)
+        start_info.FileName, start_info.Arguments = _get_cmd(command,
+                                                             arguments)
         start_info.CreateNoWindow = True
         start_info.UseShellExecute = not redirect_output
         start_info.RedirectStandardInput = redirect_output

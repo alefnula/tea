@@ -167,7 +167,7 @@ class Application(object):
         # First search in aliases
         if subcommand in config.get('alias', {}):
             alias = shell.split(config.get('alias.%s' %
-                                            subcommand).encode('utf-8'))
+                                           subcommand).encode('utf-8'))
             args = [args[0]] + alias + args[2:]
             subcommand = args[1]
 

@@ -145,7 +145,8 @@ class WinProcess(base.Process):
             self._startupinfo.hStdOutput = self._stdout_handle
             self._startupinfo.hStdError = self._stderr_handle
             self._startupinfo.dwFlags |= win32process.STARTF_USESTDHANDLES
-        (self._hProcess, self._hThread, self._dwProcessId, self._dwThreadId
+        (
+            self._hProcess, self._hThread, self._dwProcessId, self._dwThreadId
         ) = win32process.CreateProcess(
             self._appName, self._commandline, self._processAttributes,
             self._threadAttributes, self._bInheritHandles,

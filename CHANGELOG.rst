@@ -1,6 +1,8 @@
 v0.0.6 (February XX, 2014)
 --------------------------
 
+  - Remove tornado JsonHandler. It is too application specific to be in a
+    common library such as tea.
   - ``environment`` parameter in the ``process`` module changed to ``env``.
     Creation of full environment moved to the base ``Process`` class.
   - Adding ``working_dir`` parameter to the ``Process`` class constructor.
@@ -8,7 +10,7 @@ v0.0.6 (February XX, 2014)
 
 
 v0.0.5 (October 12, 2013)
-------------------------
+-------------------------
 
   - Porting everything to work with Python 2.7 and Python 3.3
   - Adding ``six`` library to ``utils`` module
