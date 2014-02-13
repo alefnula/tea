@@ -29,7 +29,6 @@ API Documentation
    api/scm.rst
    api/shell.rst
    api/system.rst
-   api/tornado.rst
    api/utils.rst
 
 

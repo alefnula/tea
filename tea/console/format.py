@@ -16,10 +16,9 @@ from .color import strip_colors, set_color
 def format_page(text):
     """Formats the text for output adding ASCII frame around the text.
 
-    @type  text: string
-    @param text: Text that needs to be formatted.
-    @rtype:  string
-    @return: Formatted string.
+    :param str text: Text that needs to be formatted.
+    :rtype:  string
+    :return: Formatted string.
     """
     width = max(map(len, text.splitlines()))
     page = '+-' + '-' * width + '-+\n'
@@ -37,17 +36,17 @@ def table(text):
     first | second
     row 2 col 1 | 4
 
-    Will be formatted as
-    +-------------+--------+
-    | first       | second |
-    +-------------+--------+
-    | row 2 col 1 | 4      |
-    +-------------+--------+
+    Will be formatted as::
 
-    @type  text: string
-    @param text: Text that needs to be formatted.
-    @rtype:  string
-    @return: Formatted string.
+        +-------------+--------+
+        | first       | second |
+        +-------------+--------+
+        | row 2 col 1 | 4      |
+        +-------------+--------+
+
+    :param str text: Text that needs to be formatted.
+    :rtype:  str
+    :return: Formatted string.
     """
     table_bar = (lambda col_lengths:
                  '+-%s-+%s' % ('-+-'.join(['-' * length
@@ -77,12 +76,11 @@ def table(text):
 
 
 def hbar(width):
-    """Returns ASCII HBar +---+ with the specified width.
+    """Returns ASCII HBar ``+---+`` with the specified width.
 
-    @type  width: integer
-    @param width: Width of the central part of the bar.
-    @rtype:  string
-    @return: ASCII HBar.
+    :param int width: Width of the central part of the bar.
+    :rtype:  str
+    :return: ASCII HBar.
     """
     return '+-' + '-' * width + '-+'
 
@@ -90,7 +88,7 @@ def hbar(width):
 def print_page(text):
     """Formats the text and prints it on stdout.
 
-    Text is formated by adding a ASCII frame around it and coloring the text.
+    Text is formatted by adding a ASCII frame around it and coloring the text.
     Colors can be added to text using color tags, for example:
 
         My [FG_BLUE]blue[NORMAL] text.
@@ -121,12 +119,10 @@ def wrap_text(text, width=80):
 
     Wrapped text is aligned against the left text border.
 
-    @type  text: string
-    @param text: Text to wrap.
-    @type  width: integer
-    @param width: Maximum number of characters per line.
-    @rtype:  string
-    @return: Wrapped text.
+    :param str text: Text to wrap.
+    :param int width: Maximum number of characters per line.
+    :rtype:  str
+    :return: Wrapped text.
     """
     text = re.sub('\s+', ' ', text).strip()
     wrapper = TextWrapper(width=width, break_long_words=False,
@@ -138,14 +134,11 @@ def rjust_text(text, width=80, indent=0, subsequent=None):
     """Same as L{wrap_text} with the difference that the text is aligned
     against the right text border.
 
-    @type  text: string
-    @param text: Text to wrap and align.
-    @type  width: integer
-    @param width: Maximum number of characters per line.
-    @type  indent: integer
-    @param indent: Indentation of the first line.
-    @type  subsequent: integer or None
-    @param subsequent: Indentation of all other lines, if it is None, then the
+    :param str text: Text to wrap and align.
+    :param int width: Maximum number of characters per line.
+    :param int indent: Indentation of the first line.
+    :type  subsequent: int or None
+    :param subsequent: Indentation of all other lines, if it is None, then the
         indentation will be same as for the first line.
     """
     text = re.sub('\s+', ' ', text).strip()
@@ -164,12 +157,10 @@ def center_text(text, width=80):
     It is assumed that all lines width is smaller then B{width}, because the
     line width will not be checked.
 
-    @type  text: string
-    @param text: Text to wrap.
-    @type  width: integer
-    @param width: Maximum number of characters per line.
-    @rtype:  string
-    @return: Centered text.
+    :param str text: Text to wrap.
+    :param int width: Maximum number of characters per line.
+    :rtype:  str
+    :return: Centered text.
     """
     centered = []
     for line in text.splitlines():

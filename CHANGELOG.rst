@@ -1,6 +1,7 @@
 v0.0.6 (February XX, 2014)
 --------------------------
 
+  - Change project organization.
   - Remove tornado JsonHandler. It is too application specific to be in a
     common library such as tea.
   - ``environment`` parameter in the ``process`` module changed to ``env``.

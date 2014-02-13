@@ -7,7 +7,7 @@ from distutils.core import setup
 
 setup(
     name='tea',
-    version='0.0.5',
+    version='0.0.6',
     description='Set of utility python modules.',
     long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
     platforms=['Windows', 'POSIX', 'MacOSX'],
@@ -32,10 +32,8 @@ setup(
         'tea.shell',
         'tea.system',
         'tea.tests',
-        'tea.tornado',
         'tea.utils',
     ],
-    package_dir={'': 'src'},
     scripts=[
     ]
 )

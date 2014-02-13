@@ -172,9 +172,11 @@ def colorize_output(output, colors, indent=0):
     color to be used and boolean value that indicates if dark foreground
     is used.
     For example:
-    >>> CLS = {
-    >>>     re.compile(r'^(--- .*)$') : (Color.red, False)
-    >>> }
+
+        >>> CLS = {
+        >>>     re.compile(r'^(--- .*)$'): (Color.red, False)
+        >>> }
+
     will colorize lines that start with '---' to red.
 
     If different parts of line needs to be in different color then dict must be
@@ -182,11 +184,14 @@ def colorize_output(output, colors, indent=0):
     and values that are tuples of color and boolean that indicates if dark
     foreground is used.
     For example:
-    >>> CLS {
-    >>>>    re.compile(r'^(?P<key>user:\s+)(?P<user>.*)$') :
-    >>>                                    {'key': (Color.yellow, True),
-    >>>                                     'user': (Color.cyan,   False) },
-    >>> }
+
+        >>> CLS = {
+        >>>     re.compile(r'^(?P<key>user:\s+)(?P<user>.*)$'): {
+        >>>         'key': (Color.yellow, True),
+        >>>         'user': (Color.cyan,   False)
+        >>>     }
+        >>> }
+
     will colorize line 'user: Some user' so that 'user:' part is yellow with
     dark foreground and 'Some user' part is cyan without dark foreground.
     """
