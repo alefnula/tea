@@ -1,5 +1,2 @@
-# Testing
-nose
-
 # Optional
 PyYAML

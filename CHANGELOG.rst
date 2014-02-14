@@ -8,6 +8,7 @@ v0.0.6 (February XX, 2014)
     Creation of full environment moved to the base ``Process`` class.
   - Adding ``working_dir`` parameter to the ``Process`` class constructor.
   - Rename tea.shutil to tea.shell
+  - Added tea.shell.gremove
 
 
 v0.0.5 (October 12, 2013)

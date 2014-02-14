@@ -13,6 +13,7 @@ import shlex
 import shutil
 import fnmatch
 import logging
+import contextlib
 from tea.utils import six
 
 logger = logging.getLogger(__name__)
@@ -63,7 +64,8 @@ def chdir(directory):
         return False
 
 
-class goto(object):
+@contextlib.contextmanager
+def goto(directory, create=False):
     """Context object for changing directory.
 
     Usage::
@@ -74,31 +76,22 @@ class goto(object):
         ...     else:
         ...         print 'All OK'
     """
-    def __init__(self, directory, create=False):
-        self.current = os.getcwd()
-        self.directory = os.path.abspath(directory)
-        self.create = create
 
-    def __enter__(self):
-        if not os.path.isdir(self.directory):
-            if self.create:
-                logger.info('goto(%s) Directory does not exist, creating.',
-                            self.directory)
-                if not mkdir(self.directory):
-                    logger.error('goto(%s) Could not create directory.',
-                                 self.directory)
-                    return False
-            else:
-                logger.error('goto(%s) failed! Directory does not exist!',
-                             self.directory)
-                return False
-        logger.info('goto -> %s' % self.directory)
-        os.chdir(self.directory)
-        return True
+    current = os.getcwd()
+    directory = os.path.abspath(directory)
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        logger.info('goto <- %s' % self.directory)
-        os.chdir(self.current)
+    if os.path.isdir(directory) or (create and mkdir(directory)):
+        logger.info('goto -> %s', directory)
+        os.chdir(directory)
+        try:
+            yield True
+        finally:
+            logger.info('goto <- %s', directory)
+            os.chdir(current)
+    else:
+        logger.info('goto(%s) - directory does not exist, or cannot be '
+                    'created.', directory)
+        yield False
 
 
 def mkdir(path, mode=0o777, delete=False):
@@ -294,3 +287,14 @@ def remove(path):
         return rmtree(path)
     else:
         return rmfile(path)
+
+
+def gremove(pattern):
+    """Remove all file found by glob.glob(pattern)
+
+    :param str pattern: Pattern of files to remove
+    """
+    for item in glob.glob(pattern):
+        if not remove(item):
+            return False
+    return True
