@@ -3,9 +3,6 @@ __date__ = '06 October 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 
-import contextlib
-
-
 def docstring(doc, prepend=False, join='\n'):
     """Decorator that will prepend or append a string to the current
     documentation of the target function.
@@ -34,17 +31,3 @@ def docstring(doc, prepend=False, join='\n'):
         return func
     return decorator
 
-
-@contextlib.contextmanager
-def ignore(*exceptions):
-    """Ignores an exception or exception list
-
-    Usage::
-
-        with ignore(OSError):
-            os.remove('filename.txt')
-    """
-    try:
-        yield
-    except exceptions:
-        pass
