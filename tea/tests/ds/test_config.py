@@ -2,10 +2,13 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '25 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
+import os
+import mock
 import unittest
 from tea.system import platform
 from tea.ds.config import Config
 
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 DICT_DATA = {
     'foo': {
@@ -20,30 +23,9 @@ DICT_DATA = {
     'baz': 4
 }
 
-JSON_DATA = '''
-{
-    "foo": {
-        "bar": {
-            "baz": 1
-        },
-        "baz": 2
-    },
-    "bar": {
-        "baz": 3
-    },
-    "baz": 4
-}
-'''
-
-YAML_DATA = '''
-foo:
-  bar:
-    baz: 1
-  baz: 2
-bar:
-  baz: 3
-baz: 4
-'''
+INI_DATA = open(os.path.join(DATA_DIR, 'config.ini')).read()
+JSON_DATA = open(os.path.join(DATA_DIR, 'config.json')).read()
+YAML_DATA = open(os.path.join(DATA_DIR, 'config.yaml')).read()
 
 
 class Checker(unittest.TestCase):
@@ -92,6 +74,58 @@ class TestConfigCreation(Checker):
             self.skipTest('YAML is not supported on .NET')
         self.c = Config(data=YAML_DATA, fmt=Config.YAML)
         self.safe_check_values()
+
+    def test_file_json(self):
+        self.c = Config(filename=os.path.join(DATA_DIR, 'config.json'))
+        self.safe_check_values()
+
+    def test_file_yaml(self):
+        self.c = Config(filename=os.path.join(DATA_DIR, 'config.yaml'))
+        self.safe_check_values()
+
+    def test_non_existing_file(self):
+        self.c = Config(filename=os.path.join(DATA_DIR, 'non_existin.yaml'))
+        self.assertEqual(self.c.data, {})
+
+    def test_unsupported_format(self):
+        self.c = Config(filename=os.path.join(DATA_DIR, 'config.ini'))
+        self.assertEqual(self.c.data, {})
+        self.c = Config(data=INI_DATA, fmt='INI')
+        self.assertEqual(self.c.data, {})
+
+    def test_invalid_format(self):
+        self.c = Config(filename=os.path.join(DATA_DIR, 'config.ini'),
+                        fmt=Config.YAML)
+        self.assertEqual(self.c.data, {})
+        self.c = Config(data=INI_DATA, fmt=Config.YAML)
+        self.assertEqual(self.c.data, {})
+
+    @mock.patch('io.open')
+    def test_save_json(self, io_open):
+        filename = 'some_filename'
+        c = Config(data=JSON_DATA, fmt=Config.JSON)
+        c.filename = filename
+        c.save()
+        io_open.assert_called_with(filename, 'w', encoding='utf-8')
+        io_open.result.write.asswert_called_with(JSON_DATA)
+
+    @mock.patch('io.open')
+    def test_save_yaml(self, io_open):
+        filename = 'some_filename'
+        c = Config(data=YAML_DATA, fmt=Config.YAML)
+        c.filename = filename
+        c.save()
+        io_open.assert_called_with(filename, 'w', encoding='utf-8')
+        io_open.result.write.asswert_called_with(YAML_DATA)
+
+    @mock.patch('io.open')
+    def test_save_unsupported(self, io_open):
+        filename = 'some_filename'
+        c = Config(data=YAML_DATA, fmt=Config.YAML)
+        c.filename = filename
+        c.fmt = 'INI'
+        c.save()
+        assert not io_open.called
 
 
 class TestSafeConfigAddition(Checker):
@@ -145,6 +179,25 @@ class TestSafeConfigAddition(Checker):
         # the rest should be untouched
         self.safe_check_values(foo=False)
 
+    def test_list_insertion(self):
+        self.c.set('foo.l', [])
+        self.assertEqual(self.c.get('foo.l'), [])
+        self.c.insert('foo.l', 1)
+        self.assertEqual(self.c.get('foo.l'), [1])
+        self.assertEqual(self.c.get('foo.l.0'), 1)
+        self.c.insert('foo.l', 0, 0)
+        self.assertEqual(self.c.get('foo.l'), [0, 1])
+        self.assertEqual(self.c.get('foo.l.0'), 0)
+        self.assertEqual(self.c.get('foo.l.1'), 1)
+        self.c.set('foo.l.0', 2)
+        self.assertEqual(self.c.get('foo.l'), [2, 1])
+        self.assertEqual(self.c.get('foo.l.0'), 2)
+        self.assertEqual(self.c.get('foo.l.1'), 1)
+
+    def test_insertion_in_non_list(self):
+        with self.assertRaises(KeyError):
+            self.c.insert('foo', 0)
+
 
 class TestSafeConfigSetting(Checker):
     def setUp(self):
@@ -197,6 +250,17 @@ class TestSafeConfigDeleting(Checker):
         # the rest should be untouched
         self.safe_check_values(foo=False)
 
+    def test_delete_from_list(self):
+        self.c.set('foo.l', [1, 2, 3])
+        self.c.delete('foo.l.1')
+        self.assertEqual(self.c.get('foo.l'), [1, 3])
+        del self.c['foo.l.0']
+        self.assertEqual(self.c.get('foo.l'), [3])
+
+    def test_safe_delete(self):
+        self.c.delete('non_existent')
+        self.safe_check_values()
+
 
 class TestUnsafeConfigGetting(Checker):
     def setUp(self):
@@ -226,3 +290,22 @@ class TestUnsafeConfigGetting(Checker):
         self.assertEqual(self.c['list.-2'], 1)
         self.assertRaises(IndexError, lambda: self.c['list.2'])
         self.assertRaises(IndexError, lambda: self.c['list.-3'])
+
+    def test_keys(self):
+        self.assertEqual(self.c.keys(), set(['foo', 'bar', 'baz']))
+
+    def test_contains(self):
+        # Existing
+        self.assertTrue('foo' in self.c)
+        self.assertTrue('foo.bar' in self.c)
+        self.assertTrue('foo.bar.baz' in self.c)
+        self.assertTrue('foo.baz' in self.c)
+        self.assertTrue('bar' in self.c)
+        self.assertTrue('bar.baz' in self.c)
+        self.assertTrue('baz' in self.c)
+        # Non existing
+        self.assertFalse('oof' in self.c)
+        self.assertFalse('bar.foo' in self.c)
+        self.assertFalse('baz.foo' in self.c)
+        self.assertFalse('baz.bar' in self.c)
+        self.assertFalse('foo.baz.bar' in self.c)

@@ -60,8 +60,8 @@ class Config(object):
             return {}
         try:
             if self.fmt == Config.JSON:
-                with io.open(self.filename, 'r+b') as f:
-                    return json.load(f, encoding=self.encoding)
+                with io.open(self.filename, 'r', encoding=self.encoding) as f:
+                    return json.load(f)
             elif self.fmt == Config.YAML:
                 import yaml
                 with io.open(self.filename, 'r', encoding=self.encoding) as f:
@@ -93,8 +93,8 @@ class Config(object):
     def save(self):
         if self.filename is not None:
             if self.fmt == Config.JSON:
-                with io.open(self.filename, 'w+b') as f:
-                    json.dump(self.data, f, indent=2, encoding=self.encoding)
+                with io.open(self.filename, 'w', encoding=self.encoding) as f:
+                    json.dump(self.data, f, indent=2)
             elif self.fmt == Config.YAML:
                 import yaml
                 with io.open(self.filename, 'w', encoding=self.encoding) as f:

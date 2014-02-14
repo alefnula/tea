@@ -69,7 +69,7 @@ class Repository(object):
 
     @property
     def muri(self):
-        """Returns a full URI with username, but password is massked"""
+        """Returns a full URI with username, but password is masked"""
         if self._muri is None:
             self._muri = set_uri(self.source, username=self.username,
                                  password='*****')
