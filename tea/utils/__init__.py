@@ -4,8 +4,14 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import sys
 import types
+import logging
+import pkgutil
 import importlib
 import traceback
+from tea.utils import six
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_object(path='', obj=None):
@@ -44,6 +50,32 @@ def get_object(path='', obj=None):
         else:
             obj = getattr(obj, item)
     return obj
+
+
+def load_subclasses(klass, modules=None):
+    """Load recursively all submodules of the modules and return all the
+    subclasses of the provided class
+
+    :param klass: Class whose subclasses we want to load.
+    :type modules: str or list[str]
+    :param modules: List of additional modules or module names that should be
+        recursively imported in order to find all the subclasses of the
+        desired class. Default: None
+
+    """
+    if modules:
+        if isinstance(modules, six.string_types):
+            modules = [modules]
+        for module in modules:
+            try:
+                if isinstance(module, six.string_types):
+                    module = get_object(module)
+                for (loader, module_name, is_pkg) in pkgutil.walk_packages(
+                        module.__path__):
+                    loader.find_module(module_name).load_module(module_name)
+            except:
+                logger.debug('Failed to load %s', module)
+    return klass.__subclasses__()
 
 
 def get_exception():

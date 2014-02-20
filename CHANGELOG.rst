@@ -10,6 +10,7 @@ v0.0.6 (February XX, 2014)
   - Rename tea.shutil to tea.shell
   - Added ``tea.shell.gremove``
   - Added ``ctx`` - context manager library
+  - Added ``tea.utils.load_subclasses``
 
 
 v0.0.5 (October 12, 2013)
