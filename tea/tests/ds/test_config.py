@@ -100,8 +100,9 @@ class TestConfigCreation(Checker):
         self.c = Config(data=INI_DATA, fmt=Config.YAML)
         self.assertEqual(self.c.data, {})
 
+    @mock.patch('os.makedirs')
     @mock.patch('io.open')
-    def test_save_json(self, io_open):
+    def test_save_json(self, io_open, makedirs):
         filename = 'some_filename'
         c = Config(data=JSON_DATA, fmt=Config.JSON)
         c.filename = filename
@@ -109,8 +110,9 @@ class TestConfigCreation(Checker):
         io_open.assert_called_with(filename, 'w', encoding='utf-8')
         io_open.result.write.asswert_called_with(JSON_DATA)
 
+    @mock.patch('os.makedirs')
     @mock.patch('io.open')
-    def test_save_yaml(self, io_open):
+    def test_save_yaml(self, io_open, makedirs):
         filename = 'some_filename'
         c = Config(data=YAML_DATA, fmt=Config.YAML)
         c.filename = filename

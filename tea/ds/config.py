@@ -61,7 +61,7 @@ class Config(object):
         try:
             if self.fmt == Config.JSON:
                 with io.open(self.filename, 'r', encoding=self.encoding) as f:
-                    return json.load(f)
+                    return json.loads(f.read())
             elif self.fmt == Config.YAML:
                 import yaml
                 with io.open(self.filename, 'r', encoding=self.encoding) as f:
@@ -92,11 +92,16 @@ class Config(object):
 
     def save(self):
         if self.filename is not None:
+            dirname = os.path.dirname(self.filename)
             if self.fmt == Config.JSON:
+                if not os.path.isdir(dirname):
+                    os.makedirs(dirname)
                 with io.open(self.filename, 'w', encoding=self.encoding) as f:
-                    json.dump(self.data, f, indent=2)
+                    f.write(json.dumps(self.data, indent=2))
             elif self.fmt == Config.YAML:
                 import yaml
+                if not os.path.isdir(dirname):
+                    os.makedirs(dirname)
                 with io.open(self.filename, 'w', encoding=self.encoding) as f:
                     yaml.safe_dump(self.data, f, default_flow_style=False)
             else:
