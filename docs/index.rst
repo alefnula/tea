@@ -20,7 +20,6 @@ API Documentation
 
    api/commander.rst
    api/console.rst
-   api/cron.rst
    api/ctx.rst
    api/ds.rst
    api/logger.rst
