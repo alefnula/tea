@@ -19,6 +19,7 @@ commands = {
     'move': (False, [str, str], 2),
     'gmove': (False, [str, str], 2),
     'remove': (False, [str], 1),
+    'gremove': (False, [str], 1),
 }
 
 

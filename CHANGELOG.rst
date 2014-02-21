@@ -13,6 +13,7 @@ v0.0.6 (February XX, 2014)
   - Added ``tea.utils.load_subclasses``
   - Remove the ``tea.cron`` module. The same thing can be found in the
     ``APScheduler`` python package on PyPI.
+  - Add ``tea.shell.touch`` and hide helper functions in ``tea.shell``.
 
 
 v0.0.5 (October 12, 2013)

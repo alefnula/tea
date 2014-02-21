@@ -8,6 +8,7 @@ __date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
+import io
 import glob
 import shlex
 import shutil
@@ -129,7 +130,7 @@ def __create_destdir(destination):
             raise Exception('Failed to create "%s"' % destdir)
 
 
-def copyfile(source, destination):
+def __copyfile(source, destination):
     """Copy data and mode bits ("cp source destination").
 
     The destination may be a directory.
@@ -150,7 +151,7 @@ def copyfile(source, destination):
         return False
 
 
-def copyfile2(source, destination):
+def __copyfile2(source, destination):
     """Copy data and all stat info ("cp -p source destination").
 
     The destination may be a directory.
@@ -171,7 +172,7 @@ def copyfile2(source, destination):
         return False
 
 
-def copytree(source, destination, symlinks=False):
+def __copytree(source, destination, symlinks=False):
     """Recursively copy a directory tree using copy2().
 
     The destination directory must not already exist.
@@ -201,9 +202,9 @@ def copytree(source, destination, symlinks=False):
 def copy(source, destination):
     """Copy file or directory"""
     if os.path.isdir(source):
-        return copytree(source, destination)
+        return __copytree(source, destination)
     else:
-        return copyfile2(source, destination)
+        return __copyfile2(source, destination)
 
 
 def gcopy(pattern, destination):
@@ -244,7 +245,7 @@ def gmove(pattern, destination):
     return True
 
 
-def rmfile(path):
+def __rmfile(path):
     """Delete a file
 
     :param str path: Path to the file that needs to be deleted.
@@ -260,7 +261,7 @@ def rmfile(path):
         return False
 
 
-def rmtree(path):
+def __rmtree(path):
     """Recursively delete a directory tree.
 
     :param str path: Path to the directory that needs to be deleted.
@@ -284,9 +285,9 @@ def remove(path):
     :return: True if the operation is successful, False otherwise.
     """
     if os.path.isdir(path):
-        return rmtree(path)
+        return __rmtree(path)
     else:
-        return rmfile(path)
+        return __rmfile(path)
 
 
 def gremove(pattern):
@@ -298,3 +299,27 @@ def gremove(pattern):
         if not remove(item):
             return False
     return True
+
+
+def touch(path, content='', encoding='utf-8'):
+    """Create a file at the given path if it does not already exists.
+
+    :param str path: Path to the file.
+    :param str content: Optional content that will be written in the file.
+    :param str encoding: Encoding in which to write the content.
+        Default: ``utf-8``
+    """
+    path = os.path.abspath(path)
+    if os.path.exists(path):
+        logger.warning('touch: "%s" already exists', path)
+        return False
+    try:
+        logger.info('touch: %s', path)
+        with io.open(path, 'wb') as f:
+            if not isinstance(content, six.binary_type):
+                content = content.encode(encoding)
+            f.write(content)
+        return True
+    except Exception as e:
+        logger.error('touch: %s failed. Error: %s', path, e)
+        return False
