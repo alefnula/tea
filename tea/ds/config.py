@@ -92,16 +92,14 @@ class Config(object):
 
     def save(self):
         if self.filename is not None:
-            dirname = os.path.dirname(self.filename)
+            dirname = os.path.abspath(os.path.dirname(self.filename))
+            if not os.path.isdir(dirname):
+                os.makedirs(dirname)
             if self.fmt == Config.JSON:
-                if not os.path.isdir(dirname):
-                    os.makedirs(dirname)
                 with io.open(self.filename, 'w', encoding=self.encoding) as f:
                     f.write(json.dumps(self.data, indent=2))
             elif self.fmt == Config.YAML:
                 import yaml
-                if not os.path.isdir(dirname):
-                    os.makedirs(dirname)
                 with io.open(self.filename, 'w', encoding=self.encoding) as f:
                     yaml.safe_dump(self.data, f, default_flow_style=False)
             else:
@@ -337,4 +335,4 @@ class MultiConfig(object):
 
     def __repr__(self):
         return ('MultiConfig(\n  %s\n)' %
-                (',\n  '.join(reversed(map(repr, self._configs)))))
+                (',\n  '.join(reversed(map(repr, self.__configs)))))

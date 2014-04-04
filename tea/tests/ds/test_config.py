@@ -100,33 +100,47 @@ class TestConfigCreation(Checker):
         self.c = Config(data=INI_DATA, fmt=Config.YAML)
         self.assertEqual(self.c.data, {})
 
+    @mock.patch('os.path.isdir', return_value=False)
     @mock.patch('os.makedirs')
     @mock.patch('io.open')
-    def test_save_json(self, io_open, makedirs):
+    def test_save_json(self, io_open, makedirs, isdir):
         filename = 'some_filename'
+        dirname = os.path.abspath(os.path.dirname(filename))
         c = Config(data=JSON_DATA, fmt=Config.JSON)
         c.filename = filename
         c.save()
+        isdir.assert_called_with(dirname)
+        makedirs.assert_called_with(dirname)
         io_open.assert_called_with(filename, 'w', encoding='utf-8')
         io_open.result.write.asswert_called_with(JSON_DATA)
 
+    @mock.patch('os.path.isdir', return_value=False)
     @mock.patch('os.makedirs')
     @mock.patch('io.open')
-    def test_save_yaml(self, io_open, makedirs):
+    def test_save_yaml(self, io_open, makedirs, isdir):
         filename = 'some_filename'
+        dirname = os.path.abspath(os.path.dirname(filename))
         c = Config(data=YAML_DATA, fmt=Config.YAML)
         c.filename = filename
         c.save()
+        isdir.assert_called_with(dirname)
+        makedirs.assert_called_with(dirname)
         io_open.assert_called_with(filename, 'w', encoding='utf-8')
         io_open.result.write.asswert_called_with(YAML_DATA)
 
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.makedirs')
     @mock.patch('io.open')
-    def test_save_unsupported(self, io_open):
+    def test_save_unsupported(self, io_open, makedirs, isdir):
+        isdir.return_value = True
         filename = 'some_filename'
+        dirname = os.path.abspath(os.path.dirname(filename))
         c = Config(data=YAML_DATA, fmt=Config.YAML)
         c.filename = filename
         c.fmt = 'INI'
         c.save()
+        isdir.assert_called_with(dirname)
+        assert not makedirs.called
         assert not io_open.called
 
 
