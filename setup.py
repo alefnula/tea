@@ -3,11 +3,12 @@ __date__ = '20 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 import io
+import os
 from distutils.core import setup
 
 setup(
     name='tea',
-    version='0.0.6',
+    version=os.environ.get('TRAVIS_TAG', '0.0.0'),
     description='Set of utility python modules.',
     long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
     platforms=['Windows', 'POSIX', 'MacOSX'],

@@ -1,11 +1,18 @@
 language: python
-
 python:
-  - 2.7
-  - 3.3
-
+- 2.7
+- 3.3
 install:
-  - pip install -r requirements-dev.txt --use-mirrors
-
+- pip install -r requirements-dev.txt
 script:
-  - nosetests
+- nosetests
+deploy:
+  provider: pypi
+  user: alefnula
+  password:
+    secure: IZ0nvhdhxxDPGUnCdMdzW72zSldZW5wWnSlwmXgBwQNdoTM0zgDnPk9uC0srixPkctovtUFLZxvshUDdSBwBiFjzuFGb2vhDAzUN6cRrWEion9A368Liu0ujytsb8jEnWUmafLOpPF4EJzhlINi+uy1gqb+HZ/DpTZc/LeajtFQ=
+  on:
+    tags: true
+    branch: master
+    distributions: sdist bdist_wheel
+    repo: alefnula/tea
