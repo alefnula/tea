@@ -1,5 +1,5 @@
-tea.utils
-=========
+:mod:`tea.utils` Module
+=======================
 
 .. automodule:: tea.utils
     :members:

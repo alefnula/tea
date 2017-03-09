@@ -18,15 +18,7 @@ API Documentation
 .. toctree::
    :maxdepth: 3
 
-   api/console.rst
-   api/ctx.rst
-   api/ds.rst
-   api/logger.rst
-   api/msg.rst
-   api/process.rst
-   api/shell.rst
-   api/system.rst
-   api/utils.rst
+   api/index.rst
 
 
 Indices and tables

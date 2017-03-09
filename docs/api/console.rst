@@ -1,5 +1,5 @@
-tea.console
-===========
+:mod:`tea.console` Module
+=========================
 
 .. automodule:: tea.console
     :members:

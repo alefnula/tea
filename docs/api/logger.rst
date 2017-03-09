@@ -1,5 +1,5 @@
-tea.logger
-==========
+:mod:`tea.logger` Module
+========================
 
 .. automodule:: tea.logger
     :members:

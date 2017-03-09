@@ -1,5 +1,5 @@
-tea.ds
-======
+:mod:`tea.ds` Module
+====================
 
 .. automodule:: tea.ds
     :members:

@@ -1,5 +1,5 @@
-tea.msg
-=======
+:mod:`tea.msg` Module
+=====================
 
 .. automodule:: tea.msg
     :members:
