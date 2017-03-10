@@ -77,7 +77,4 @@ class Singleton(six.with_metaclass(SingletonMetaclass)):
     >>> assert first.data == second.data
     >>>
     """
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+    pass

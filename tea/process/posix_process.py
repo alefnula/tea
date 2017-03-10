@@ -11,7 +11,7 @@ import logging
 import tempfile
 import threading
 import subprocess
-
+from tea.utils import cmp
 from tea.process import base
 from tea.system import platform
 from tea.decorators import docstring

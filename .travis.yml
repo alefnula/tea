@@ -10,6 +10,7 @@ install:
 
 script:
   - py.test --pep8 tea --cov tea
+  - flake8 tea
 
 after_success:
   - codecov

@@ -60,7 +60,3 @@ def load_plugins(modules, cls=None, annotation=None, subclasses=False):
                 if getattr(obj, '_tea_ds_plugin', None) == annotation:
                     items.append(obj)
         return items
-
-if __name__ == '__main__':
-    from unittest import TestCase
-    print(load_plugins('tea.tests', cls=TestCase))

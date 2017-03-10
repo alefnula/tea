@@ -14,6 +14,14 @@ import traceback
 logger = logging.getLogger(__name__)
 
 
+def _package(module):
+    """This is a hack for python2 since it does not have __package__ always set
+    up correctly"""
+    return (
+        module.__name__ if module.__package__ is None else module.__package__
+    )
+
+
 def get_object(path='', obj=None):
     """Returns an object from a dot path.
 
@@ -43,13 +51,70 @@ def get_object(path='', obj=None):
         path = path[1:]
     for item in path:
         if isinstance(obj, types.ModuleType):
+            submodule = '{}.{}'.format(_package(obj), item)
             try:
-                obj = importlib.import_module('%s.%s' % (obj.__name__, item))
-            except ImportError:
-                obj = getattr(obj, item)
+                obj = importlib.import_module(submodule)
+            except Exception as import_error:
+                try:
+                    obj = getattr(obj, item)
+                except:
+                    # FIXME: I know I should probably merge the errors, but
+                    #        it's easier just to throw the import error since
+                    #        it's most probably the one user wants to see.
+                    #        Create a new LoadingError and throw a combination
+                    #        of the import error and attribute error.
+                    raise import_error
         else:
             obj = getattr(obj, item)
     return obj
+
+
+class Loader(object):
+    """Module loader class loads recursively a module and all it's submodules.
+
+    Loaded modules will be stored in the ``modules`` attribute of the loader as
+    a dictionary of {module_path: module} key, value pairs.
+
+    Errors accounted during the loading process will not stop the loading
+    process. They will be stored in the ``errors`` attribute of the loader as a
+    dictionary of {module_path: exception} key, value pairs.
+
+    Usage::
+
+        loader = Loader()
+        loader.load('foo')
+        loader.load('baz.bar', 'boo')
+
+        import baz
+        loader.load(baz)
+    """
+    def __init__(self):
+        self.modules = {}
+        self.errors = {}
+
+    def load(self, *modules):
+        """Load one or modre modules.
+
+        :param modules: Either a string full path to a module or an actual
+            module object.
+        """
+        for module in modules:
+            if isinstance(module, six.string_types):
+                try:
+                    module = get_object(module)
+                except Exception as e:
+                    self.errors[module] = e
+                    continue
+            self.modules[module.__package__] = module
+            for (loader, module_name, is_pkg) in pkgutil.walk_packages(
+                    module.__path__):
+                full_name = '{}.{}'.format(_package(module), module_name)
+                try:
+                    self.modules[full_name] = get_object(full_name)
+                    if is_pkg:
+                        self.load(self.modules[full_name])
+                except Exception as e:
+                    self.errors[full_name] = e
 
 
 def load_subclasses(klass, modules=None):
@@ -62,23 +127,20 @@ def load_subclasses(klass, modules=None):
         recursively imported in order to find all the subclasses of the
         desired class. Default: None
 
+    FIXME: This function is kept only for backward compatibility reasons, it
+        should not be used. Deprecation warning should be raised and it should
+        be replaces by the ``Loader`` class.
     """
     if modules:
         if isinstance(modules, six.string_types):
             modules = [modules]
-        for module in modules:
-            try:
-                if isinstance(module, six.string_types):
-                    module = get_object(module)
-                for (loader, module_name, is_pkg) in pkgutil.walk_packages(
-                        module.__path__):
-                    loader.find_module(module_name).load_module(module_name)
-            except:
-                logger.debug('Failed to load %s', module)
+        loader = Loader()
+        loader.load(*modules)
     return klass.__subclasses__()
 
 
 def get_exception():
+    """Returns full formatted traceback as a string."""
     trace = ''
     exception = ''
     exc_list = traceback.format_exception_only(sys.exc_info()[0],
@@ -88,4 +150,9 @@ def get_exception():
     tb_list = traceback.format_tb(sys.exc_info()[2])
     for entry in tb_list:
         trace += entry
-    return '\n\n%s\n%s' % (exception, trace)
+    return '%s\n%s' % (exception, trace)
+
+
+def cmp(x, y):
+    """Compare function from python2"""
+    return (x > y) - (x < y)

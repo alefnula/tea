@@ -4,16 +4,18 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import re
+import six
 import sys
 import time
 import threading
+from tea.utils import cmp
 from tea.process import base
 from tea.decorators import docstring
 
-import clr  # @UnresolvedImport
+import clr
 clr.AddReference('System.Management')
-from System.Diagnostics import Process as CSharpProcess
-from System.Management import ManagementObjectSearcher
+from System.Diagnostics import Process as CSharpProcess  # noqa
+from System.Management import ManagementObjectSearcher   # noqa
 
 
 @docstring(base.doc_get_processes)
@@ -125,7 +127,7 @@ class DotnetProcess(base.Process):
         # Setup environment variables
         process_env = self._process.StartInfo.EnvironmentVariables
         for key, value in self._create_env(self._env).items():
-            process_env[unicode(key)] = unicode(value)
+            process_env[six.text_type(key)] = six.text_type(value)
         self._process.Start()
         if self._redirect_output:
             self._process.BeginOutputReadLine()

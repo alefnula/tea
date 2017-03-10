@@ -2,6 +2,8 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '19 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
+__all__ = ['platform', 'get_username', 'get_appdata']
+
 import sys
 _names = sys.builtin_module_names
 
@@ -95,10 +97,10 @@ platform = __platform()
 
 
 if platform.is_a(platform.POSIX):
-    from .posix_system import *
+    from tea.system.posix_system import get_username, get_appdata
 elif platform.is_a(platform.DOTNET):
-    from .dotnet_system import *
+    from tea.system.dotnet_system import get_username, get_appdata
 elif platform.is_a(platform.WINDOWS):
-    from .win_system import *
+    from tea.system.win_system import get_username, get_appdata
 else:
     raise platform.not_supported('tea.system')

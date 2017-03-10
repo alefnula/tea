@@ -59,6 +59,7 @@ class CachedDnsName(object):
             self._fqdn = socket.getfqdn()
         return self._fqdn
 
+
 DNS_NAME = CachedDnsName()
 
 

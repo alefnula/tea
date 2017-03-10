@@ -15,6 +15,7 @@ __all__ = ['CryptError', 'encrypt', 'decrypt']
 class CryptError(Exception):
     pass
 
+
 # key to use for encryption if no other alternative is possible
 _key = [213, 21, 199, 11, 17, 227, 18, 7, 114, 184, 27,
         162, 37, 112, 222, 209, 241, 24, 175, 144, 173,
@@ -92,12 +93,12 @@ try:
         return AES.new(key, AES.MODE_CFB, vector)
 
     @encrypter('aes')
-    def _encrypt(data, key):
+    def _aes_encrypt(data, key):
         """Encrypts data using provided key with AES cipher."""
         return _get_cipher(key).encrypt(data)
 
     @decrypter('aes')
-    def _decrypt(data, key):
+    def _aes_decrypt(data, key):
         """Decrypts data using provided key with AES cipher."""
         return _get_cipher(key).decrypt(data)
 except ImportError:
@@ -243,7 +244,7 @@ elif platform.is_a(platform.DOTNET):
                                               DataProtectionScope)
 
     @encrypter('dotnet')
-    def _encrypt(text, key):
+    def _dotnet_encrypt(text, key):
         """Performs crypting of provided text using AES algorithm.
 
         If 'digest' is True hex_digest will be returned, otherwise bytes of
@@ -269,7 +270,7 @@ elif platform.is_a(platform.DOTNET):
         return ''.join(map(chr, encrypted))
 
     @decrypter('dotnet')
-    def _decrypt(data, key):
+    def _dotnet_decrypt(data, key):
         """Performs decrypting of provided encrypted data.
         If 'digest' is True data must be hex digest, otherwise data should be
         encrypted bytes.

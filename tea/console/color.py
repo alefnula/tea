@@ -34,34 +34,36 @@ class Color(object):
 
 if platform.is_a(platform.WINDOWS | platform.DOTNET):
 
+    # COLORS[fg or bg][is dark][color]
+    COLORS = {
+        'fg': {
+            True: {Color.black: 0x00, Color.blue: 0x01, Color.green: 0x02,
+                   Color.cyan: 0x03, Color.red: 0x04, Color.purple: 0x05,
+                   Color.yellow: 0x06, Color.white: 0x07, Color.gray: 0x08,
+                   Color.normal: 0x07},
+            False: {Color.black: 0x00, Color.blue: 0x09, Color.green: 0x0A,
+                    Color.cyan: 0x0B, Color.red: 0x0C, Color.purple: 0x0D,
+                    Color.yellow: 0x0E, Color.white: 0x0F,
+                    Color.gray: 0x07, Color.normal: 0x07}
+        },
+        'bg': {
+            True: {Color.black: 0x00, Color.blue: 0x10, Color.green: 0x20,
+                   Color.cyan: 0x30, Color.red: 0x40, Color.purple: 0x50,
+                   Color.yellow: 0x60, Color.white: 0x70, Color.gray: 0x80,
+                   Color.normal: 0x00},
+            False: {Color.black: 0x00, Color.blue: 0x90, Color.green: 0xA0,
+                    Color.cyan: 0xB0, Color.red: 0xC0, Color.purple: 0xD0,
+                    Color.yellow: 0xE0, Color.white: 0xF0,
+                    Color.gray: 0x70, Color.normal: 0x00}
+        }
+    }
+
     def _set_color(fg, bg, fg_dark, bg_dark, underlined):
         # System is Windows
-        STD_INPUT_HANDLE = -10
+        # STD_INPUT_HANDLE = -10
         STD_OUTPUT_HANDLE = -11
-        STD_ERROR_HANDLE = -12
-        # COLORS[fg or bg][is dark][color]
-        COLORS = {
-            'fg': {
-                True: {Color.black: 0x00, Color.blue: 0x01, Color.green: 0x02,
-                       Color.cyan: 0x03, Color.red: 0x04, Color.purple: 0x05,
-                       Color.yellow: 0x06, Color.white: 0x07, Color.gray: 0x08,
-                       Color.normal: 0x07},
-                False: {Color.black: 0x00, Color.blue: 0x09, Color.green: 0x0A,
-                        Color.cyan: 0x0B, Color.red: 0x0C, Color.purple: 0x0D,
-                        Color.yellow: 0x0E, Color.white: 0x0F,
-                        Color.gray: 0x07, Color.normal: 0x07}
-            },
-            'bg': {
-                True: {Color.black: 0x00, Color.blue: 0x10, Color.green: 0x20,
-                       Color.cyan: 0x30, Color.red: 0x40, Color.purple: 0x50,
-                       Color.yellow: 0x60, Color.white: 0x70, Color.gray: 0x80,
-                       Color.normal: 0x00},
-                False: {Color.black: 0x00, Color.blue: 0x90, Color.green: 0xA0,
-                        Color.cyan: 0xB0, Color.red: 0xC0, Color.purple: 0xD0,
-                        Color.yellow: 0xE0, Color.white: 0xF0,
-                        Color.gray: 0x70, Color.normal: 0x00}
-            }
-        }
+        # STD_ERROR_HANDLE = -12
+
         std_out_handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
         code = 0 | COLORS['fg'][fg_dark][fg] | COLORS['bg'][bg_dark][bg]
         ctypes.windll.kernel32.SetConsoleTextAttribute(std_out_handle, code)
@@ -69,21 +71,22 @@ if platform.is_a(platform.WINDOWS | platform.DOTNET):
 
 elif platform.is_a(platform.POSIX):
 
-    def _set_color(fg, bg, fg_dark, bg_dark, underlined):
-        COLORS = {
-            'fg': {
-                Color.black: 30, Color.red: 31, Color.green: 32,
-                Color.yellow: 33, Color.blue: 34, Color.purple: 35,
-                Color.cyan: 36, Color.gray: 37, Color.white: 37,
-                Color.normal: 00,
-            },
-            'bg': {
-                Color.black: 40, Color.red: 41, Color.green: 42,
-                Color.yellow: 43, Color.blue: 44, Color.purple: 45,
-                Color.cyan: 46, Color.gray: 47, Color.white: 47,
-                Color.normal: 00,
-            }
+    COLORS = {
+        'fg': {
+            Color.black: 30, Color.red: 31, Color.green: 32,
+            Color.yellow: 33, Color.blue: 34, Color.purple: 35,
+            Color.cyan: 36, Color.gray: 37, Color.white: 37,
+            Color.normal: 00,
+        },
+        'bg': {
+            Color.black: 40, Color.red: 41, Color.green: 42,
+            Color.yellow: 43, Color.blue: 44, Color.purple: 45,
+            Color.cyan: 46, Color.gray: 47, Color.white: 47,
+            Color.normal: 00,
         }
+    }
+
+    def _set_color(fg, bg, fg_dark, bg_dark, underlined):
         args = set()
         if fg != Color.normal:
             if not fg_dark:

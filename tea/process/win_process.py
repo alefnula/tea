@@ -14,7 +14,7 @@ import win32file
 import win32event
 import win32process
 import win32security
-
+from tea.utils import cmp
 from tea.process import base
 from tea.decorators import docstring
 
