@@ -3,10 +3,15 @@ __date__ = '25 July 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
-import mock
+import six
 import unittest
 from tea.system import platform
 from tea.ds.config import Config
+if six.PY2:
+    import mock
+else:
+    from unittest import mock
+
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 

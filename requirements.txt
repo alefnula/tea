@@ -1,2 +1,2 @@
-# Optional
-PyYAML
+six
+pyyaml

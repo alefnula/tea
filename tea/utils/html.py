@@ -3,7 +3,7 @@ __date__ = '25 October 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 from re import sub
-from tea.utils.six.moves import html_parser
+from six.moves import html_parser
 
 
 class _StripTagsParser(html_parser.HTMLParser):

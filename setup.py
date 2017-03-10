@@ -4,7 +4,8 @@ __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 import io
 import os
-from distutils.core import setup
+from setuptools import setup, find_packages
+
 
 setup(
     name='tea',
@@ -18,20 +19,7 @@ setup(
     maintainer_email='alefnula@gmail.com',
     url='https://github.com/alefnula/tea',
     license='BSD',
-    packages=[
-        'tea',
-        'tea.console',
-        'tea.ctx',
-        'tea.decorators',
-        'tea.ds',
-        'tea.logger',
-        'tea.msg',
-        'tea.process',
-        'tea.shell',
-        'tea.system',
-        'tea.tests',
-        'tea.utils',
-    ],
-    scripts=[
-    ]
+    packages=find_packages(),
+    install_requires=io.open('requirements.txt').read().splitlines(),
+    scripts=[],
 )

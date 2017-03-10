@@ -2,9 +2,13 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '14 February 2014'
 __copyright__ = 'Copyright (c) 2014 Viktor Kerkez'
 
-import mock
+import six
 import unittest
 from tea import shell
+if six.PY2:
+    import mock
+else:
+    from unittest import mock
 
 
 class TestGoto(unittest.TestCase):

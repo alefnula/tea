@@ -5,8 +5,8 @@ __date__ = '11 January 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
+import six
 import random
-from tea.utils import six
 from tea.system import platform
 
 __all__ = ['CryptError', 'encrypt', 'decrypt']

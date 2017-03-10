@@ -9,13 +9,14 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
 import io
+import six
 import glob
 import shlex
 import shutil
 import fnmatch
 import logging
 import contextlib
-from tea.utils import six
+
 
 logger = logging.getLogger(__name__)
 

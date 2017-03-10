@@ -6,12 +6,13 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
 import io
+import six
 import json
 import copy
 import logging
 import functools
 import threading
-from tea.utils import six
+
 
 logger = logging.getLogger(__name__)
 

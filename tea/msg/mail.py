@@ -9,13 +9,13 @@ __all__ = ['SMTPConnection', 'EmailMessage', 'EmailMultiAlternatives',
 
 
 import os
+import six
 import time
 import socket
 import random
 import smtplib
 import logging
 import mimetypes
-from tea.utils import six
 from tea.utils.html import strip_tags
 from tea.utils.encoding import smart_text, smart_bytes
 if six.PY3:

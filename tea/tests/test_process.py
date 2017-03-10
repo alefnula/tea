@@ -3,10 +3,10 @@ __date__ = '20 January 2010'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 import os
+import six
 import sys
 import time
 import unittest
-from tea.utils import six
 from tea.system import platform
 from tea.process import Process, execute, execute_and_report
 

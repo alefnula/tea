@@ -2,13 +2,13 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '27 November 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
+import six
 import sys
 import types
 import logging
 import pkgutil
 import importlib
 import traceback
-from tea.utils import six
 
 
 logger = logging.getLogger(__name__)

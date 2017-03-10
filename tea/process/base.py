@@ -4,7 +4,7 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import os
 import abc
-from tea.utils import six
+import six
 
 
 doc_get_processes = """Retrieves a list of processes sorted by name.
