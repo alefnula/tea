@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 import os
 import zipfile
 import logging
-# tea imports
+from tea import shell
 from tea.system import platform
 from tea.process import execute_and_report as er
 
@@ -17,10 +17,10 @@ def _extract_file(archive, destination, filename):
         output_path = os.path.join(destination, filename)
         output_dir = os.path.dirname(output_path)
         if not os.path.isdir(output_dir):
-            os.makedirs(output_dir)
+            shell.mkdir(output_dir)
         # Cannot write big chunks of data to windows shares
         MAX_BYTES = 5242880  # 5MB
-        reader = archive.open(file)
+        reader = archive.open(filename)
         writer = open(output_path, 'wb')
         while True:
             data = reader.read(MAX_BYTES)
@@ -73,7 +73,7 @@ def unzip(archive, destination, filenames=None):
             filenames = archive.namelist()
         for filename in filenames:
             if filename.endswith('/'):  # it's a directory
-                os.makedirs(os.path.join(destination, filename))
+                shell.mkdir(os.path.join(destination, filename))
             else:
                 if not _extract_file(archive, destination, filename):
                     raise Exception()

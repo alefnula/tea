@@ -4,6 +4,7 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '18 September 2012'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
+import io
 import os
 import sys
 import time
@@ -61,9 +62,9 @@ if platform.is_a(platform.POSIX):
             # redirect standard file descriptors
             sys.stdout.flush()
             sys.stderr.flush()
-            si = file(self.stdin, 'r')
-            so = file(self.stdout, 'a+')
-            se = file(self.stderr, 'a+', 0)
+            si = io.open(self.stdin, 'rb')
+            so = io.open(self.stdout, 'ab+')
+            se = io.open(self.stderr, 'ab+')
             os.dup2(si.fileno(), sys.stdin.fileno())
             os.dup2(so.fileno(), sys.stdout.fileno())
             os.dup2(se.fileno(), sys.stderr.fileno())
@@ -71,7 +72,7 @@ if platform.is_a(platform.POSIX):
             # write pidfile
             atexit.register(self.delpid)
             pid = str(os.getpid())
-            file(self.pidfile, 'w+').write('%s\n' % pid)
+            io.open(self.pidfile, 'w+').write(u'%s\n' % pid)
 
         def delpid(self):
             os.remove(self.pidfile)
@@ -80,7 +81,7 @@ if platform.is_a(platform.POSIX):
             """Start the daemon"""
             # Check for a pidfile to see if the daemon already runs
             try:
-                pf = file(self.pidfile, 'r')
+                pf = io.open(self.pidfile, 'r')
                 pid = int(pf.read().strip())
                 pf.close()
             except IOError:
@@ -99,7 +100,7 @@ if platform.is_a(platform.POSIX):
             """Stop the daemon"""
             # Get the pid from the pidfile
             try:
-                pf = file(self.pidfile, 'r')
+                pf = io.open(self.pidfile, 'r')
                 pid = int(pf.read().strip())
                 pf.close()
             except IOError:

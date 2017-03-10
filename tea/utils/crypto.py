@@ -163,8 +163,9 @@ if platform.is_only(platform.WINDOWS):
         # import win32cryptcon
         # @encrypter('win')
         # def _encrypt(data, key=None):
-        #     ''' Encrypts data using windows crypt service.
-        #         Key is not used.'''
+        #     """Encrypts data using windows crypt service.
+        #     Key is not used.
+        #     """
         #     windll.c
         #     return win32crypt.CryptProtectData(
         #         data, 'tea-crypt', None, None, None,
@@ -173,8 +174,9 @@ if platform.is_only(platform.WINDOWS):
         #
         # @decrypter('win')
         # def _decrypt(data, key=None):
-        #     ''' Decrypts data using windows crypt service.
-        #         Key is not used.'''
+        #     """Decrypts data using windows crypt service.
+        #     Key is not used.
+        #     """
         #     return win32crypt.CryptUnprotectData(
         #         data, None, None, None,
         #         win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN
@@ -383,8 +385,8 @@ def main():
     print(implementations)
     print(implementations['get_key'].__doc__)
     print(implementations['get_key']())
-    print(encrypt('password koji ce biti encryptovan'))
-    print(decrypt(encrypt('password koji ce biti encryptovan')))
+    print(encrypt('password for encryption'))
+    print(decrypt(encrypt('password for encryption')))
 
 
 if __name__ == '__main__':

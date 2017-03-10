@@ -100,7 +100,7 @@ def goto(directory, create=False):
 
 
 def mkdir(path, mode=0o755, delete=False):
-    """mkdir(path [, mode=0777])
+    """mkdir(path [, mode=0755])
 
     Create a leaf directory and all intermediate ones.
     Works like mkdir, except that any intermediate path segment (not

@@ -6,7 +6,7 @@ import os
 import sys
 import time
 import logging
-
+from tea import shell
 from tea.system import platform
 if platform.is_only(platform.WINDOWS):
     from .win_handlers import RotatingFileHandler  # @UnusedImport
@@ -72,7 +72,7 @@ def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
         # Check if filename directory exists and creates it if it doesn't
         directory = os.path.abspath(os.path.dirname(filename))
         if not os.path.isdir(directory):
-            os.makedirs(directory)
+            shell.mkdir(directory)
         # Create file handler
         file_handler = RotatingFileHandler(filename, filemode, max_size,
                                            rotations_number)

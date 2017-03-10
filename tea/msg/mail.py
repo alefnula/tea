@@ -18,22 +18,20 @@ import logging
 import mimetypes
 from tea.utils.html import strip_tags
 from tea.utils.encoding import smart_text, smart_bytes
+from six.moves.email_mime_text import MIMEText
+from six.moves.email_mime_base import MIMEBase
+from six.moves.email_mime_multipart import MIMEMultipart
 if six.PY3:
-    from email.header import Header  # @UnusedImport
-    from email import charset as Charset  # @UnusedImport
-    from email.encoders import encode_base64  # @UnusedImport
-    from email.mime.text import MIMEText  # @UnusedImport
-    from email.mime.base import MIMEBase  # @UnusedImport
-    from email.mime.multipart import MIMEMultipart  # @UnusedImport
-    from email.utils import formatdate, parseaddr, formataddr  # @UnusedImport
+    from email import charset as Charset
+    from email.header import Header
+    from email.encoders import encode_base64
+    from email.utils import formatdate, parseaddr, formataddr
 else:
-    from email.Header import Header  # @Reimport
-    from email import Charset  # @Reimport
-    from email.Encoders import encode_base64  # @Reimport @UnusedImport
-    from email.MIMEText import MIMEText  # @Reimport
-    from email.MIMEBase import MIMEBase  # @Reimport
-    from email.MIMEMultipart import MIMEMultipart  # @Reimport
-    from email.Utils import formatdate, parseaddr, formataddr  # @Reimport
+    from email import Charset
+    from email.Header import Header
+    from email.Encoders import encode_base64
+    from email.Utils import formatdate, parseaddr, formataddr
+
 
 logger = logging.getLogger(__name__)
 
