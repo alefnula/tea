@@ -5,6 +5,7 @@ dist
 build
 MANIFEST
 docs/_build
+.cache
 .idea
 .settings
 .project

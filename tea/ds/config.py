@@ -12,6 +12,7 @@ import copy
 import logging
 import functools
 import threading
+from tea import shell
 
 
 logger = logging.getLogger(__name__)
@@ -95,7 +96,7 @@ class Config(object):
         if self.filename is not None:
             dirname = os.path.abspath(os.path.dirname(self.filename))
             if not os.path.isdir(dirname):
-                os.makedirs(dirname)
+                shell.mkdir(dirname)
             if self.fmt == Config.JSON:
                 with io.open(self.filename, 'w', encoding=self.encoding) as f:
                     f.write(json.dumps(self.data, indent=2))

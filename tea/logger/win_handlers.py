@@ -15,8 +15,8 @@ class FileHandler(logging.StreamHandler):
         """Open the specified file and use it as the stream for logging."""
         stream = WindowsFile(filename, mode, encoding)
         logging.StreamHandler.__init__(self, stream)
-        #keep the absolute path, otherwise derived classes which use this
-        #may come a cropper when the current directory changes
+        # keep the absolute path, otherwise derived classes which use this
+        # may come a cropper when the current directory changes
         self.baseFilename = os.path.abspath(filename)
         self.mode = mode
 

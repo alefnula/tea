@@ -7,7 +7,7 @@ install:
 - pip install -r requirements-dev.txt
 
 script:
-- nosetests
+- py.test --pep8 tea --cov tea
 
 deploy:
   provider: pypi

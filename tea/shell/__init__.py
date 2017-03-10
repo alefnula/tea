@@ -34,19 +34,22 @@ def search(path, matcher='*', dirs=False, files=True):
     :param path: path to search recursively
     :param matcher: string pattern to search for or function that returns
         True/False for a file argument
-    :param dirs: if True returns also directories that match the pattern
+    :param dirs: if True returns directories that match the pattern
+    :param files: if True returns files that match the patter
     """
     if callable(matcher):
-        fnmatcher = lambda items: list(filter(matcher, items))
+        def fnmatcher(items):
+            return list(filter(matcher, items))
     else:
-        fnmatcher = lambda items: fnmatch.filter(items, matcher)
+        def fnmatcher(items):
+            return fnmatch.filter(items, matcher)
     for root, directories, filenames in os.walk(os.path.abspath(path)):
-        items = []
+        to_match = []
         if dirs:
-            items.extend(directories)
+            to_match.extend(directories)
         if files:
-            items.extend(filenames)
-        for item in fnmatcher(items):
+            to_match.extend(filenames)
+        for item in fnmatcher(to_match):
             yield os.path.join(root, item)
 
 
@@ -96,7 +99,7 @@ def goto(directory, create=False):
         yield False
 
 
-def mkdir(path, mode=0o777, delete=False):
+def mkdir(path, mode=0o755, delete=False):
     """mkdir(path [, mode=0777])
 
     Create a leaf directory and all intermediate ones.

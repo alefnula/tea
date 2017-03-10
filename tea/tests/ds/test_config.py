@@ -115,7 +115,7 @@ class TestConfigCreation(Checker):
         c.filename = filename
         c.save()
         isdir.assert_called_with(dirname)
-        makedirs.assert_called_with(dirname)
+        makedirs.assert_called_with(dirname, 0o755)
         io_open.assert_called_with(filename, 'w', encoding='utf-8')
         io_open.result.write.asswert_called_with(JSON_DATA)
 
@@ -129,7 +129,7 @@ class TestConfigCreation(Checker):
         c.filename = filename
         c.save()
         isdir.assert_called_with(dirname)
-        makedirs.assert_called_with(dirname)
+        makedirs.assert_called_with(dirname, 0o755)
         io_open.assert_called_with(filename, 'w', encoding='utf-8')
         io_open.result.write.asswert_called_with(YAML_DATA)
 

@@ -49,7 +49,7 @@ class TestGoto(unittest.TestCase):
             os.getcwd.assert_called_with()
             os.path.abspath.assert_called_with('some_directory')
             os.path.isdir.assert_called_with('some_directory')
-            os.makedirs.assert_called_with('some_directory', 0o777)
+            os.makedirs.assert_called_with('some_directory', 0o755)
             os.chdir.assert_called_with('some_directory')
         os.chdir.assert_called_with('foo')
 
@@ -64,7 +64,7 @@ class TestGoto(unittest.TestCase):
             os.getcwd.assert_called_with()
             os.path.abspath.assert_called_with('some_directory')
             os.path.isdir.assert_called_with('some_directory')
-            os.makedirs.assert_called_with('some_directory', 0o777)
+            os.makedirs.assert_called_with('some_directory', 0o755)
             assert not os.chdir.called
         assert not os.chdir.called
 

@@ -25,12 +25,12 @@ class WindowsFile(object):
         else:
             raise ValueError('Invalid access mode')
         self.filename = filename
-        #shareMode = (win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE |
-        #             win32con.FILE_SHARE_DELETE)
+        # shareMode = (win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE |
+        #              win32con.FILE_SHARE_DELETE)
         shareMode = win32con.shareMode = (win32con.FILE_SHARE_READ |
                                           win32con.FILE_SHARE_WRITE)
         attributes = win32security.SECURITY_ATTRIBUTES()
-        #dwFlagsAndAttributes = win32con.FILE_ATTRIBUTE_NORMAL
+        # dwFlagsAndAttributes = win32con.FILE_ATTRIBUTE_NORMAL
         dwFlagsAndAttributes = win32con.FILE_FLAG_WRITE_THROUGH
 
         self.encoding = encoding or 'utf-8'
@@ -63,7 +63,7 @@ class WindowsFile(object):
         status, written = win32file.WriteFile(self.handle,
                                               s.replace('\n', '\r\n')
                                                .encode(self.encoding), None)
-        #win32file.FlushFileBuffers(self.handle)
+        # win32file.FlushFileBuffers(self.handle)
         return status
 
     def writelines(self, string_list):

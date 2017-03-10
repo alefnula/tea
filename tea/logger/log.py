@@ -64,7 +64,7 @@ def configure_logging(filename=None, filemode='a', datefmt=FMT_DATE,
         stdout_handler = logging.StreamHandler(sys.stdout)
         stdout_handler.setLevel(stdout_level)
         stdout_formatter = logging.Formatter(stdout_fmt, datefmt)
-        #stdoutFormatter.converter = time.gmtime
+        # stdoutFormatter.converter = time.gmtime
         stdout_handler.setFormatter(stdout_formatter)
         logger.addHandler(stdout_handler)
     # Create file handler if filename is provided

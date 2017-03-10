@@ -19,9 +19,9 @@ def setup(module, target='zip', output_path=None, data_dir=None):
     try:
         if target == 'zip':
             assert er('setup.py', 'install', '--no-compile',
-                      '--install-lib',     os.path.join(dist, 'lib'),
+                      '--install-lib', os.path.join(dist, 'lib'),
                       '--install-scripts', os.path.join(dist),
-                      *(['--install-data',    os.path.join(dist, data_dir)]
+                      *(['--install-data', os.path.join(dist, data_dir)]
                         if data_dir is not None else []))
             with shell.goto(dist) as ok:
                 assert ok
@@ -30,9 +30,9 @@ def setup(module, target='zip', output_path=None, data_dir=None):
                 assert shell.remove('lib')
         elif target == 'exe':
             assert er('setup.py', 'install', '--no-compile',
-                      '--install-lib',     os.path.join(dist, 'lib', 'python'),
+                      '--install-lib', os.path.join(dist, 'lib', 'python'),
                       '--install-scripts', os.path.join(dist, 'scripts'),
-                      *(['--install-data',    os.path.join(dist, data_dir)]
+                      *(['--install-data', os.path.join(dist, data_dir)]
                         if data_dir is not None else []))
             with shell.goto(dist) as ok:
                 assert ok

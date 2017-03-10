@@ -109,13 +109,13 @@ class WinProcess(base.Process):
         self._bInheritHandles = 1
         self._processAttributes = win32security.SECURITY_ATTRIBUTES()
         # TODO: Is this needed?
-        #self._processAttributes.bInheritHandle = self._bInheritHandles
+        # self._processAttributes.bInheritHandle = self._bInheritHandles
         self._threadAttributes = win32security.SECURITY_ATTRIBUTES()
         # TODO: Is this needed
-        #self._threadAttributes.bInheritHandle = self._bInheritHandles
+        # self._threadAttributes.bInheritHandle = self._bInheritHandles
         self._dwCreationFlags = win32con.CREATE_NO_WINDOW
         # TODO: Which one of these is best?
-        #self._dwCreationFlags=win32con.NORMAL_PRIORITY_CLASS
+        # self._dwCreationFlags=win32con.NORMAL_PRIORITY_CLASS
         self._currentDirectory = working_dir
         # This will be created during the start
         self._hProcess = None

@@ -23,12 +23,12 @@ class Color(object):
 
     @classmethod
     def colors(cls):
-        return (cls.black,  cls.blue,   cls.green, cls.cyan,  cls.red,
-                cls.purple, cls.yellow, cls.gray,  cls.white, cls.normal)
+        return (cls.black, cls.blue, cls.green, cls.cyan, cls.red, cls.purple,
+                cls.yellow, cls.gray, cls.white, cls.normal)
 
     @classmethod
     def color_re(cls):
-        return re.compile(r'\[(?P<dark>dark\ )?(?P<color>%s)\]' %
+        return re.compile(r'\[(?P<dark>dark )?(?P<color>%s)\]' %
                           '|'.join(cls.colors()), re.MULTILINE)
 
 
@@ -79,7 +79,7 @@ elif platform.is_a(platform.POSIX):
             },
             'bg': {
                 Color.black: 40, Color.red: 41, Color.green: 42,
-                Color.yellow: 43, Color.blue:  44, Color.purple: 45,
+                Color.yellow: 43, Color.blue: 44, Color.purple: 45,
                 Color.cyan: 46, Color.gray: 47, Color.white: 47,
                 Color.normal: 00,
             }

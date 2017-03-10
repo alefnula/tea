@@ -6,12 +6,15 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import sys
 
-b = lambda x: x.lower() in ('true', 't')
+
+def is_true(x):
+    return x.lower() in ('true', 't')
+
 
 commands = {
     # Function name : (Iterable result, [Param types],
     #                  Number of required arguments)])
-    'search': (True,  [str, str, b, b], 2),
+    'search': (True, [str, str, is_true, is_true], 2),
     'chdir': (False, [str], 1),
     'mkdir': (False, [str], 1),
     'copy': (False, [str, str], 2),

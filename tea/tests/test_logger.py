@@ -23,7 +23,7 @@ class TestLogger(unittest.TestCase):
         # TODO: You cannot delete open file on windows, and the file
         # remains open
         # because the logging is holding it.
-        #os.remove(self.output_filename)
+        # os.remove(self.output_filename)
 
     def test_debug(self):
         self.logger.debug('Debug message #01')

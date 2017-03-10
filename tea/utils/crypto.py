@@ -159,26 +159,26 @@ if platform.is_only(platform.WINDOWS):
             else:
                 return ''
 
-        #import win32crypt
-        #import win32cryptcon
-        #@encrypter('win')
-        #def _encrypt(data, key=None):
-        #    ''' Encrypts data using windows crypt service.
-        #        Key is not used.'''
-        #    windll.c
-        #    return win32crypt.CryptProtectData(
-        #        data, 'tea-crypt', None, None, None,
-        #        win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN
-        #    )
+        # import win32crypt
+        # import win32cryptcon
+        # @encrypter('win')
+        # def _encrypt(data, key=None):
+        #     ''' Encrypts data using windows crypt service.
+        #         Key is not used.'''
+        #     windll.c
+        #     return win32crypt.CryptProtectData(
+        #         data, 'tea-crypt', None, None, None,
+        #         win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN
+        #     )
         #
-        #@decrypter('win')
-        #def _decrypt(data, key=None):
-        #    ''' Decrypts data using windows crypt service.
-        #        Key is not used.'''
-        #    return win32crypt.CryptUnprotectData(
-        #        data, None, None, None,
-        #        win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN
-        #    )[1]
+        # @decrypter('win')
+        # def _decrypt(data, key=None):
+        #     ''' Decrypts data using windows crypt service.
+        #         Key is not used.'''
+        #     return win32crypt.CryptUnprotectData(
+        #         data, None, None, None,
+        #         win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN
+        #     )[1]
     except ImportError:
         pass
 

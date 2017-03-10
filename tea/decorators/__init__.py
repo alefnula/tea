@@ -30,4 +30,3 @@ def docstring(doc, prepend=False, join='\n'):
             func.__doc__ = new.strip() + '\n'
         return func
     return decorator
-
