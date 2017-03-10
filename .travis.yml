@@ -1,13 +1,20 @@
 language: python
+
 python:
-- 2.7
-- 3.6
+  - 2.7
+  - 3.6
 
 install:
-- pip install -r requirements-dev.txt
+  - pip install -r requirements-dev.txt
+  - pip install codecov
+  - pip install python-coveralls
 
 script:
-- py.test --pep8 tea --cov tea
+  - py.test --pep8 tea --cov tea
+
+after_success:
+  - codecov
+  - coveralls
 
 deploy:
   provider: pypi
