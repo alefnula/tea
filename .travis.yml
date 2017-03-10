@@ -7,14 +7,12 @@ python:
 install:
   - pip install -r requirements-dev.txt
   - pip install codecov
-  - pip install python-coveralls
 
 script:
   - py.test --pep8 tea --cov tea
 
 after_success:
   - codecov
-  - coveralls
 
 deploy:
   provider: pypi
