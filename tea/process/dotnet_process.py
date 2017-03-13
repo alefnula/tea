@@ -8,11 +8,12 @@ import six
 import sys
 import time
 import threading
+from tea import shell
 from tea.utils import cmp
 from tea.process import base
 from tea.decorators import docstring
-
 import clr
+from System import IO
 clr.AddReference('System.Management')
 from System.Diagnostics import Process as CSharpProcess  # noqa
 from System.Management import ManagementObjectSearcher   # noqa
@@ -85,43 +86,87 @@ def _get_cmd(command, arguments):
 
 
 class DotnetProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, redirect_output=True,
-                 working_dir=None):
+    def __init__(self, command, arguments=None, env=None, stdout=None,
+                 stderr=None, redirect_output=True, working_dir=None):
         self._process = CSharpProcess()
+        self._started = False
         start_info = self._process.StartInfo
         start_info.FileName, start_info.Arguments = _get_cmd(command,
                                                              arguments)
+        self._env = env
         start_info.CreateNoWindow = True
-        start_info.UseShellExecute = not redirect_output
-        start_info.RedirectStandardInput = redirect_output
-        start_info.RedirectStandardOutput = redirect_output
-        start_info.RedirectStandardError = redirect_output
         if working_dir is not None:
             start_info.WorkingDirectory = working_dir
-        self._env = env
-        self._redirect_output = redirect_output
-        self._process.OutputDataReceived += self._stdout_handler
-        self._process.ErrorDataReceived += self._stderr_handler
 
-        self._started = False
-        self._stdout = b''
-        self._stdout_lock = threading.Lock()
-        self._stderr = b''
-        self._stderr_lock = threading.Lock()
+        self._stdout = os.path.abspath(stdout) if stdout else None
+        self._stderr = os.path.abspath(stderr) if stderr else None
+        self._redirect_output = (stdout or stderr or redirect_output)
+        if self._redirect_output:
+            start_info.UseShellExecute = False
+            start_info.RedirectStandardInput = True
+            start_info.RedirectStandardOutput = True
+            start_info.RedirectStandardError = True
+            self._process.OutputDataReceived += self._stdout_handler
+            self._process.ErrorDataReceived += self._stderr_handler
+            self._stdout_lock = threading.Lock()
+            if self._stdout:
+                if os.path.isfile(self._stdout):
+                    shell.remove(self._stdout)
+                self._stdout_ostream = IO.FileStream(
+                    self._stdout, IO.FileMode.Append, IO.FileAccess.Write,
+                    IO.FileShare.Read
+                )
+                self._stdout_istream = IO.FileStream(
+                    self._stdout, IO.FileMode.Open, IO.FileAccess.Read,
+                    IO.FileShare.ReadWrite
+                )
+                self._stdout_writer = IO.StreamWriter(self._stdout_ostream)
+                self._stdout_reader = IO.StreamReader(self._stdout_istream)
+            else:
+                self._stdout_buffer = b''
+            self._stderr_lock = threading.Lock()
+            if self._stderr:
+                if os.path.isfile(self._stderr):
+                    shell.remove(self._stderr)
+                self._stderr_ostream = IO.FileStream(
+                    self._stderr, IO.FileMode.Append, IO.FileAccess.Write,
+                    IO.FileShare.Read
+                )
+                self._stderr_istream = IO.FileStream(
+                    self._stderr, IO.FileMode.Open, IO.FileAccess.Read,
+                    IO.FileShare.ReadWrite
+                )
+                self._stderr_writer = IO.StreamWriter(self._stderr_ostream)
+                self._stderr_reader = IO.StreamReader(self._stderr_istream)
+            else:
+                self._stderr_buffer = b''
+        else:
+            start_info.UseShellExecute = True
+            start_info.RedirectStandardInput = False
+            start_info.RedirectStandardOutput = False
+            start_info.RedirectStandardError = False
 
     def _stdout_handler(self, sender, outline):
         data = outline.Data
         if data is None:
             return
         with self._stdout_lock:
-            self._stdout += data
+            if self._stdout:
+                self._stdout_writer.WriteLine(data)
+                self._stdout_writer.Flush()
+            else:
+                self._stdout_buffer += data
 
     def _stderr_handler(self, sender, outline):
         data = outline.Data
         if data is None:
             return
         with self._stderr_lock:
-            self._stderr += outline.Data
+            if self._stderr:
+                self._stderr_writer.WriteLine(data)
+                self._stderr_writer.Flush()
+            else:
+                self._stderr_buffer += data
 
     def start(self):
         # Setup environment variables
@@ -170,15 +215,21 @@ class DotnetProcess(base.Process):
     def read(self):
         if self._redirect_output:
             with self._stdout_lock:
-                result = self._stdout
-                self._stdout = b''
-                return result
+                if self._stdout:
+                    return self._stdout_reader.ReadToEnd()
+                else:
+                    result = self._stdout_buffer
+                    self._stdout_buffer = b''
+                    return result
         return b''
 
     def eread(self):
         if self._redirect_output:
             with self._stderr_lock:
-                result = self._stderr
-                self._stderr = b''
-                return result
+                if self._stderr:
+                    return self._stderr_reader.ReadToEnd()
+                else:
+                    result = self._stderr_buffer
+                    self._stderr_buffer = b''
+                    return result
         return b''

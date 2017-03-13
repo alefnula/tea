@@ -2,6 +2,7 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
+import io
 import os
 import sys
 import time
@@ -90,42 +91,67 @@ def _get_cmd(command, arguments):
 
 
 class PosixProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, redirect_output=True,
-                 working_dir=None):
+    def __init__(self, command, arguments=None, env=None, stdout=None,
+                 stderr=None, redirect_output=True, working_dir=None):
+        self._command = command
+        self._arguments = arguments
         self._commandline = _get_cmd(command, arguments)
         self._env = env
         self._process = None
         self._wait_thread = None
-        self._redirect_output = redirect_output
-        self._working_dir = working_dir
-        self._stdout_named = None
-        self._stderr_named = None
+        self._stdout = os.path.abspath(stdout) if stdout else None
         self._stdout_reader = None
+        self._stdout_writer = None
+        self._stderr = os.path.abspath(stderr) if stderr else None
         self._stderr_reader = None
+        self._stderr_writer = None
+        self._redirect_output = (stdout or stderr or redirect_output)
+        self._working_dir = working_dir
 
     def start(self):
         if self._redirect_output:
-            self._stdout_named = tempfile.NamedTemporaryFile()
-            self._stderr_named = tempfile.NamedTemporaryFile()
-            self._stdout_reader = open(self._stdout_named.name, 'rb')
-            self._stderr_reader = open(self._stderr_named.name, 'rb')
-            self._process = subprocess.Popen(
-                self._commandline,
-                stdin=subprocess.PIPE,
-                stdout=self._stdout_named.file,
-                stderr=self._stderr_named.file,
-                env=self._create_env(self._env),
-                cwd=self._working_dir
-            )
+            if self._stdout:
+                self._stdout_writer = io.open(self._stdout, 'wb')
+                self._stdout_reader = io.open(self._stdout, 'rb')
+            else:
+                self._stdout_writer = tempfile.NamedTemporaryFile()
+                self._stdout_reader = io.open(self._stdout_writer.name, 'rb')
+
+            if self._stderr:
+                self._stderr_writer = io.open(self._stderr, 'wb')
+                self._stderr_reader = io.open(self._stderr, 'rb')
+            else:
+                self._stderr_writer = tempfile.NamedTemporaryFile()
+                self._stderr_reader = io.open(self._stderr_writer.name, 'rb')
+            try:
+                self._process = subprocess.Popen(
+                    self._commandline,
+                    stdin=subprocess.PIPE,
+                    stdout=(self._stdout_writer if self._stdout else
+                            self._stdout_writer.file),
+                    stderr=(self._stderr_writer if self._stderr else
+                            self._stderr_writer.file),
+                    env=self._create_env(self._env),
+                    cwd=self._working_dir
+                )
+            except OSError:
+                raise base.NotFound(
+                    'Executable "{}" not found'.format(self._command)
+                )
         else:
-            self._process = subprocess.Popen(
-                self._commandline,
-                stdin=None,
-                stdout=open(os.devnull, 'wb'),
-                stderr=subprocess.STDOUT,
-                env=self._create_env(self._env),
-                cwd=self._working_dir
-            )
+            try:
+                self._process = subprocess.Popen(
+                    self._commandline,
+                    stdin=None,
+                    stdout=io.open(os.devnull, 'wb'),
+                    stderr=subprocess.STDOUT,
+                    env=self._create_env(self._env),
+                    cwd=self._working_dir
+                )
+            except OSError:
+                raise base.NotFound(
+                    'Executable "{}" not found'.format(self._command)
+                )
         self._wait_thread = threading.Thread(target=self._process.wait)
         self._wait_thread.setDaemon(True)
         self._wait_thread.start()

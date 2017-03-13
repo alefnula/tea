@@ -2,6 +2,7 @@ __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '01 January 2009'
 __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
+import io
 import os
 import re
 import sys
@@ -14,6 +15,7 @@ import win32file
 import win32event
 import win32process
 import win32security
+from tea import shell
 from tea.utils import cmp
 from tea.process import base
 from tea.decorators import docstring
@@ -100,10 +102,12 @@ def _get_cmd(command, arguments):
 
 
 class WinProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, redirect_output=True,
-                 working_dir=None):
+    def __init__(self, command, arguments=None, env=None, stdout=None,
+                 stderr=None, redirect_output=True, working_dir=None):
         self._commandline = _get_cmd(command, arguments)
         self._env = env
+        self._stdout = os.path.abspath(stdout) if stdout else None
+        self._stderr = os.path.abspath(stderr) if stderr else None
         self._redirect_output = redirect_output
         self._appName = None
         self._bInheritHandles = 1
@@ -130,10 +134,22 @@ class WinProcess(base.Process):
         self._stdin_read, self._stdin_write = win32pipe.CreatePipe(sa, 0)
         win32api.SetHandleInformation(self._stdin_write,
                                       win32con.HANDLE_FLAG_INHERIT, 0)
-        self._stdout = tempfile.TemporaryFile()
-        self._stdout_handle = create_file(self._stdout.name)
-        self._stderr = tempfile.TemporaryFile()
-        self._stderr_handle = create_file(self._stderr.name)
+        if self._stdout:
+            if os.path.isfile(self._stdout):
+                shell.remove(self._stdout)
+            shell.touch(self._stdout)
+            self.stdout_reader = io.open(self._stdout, 'rb+')
+        else:
+            self._stdout_reader = tempfile.TemporaryFile()
+        self._stdout_handle = create_file(self._stdout_reader.name)
+        if self._stderr:
+            if os.path.isfile(self._stderr):
+                shell.remove(self._stderr)
+            shell.touch(self._stderr)
+            self._stderr_reader = io.open(self._stderr, 'rb+')
+        else:
+            self._stderr_reader = tempfile.TemporaryFile()
+        self._stderr_handle = create_file(self._stderr_reader.name)
 
     def start(self):
         # Set up members of the STARTUPINFO structure.
@@ -197,10 +213,10 @@ class WinProcess(base.Process):
 
     def read(self):
         if self._redirect_output:
-            return self._stdout.read()
+            return self._stdout_reader.read()
         return ''
 
     def eread(self):
         if self._redirect_output:
-            return self._stderr.read()
+            return self._stderr_reader.read()
         return ''

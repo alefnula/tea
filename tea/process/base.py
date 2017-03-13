@@ -30,6 +30,10 @@ doc_kill = """Kills a process by it's process ID.
 """
 
 
+class NotFound(Exception):
+    pass
+
+
 class Process(six.with_metaclass(abc.ABCMeta)):
     """Abstract base class for the Process class that is implemented for every
     platform in it's own module.
@@ -58,8 +62,8 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         return full_env
 
     @abc.abstractmethod
-    def __init__(self, command, arguments=None, env=None, redirect_output=True,
-                 working_dir=None):
+    def __init__(self, command, arguments=None, env=None, stdout=None,
+                 stderr=None, redirect_output=True, working_dir=None):
         """Creates the Process object providing the command and it's
         command line arguments.
 
@@ -74,9 +78,15 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         :param dict env: Optional additional environment variables that
             will be added to the subprocess environment or that override
             currently set environment variables.
+        :param str stdout: Path to the file to which standard output would be
+            redirected.
+        :param str stderr: Path to the file to which standard error would be
+            redirected.
         :param bool redirect_output: True if you want to be able to get
             the standard output and the standard error of the
-            subprocess, otherwise it will be redirected to /dev/null
+            subprocess, otherwise it will be redirected to /dev/null. If stdout
+            or stderr are provided redirect_output will automatically be set to
+            True.
         :param str working_dir: Set the working directory from which the
             process will be started.
         """

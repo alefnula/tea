@@ -3,7 +3,7 @@
 .coverage
 dist
 build
-MANIFEST
+tea.egg-info
 docs/_build
 .cache
 .idea
