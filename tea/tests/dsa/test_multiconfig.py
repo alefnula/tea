@@ -4,7 +4,7 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import unittest
 from tea.system import platform
-from tea.ds.config import MultiConfig, Config
+from tea.dsa.config import MultiConfig, Config
 
 
 class TestMultiConfig(unittest.TestCase):

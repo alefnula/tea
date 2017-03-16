@@ -6,7 +6,7 @@ import os
 import six
 import unittest
 from tea.system import platform
-from tea.ds.config import Config
+from tea.dsa.config import Config
 if six.PY2:
     import mock
 else:

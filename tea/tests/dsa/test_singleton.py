@@ -3,7 +3,7 @@ __date__ = '05 August 2013'
 __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import unittest
-from tea.ds.singleton import Singleton
+from tea.dsa.singleton import Singleton
 
 
 class TestMultiConfig(unittest.TestCase):

@@ -1,4 +1,4 @@
-"""Data structures module"""
+"""Data structures and algorithms module"""
 
 __author__ = 'Viktor Kerkez <alefnula@gmail.com>'
 __date__ = '25 July 2013'
