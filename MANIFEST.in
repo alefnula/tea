@@ -1,5 +1,6 @@
 recursive-include docs
 include *.rst
+include VERSION
 include LICENSE
 include AUTHORS
 include setup.py
