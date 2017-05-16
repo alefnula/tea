@@ -7,22 +7,60 @@ __all__ = ['execute', 'execute_and_report', 'Process', 'find', 'get_processes',
 
 import os
 import logging
-
+from functools import cmp_to_key
+from tea.utils import cmp
 from tea.system import platform
 if platform.is_a(platform.DOTNET):
     from .dotnet_process import DotnetProcess as Process
-    from .dotnet_process import find, get_processes, kill
+    from .dotnet_process import _list_processes, kill
 elif platform.is_a(platform.WINDOWS):
     from .win_process import WinProcess as Process
-    from .win_process import find, get_processes, kill
+    from .win_process import _list_processes, kill
 elif platform.is_a(platform.POSIX):
     from .posix_process import PosixProcess as Process
-    from .posix_process import find, get_processes, kill
+    from .posix_process import _list_processes, kill
 else:
     raise platform.not_supported('tea.process')
 
 
 logger = logging.getLogger(__name__)
+
+
+def get_processes(sort_by_name=True):
+    """Retrieves a list of processes sorted by name.
+
+    :param bool sort_by_name: Sort the list by name or by process ID's
+    :rtype:  list[(int, str)] or list[(int, str, str)]
+    :return: List of process id, process name and optional cmdline tuples
+    """
+    if sort_by_name:
+        return sorted(_list_processes(), key=cmp_to_key(
+            lambda p1, p2: (cmp(p1.name, p2.name) or cmp(p1.pid, p2.pid))
+        ))
+    else:
+        return sorted(_list_processes(), key=cmp_to_key(
+            lambda p1, p2: (cmp(p1.pid, p2.pid) or cmp(p1.name, p2.name))
+        ))
+
+
+def find(name, arg=None):
+    """Find process by name or by argument in command line if arg
+    param is available.
+
+    :param str name: process name to search for
+    :param str arg: command line argument for a process to search for
+    :rtype: `tea.process.base.IProcess`
+    :return: Process if found
+    """
+    for p in get_processes():
+        if p.name.lower().find(name.lower()) != -1:
+            if arg is not None:
+                for a in (p.cmdline or []):
+                    if a.lower().find(arg.lower()) != -1:
+                        return p
+            else:
+                return p
+    return None
 
 
 def execute(command, *args, **kwargs):

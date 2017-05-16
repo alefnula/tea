@@ -7,23 +7,6 @@ import abc
 import six
 
 
-doc_get_processes = """Retrieves a list of processes sorted by name.
-
-:param bool sort_by_name: Sort the list by name or by process ID's
-:param bool cmdline: Add process command line to output
-:rtype:  list[(int, str)] or list[(int, str, str)]
-:return: List of process id, process name and optional cmdline tuples
-"""
-
-doc_find = """Find process by name or by argument in command line if arg
-param is available.
-
-:param str name: process name to search for
-:param str arg: command line argument for a process to search for
-:rtype: (int, str)
-:return: A tuple of process id, process name
-"""
-
 doc_kill = """Kills a process by it's process ID.
 
 :param int pid: Process ID of the process to kill.
@@ -41,17 +24,21 @@ class Process(six.with_metaclass(abc.ABCMeta)):
     Simple example of Process class usage can be::
 
         >>> from tea.process import Process
-        >>> p = Process('python', ['-c', 'import time;time.sleep(5);print 3'])
+        >>> p = Process('python', ['-c', 'import time;time.sleep(5);print(3)'])
         >>> p.start()
         >>> p.is_running
         True
         >>> p.wait()
         True
         >>> p.read()
-        '3\\n'
+        b'3\\n'
         >>> p.eread()
-        ''
+        b''
     """
+    def __str__(self):
+        return 'Process(pid={0.pid}, command={0.command})'.format(self)
+
+    __repr__ = __str__
 
     @staticmethod
     def _create_env(env):
@@ -90,6 +77,20 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         :param str working_dir: Set the working directory from which the
             process will be started.
         """
+
+    @abc.abstractclassmethod
+    def immutable(cls, pid, command):
+        """Create an immutable process object used for listing processes on the
+        system
+        """
+
+    @abc.abstractproperty
+    def command(self):
+        """Command"""
+
+    @abc.abstractproperty
+    def arguments(self):
+        """Arguments"""
 
     @abc.abstractmethod
     def start(self):

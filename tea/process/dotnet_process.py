@@ -9,7 +9,6 @@ import sys
 import time
 import threading
 from tea import shell
-from tea.utils import cmp
 from tea.process import base
 from tea.decorators import docstring
 import clr
@@ -19,43 +18,14 @@ from System.Diagnostics import Process as CSharpProcess  # noqa
 from System.Management import ManagementObjectSearcher   # noqa
 
 
-@docstring(base.doc_get_processes)
-def get_processes(sort_by_name=True, cmdline=False):
-    processes = []
-    if cmdline:
-        searcher = ManagementObjectSearcher(
-            'SELECT ProcessID, Caption, CommandLine FROM Win32_Process'
+def _list_processes():
+    searcher = ManagementObjectSearcher(
+        'SELECT ProcessID, CommandLine FROM Win32_Process'
+    )
+    for process in searcher.Get():
+        yield DotnetProcess.immutable(
+            int(process['ProcessID']), process['CommandLine']
         )
-        for process in searcher.Get():
-            processes.append((int(process['ProcessID']), process['Caption'],
-                              process['CommandLine'] or ''))
-    else:
-        searcher = ManagementObjectSearcher(
-            'SELECT ProcessID, Caption FROM Win32_Process'
-        )
-        for process in searcher.Get():
-            processes.append((int(process['ProcessID']), process['Caption']))
-    if sort_by_name:
-        return sorted(processes, lambda t1, t2: (cmp(t1[1], t2[1]) or
-                                                 cmp(t1[0], t2[0])))
-    else:
-        return sorted(processes, lambda t1, t2: (cmp(t1[0], t2[0]) or
-                                                 cmp(t1[1], t2[1])))
-
-
-@docstring(base.doc_find)
-def find(name, arg=None):
-    if arg is None:
-        for pid, process in get_processes():
-            if process.lower().find(name.lower()) != -1:
-                return pid, process
-    else:
-        for pid, process, cmdline in get_processes(cmdline=True):
-            if process.lower().find(name.lower()) != -1:
-                if (cmdline is not None and
-                        cmdline.lower().find(arg.lower()) != -1):
-                    return pid, process
-    return None
 
 
 @docstring(base.doc_kill)
@@ -70,29 +40,33 @@ def _get_cmd(command, arguments):
     if arguments is None:
         arguments = []
     if command.endswith('.py'):
-        arguments = [command] + list(arguments)
-        command = os.path.join(sys.prefix, 'ipy.exe')
+        return [
+            os.path.join(sys.prefix, 'ipy.exe'), command
+        ] + list(arguments)
     elif command.endswith('.pyw'):
-        arguments = [command] + list(arguments)
-        command = os.path.join(sys.prefix, 'ipyw.exe')
-    args = []
-    for argument in arguments:
-        if re.search(r'\s', argument):
-            args.append(r'"%s"' % argument)
-        else:
-            args.append(argument)
-    arguments = ' '.join(args)
-    return command, arguments
+        return [
+            os.path.join(sys.prefix, 'ipyw.exe'), command
+        ] + list(arguments)
+    else:
+        return [command] + list(arguments)
+
+
+def _escape(cmdline):
+    return ' '.join([
+        r'"%s"' % argument if re.search(r'\s', argument) else argument
+        for argument in cmdline
+    ])
 
 
 class DotnetProcess(base.Process):
     def __init__(self, command, arguments=None, env=None, stdout=None,
                  stderr=None, redirect_output=True, working_dir=None):
+        self._cmdline = _get_cmd(command, arguments)
         self._process = CSharpProcess()
         self._started = False
         start_info = self._process.StartInfo
-        start_info.FileName, start_info.Arguments = _get_cmd(command,
-                                                             arguments)
+        start_info.FileName = self._cmdline[0]
+        start_info.Arguments = self._cmdline[1:]
         self._env = env
         start_info.CreateNoWindow = True
         if working_dir is not None:
@@ -146,6 +120,16 @@ class DotnetProcess(base.Process):
             start_info.RedirectStandardOutput = False
             start_info.RedirectStandardError = False
 
+        self._pid = None
+        self._immutable = None
+
+    @classmethod
+    def immutable(cls, pid, command):
+        p = cls(command[0], command[1:])
+        p._pid = pid
+        p._immutable = True
+        return p
+
     def _stdout_handler(self, sender, outline):
         data = outline.Data
         if data is None:
@@ -168,7 +152,18 @@ class DotnetProcess(base.Process):
             else:
                 self._stderr_buffer += data
 
+    @property
+    def command(self):
+        return self._cmdline[0]
+
+    @property
+    def arguments(self):
+        return self._cmdline[1:]
+
     def start(self):
+        if self._immutable:
+            raise NotImplemented
+
         # Setup environment variables
         process_env = self._process.StartInfo.EnvironmentVariables
         for key, value in self._create_env(self._env).items():
@@ -180,11 +175,16 @@ class DotnetProcess(base.Process):
         self._started = True
 
     def kill(self):
-        if self._started:
+        if self._immutable:
+            kill(self.pid)
+        elif self._started:
             self._process.Kill()
-        self.wait()
+            self.wait()
 
     def wait(self, timeout=None):
+        if self._immutable:
+            raise NotImplemented
+
         if self._started:
             if timeout is not None:
                 return self._process.WaitForExit(timeout)
@@ -196,23 +196,39 @@ class DotnetProcess(base.Process):
 
     @property
     def is_running(self):
+        if self._immutable:
+            raise NotImplemented
+
         return not self._process.HasExited if self._started else False
 
     @property
     def pid(self):
-        return self._process.Id if self._started else 0
+        return (
+            self._pid if self._immutable else (
+                self._process.Id if self._started else 0
+            )
+        )
 
     @property
     def exit_code(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._started and self._process.HasExited:
             return self._process.ExitCode
         return None
 
     def write(self, string):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             self._process.StandardInput.WriteLine(string)
 
     def read(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             with self._stdout_lock:
                 if self._stdout:
@@ -224,6 +240,9 @@ class DotnetProcess(base.Process):
         return b''
 
     def eread(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             with self._stderr_lock:
                 if self._stderr:

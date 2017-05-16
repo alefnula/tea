@@ -7,69 +7,28 @@ import os
 import sys
 import time
 import posix
+import psutil
 import signal
 import logging
 import tempfile
 import threading
 import subprocess
-from tea.utils import cmp
 from tea.process import base
-from tea.system import platform
 from tea.decorators import docstring
 
 logger = logging.getLogger(__name__)
 
 
-@docstring(base.doc_get_processes)
-def get_processes(sort_by_name=True, cmdline=False):
-    if platform.is_a(platform.DARWIN):
-        process = PosixProcess('ps', ['-eo', 'pid,comm,args' if cmdline
-                                             else 'pid,comm'])
-    else:
-        process = PosixProcess('ps', ['h', '-eo', 'pid,comm,args' if cmdline
-                                                  else 'pid,comm'])
-    process.start()
-    process.wait()
-    processes = []
-    if process.exit_code == 0:
-        for line in process.read().splitlines():
-            if cmdline:
-                parts = line.strip().split(' ', 3)
-                try:
-                    processes.append((int(parts[0]), parts[1],
-                                      ' '.join(parts[2:]).strip()))
-                except ValueError:
-                    logger.error('Failed to parse PID: %s' % parts[0])
-            else:
-                pid, name = line.strip().split(' ', 1)
-                try:
-                    processes.append((int(pid), name))
-                except ValueError:
-                    logger.error('Failed to parse PID: %s' % pid)
-    if sort_by_name:
-        return sorted(processes, lambda t1, t2: (cmp(t1[1], t2[1]) or
-                                                 cmp(int(t1[0]), int(t2[0]))))
-    else:
-        return sorted(processes, lambda t1, t2: (cmp(int(t1[0]), int(t2[0])) or
-                                                 cmp(t1[1], t2[1])))
-
-
-@docstring(base.doc_find)
-def find(name, arg=None):
-    if arg is None:
-        for pid, process in get_processes():
-            # TODO: HACK!!! Gives only the first 15 characters!!!
-            if (process.lower().find(name[:15].lower()) != -1 and
-                    '<defunct>' not in process.lower()):
-                return pid, process
-    else:
-        for pid, process, cmdline in get_processes(cmdline=True):
-            # TODO: HACK!!! Gives only the first 15 characters!!!
-            if process.lower().find(name[:15].lower()) != -1:
-                if (cmdline is not None and
-                        cmdline.lower().find(arg.lower()) != -1):
-                    return pid, process
-    return None
+def _list_processes():
+    for p in psutil.process_iter():
+        try:
+            try:
+                cmdline = p.cmdline()
+            except:
+                cmdline = [p.exe()]
+            yield PosixProcess.immutable(p.pid, cmdline)
+        except:
+            pass
 
 
 @docstring(base.doc_kill)
@@ -93,8 +52,6 @@ def _get_cmd(command, arguments):
 class PosixProcess(base.Process):
     def __init__(self, command, arguments=None, env=None, stdout=None,
                  stderr=None, redirect_output=True, working_dir=None):
-        self._command = command
-        self._arguments = arguments
         self._commandline = _get_cmd(command, arguments)
         self._env = env
         self._process = None
@@ -107,8 +64,28 @@ class PosixProcess(base.Process):
         self._stderr_writer = None
         self._redirect_output = (stdout or stderr or redirect_output)
         self._working_dir = working_dir
+        self._pid = None
+        self._immutable = False
+
+    @classmethod
+    def immutable(cls, pid, command):
+        p = cls(command[0], command[1:])
+        p._pid = pid
+        p._immutable = True
+        return p
+
+    @property
+    def command(self):
+        return self._commandline[0]
+
+    @property
+    def arguments(self):
+        return self._commandline[1:]
 
     def start(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             if self._stdout:
                 self._stdout_writer = io.open(self._stdout, 'wb')
@@ -136,7 +113,7 @@ class PosixProcess(base.Process):
                 )
             except OSError:
                 raise base.NotFound(
-                    'Executable "{}" not found'.format(self._command)
+                    'Executable "{}" not found'.format(self.command)
                 )
         else:
             try:
@@ -150,7 +127,7 @@ class PosixProcess(base.Process):
                 )
             except OSError:
                 raise base.NotFound(
-                    'Executable "{}" not found'.format(self._command)
+                    'Executable "{}" not found'.format(self.command)
                 )
         self._wait_thread = threading.Thread(target=self._process.wait)
         self._wait_thread.setDaemon(True)
@@ -159,9 +136,12 @@ class PosixProcess(base.Process):
     def kill(self):
         try:
             if self._process is not None:
-                kill(self._process.pid)
+                kill(self.pid)
                 self._wait_thread.join()
                 self._process = None
+                return True
+            elif self._immutable:
+                kill(self.pid)
                 return True
             else:
                 return None
@@ -169,6 +149,9 @@ class PosixProcess(base.Process):
             return False
 
     def wait(self, timeout=None):
+        if self._immutable:
+            raise NotImplemented
+
         if timeout is not None:
             current_time = time.time()
             while time.time() - current_time < (timeout * 1000):
@@ -183,21 +166,30 @@ class PosixProcess(base.Process):
 
     @property
     def is_running(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._process is None or self._process.returncode is not None:
             return False
         return True
 
     @property
     def pid(self):
-        return self._process.pid
+        return self._pid if self._immutable else self._process.pid
 
     @property
     def exit_code(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self.is_running:
             return None
         return self._process.returncode
 
     def write(self, string):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             if string[-1] != b'\n':
                 string += b'\n'
@@ -205,11 +197,17 @@ class PosixProcess(base.Process):
             self._process.stdin.flush()
 
     def read(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             return self._stdout_reader.read()
-        return ''
+        return b''
 
     def eread(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             return self._stderr_reader.read()
-        return ''
+        return b''

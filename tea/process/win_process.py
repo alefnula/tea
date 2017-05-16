@@ -16,39 +16,20 @@ import win32event
 import win32process
 import win32security
 from tea import shell
-from tea.utils import cmp
 from tea.process import base
 from tea.decorators import docstring
 
 
-@docstring(base.doc_get_processes)
-def get_processes(sort_by_name=True, cmdline=False):
-    if cmdline:
-        processes = [(p.pid, p.name, p.cmdline)
-                     for p in psutil.get_process_list()]
-    else:
-        processes = [(p.pid, p.name) for p in psutil.get_process_list()]
-    if sort_by_name:
-        return sorted(processes, lambda t1, t2: (cmp(t1[1], t2[1]) or
-                                                 cmp(t1[0], t2[0])))
-    else:
-        return sorted(processes, lambda t1, t2: (cmp(t1[0], t2[0]) or
-                                                 cmp(t1[1], t2[1])))
-
-
-@docstring(base.doc_find)
-def find(name, arg=None):
-    if arg is None:
-        for pid, process in get_processes():
-            if process.lower().find(name.lower()) != -1:
-                return pid, process
-    else:
-        for pid, process, cmdline in get_processes(cmdline=True):
-            if process.lower().find(name.lower()) != -1:
-                if (cmdline is not None and
-                        cmdline.lower().find(arg.lower()) != -1):
-                    return pid, process
-    return None
+def _list_processes():
+    for p in psutil.process_iter():
+        try:
+            try:
+                cmdline = p.cmdline()
+            except:
+                cmdline = [p.exe()]
+            yield WinProcess.immutable(p.pid, cmdline)
+        except:
+            pass
 
 
 @docstring(base.doc_kill)
@@ -87,24 +68,28 @@ def _get_cmd(command, arguments):
     if arguments is None:
         arguments = []
     if command.endswith('.py'):
-        arguments = ['%s\\python.exe' % sys.prefix, command] + list(arguments)
+        return [
+            os.path.join(sys.prefix, 'python.exe'), command
+        ] + list(arguments)
     elif command.endswith('.pyw'):
-        arguments = ['%s\\pythonw.exe' % sys.prefix, command] + list(arguments)
+        return [
+            os.path.join(sys.prefix, 'pythonw.exe'), command
+        ] + list(arguments)
     else:
-        arguments = [command] + list(arguments)
-    args = []
-    for argument in arguments:
-        if re.search(r'\s', argument):
-            args.append(r'"%s"' % argument)
-        else:
-            args.append(argument)
-    return ' '.join(args)
+        return [command] + list(arguments)
+
+
+def _escape(cmdline):
+    return ' '.join([
+        r'"%s"' % argument if re.search(r'\s', argument) else argument
+        for argument in cmdline
+    ])
 
 
 class WinProcess(base.Process):
     def __init__(self, command, arguments=None, env=None, stdout=None,
                  stderr=None, redirect_output=True, working_dir=None):
-        self._commandline = _get_cmd(command, arguments)
+        self._cmdline = _get_cmd(command, arguments)
         self._env = env
         self._stdout = os.path.abspath(stdout) if stdout else None
         self._stderr = os.path.abspath(stderr) if stderr else None
@@ -122,11 +107,21 @@ class WinProcess(base.Process):
         # self._dwCreationFlags=win32con.NORMAL_PRIORITY_CLASS
         self._currentDirectory = working_dir
         # This will be created during the start
+        self._startupinfo = None
         self._hProcess = None
         self._hThread = None
         self._dwProcessId = None
         self._dwThreadId = None
         self._exit_code = None
+        self._pid = None
+        self._immutable = False
+
+    @classmethod
+    def immutable(cls, pid, command):
+        p = cls(command[0], command[1:])
+        p._immutable = False
+        p._pid = pid
+        return p
 
     def _create_pipes(self):
         sa = win32security.SECURITY_ATTRIBUTES()
@@ -151,7 +146,18 @@ class WinProcess(base.Process):
             self._stderr_reader = tempfile.TemporaryFile()
         self._stderr_handle = create_file(self._stderr_reader.name)
 
+    @property
+    def command(self):
+        return self._cmdline[0]
+
+    @property
+    def arguments(self):
+        return self._cmdline[1:]
+
     def start(self):
+        if self._immutable:
+            raise NotImplemented
+
         # Set up members of the STARTUPINFO structure.
         self._startupinfo = win32process.STARTUPINFO()
         if self._redirect_output:
@@ -164,7 +170,7 @@ class WinProcess(base.Process):
         (
             self._hProcess, self._hThread, self._dwProcessId, self._dwThreadId
         ) = win32process.CreateProcess(
-            self._appName, self._commandline, self._processAttributes,
+            self._appName, _escape(self._cmdline), self._processAttributes,
             self._threadAttributes, self._bInheritHandles,
             self._dwCreationFlags, self._create_env(self._env),
             self._currentDirectory, self._startupinfo
@@ -174,6 +180,9 @@ class WinProcess(base.Process):
         return kill(self.pid)
 
     def wait(self, timeout=None):
+        if self._immutable:
+            raise NotImplemented
+
         if timeout is None:
             while self.is_running:
                 win32api.Sleep(1000)
@@ -186,6 +195,9 @@ class WinProcess(base.Process):
 
     @property
     def is_running(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._hProcess is None or self._exit_code is not None:
             return False
         exit_code = win32process.GetExitCodeProcess(self._hProcess)
@@ -196,15 +208,21 @@ class WinProcess(base.Process):
 
     @property
     def pid(self):
-        return self._dwProcessId
+        return self._pid if self._immutable else self._dwProcessId
 
     @property
     def exit_code(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self.is_running:
             return None
         return self._exit_code
 
     def write(self, string):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             if not string.endswith('\n'):
                 string += '\n'
@@ -212,11 +230,17 @@ class WinProcess(base.Process):
             win32file.FlushFileBuffers(self._stdin_write)
 
     def read(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             return self._stdout_reader.read()
         return ''
 
     def eread(self):
+        if self._immutable:
+            raise NotImplemented
+
         if self._redirect_output:
             return self._stderr_reader.read()
         return ''
