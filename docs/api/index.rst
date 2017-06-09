@@ -6,7 +6,8 @@ tea api documentation
 
    console.rst
    ctx.rst
-   ds.rst
+   decorators.rst
+   dsa.rst
    logger.rst
    msg.rst
    process.rst

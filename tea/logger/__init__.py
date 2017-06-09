@@ -1,6 +1,7 @@
 """
 Logging module
 ==============
+
 This logging module is designed as a wrapper around the python
 :ref:`logging` module.
 
@@ -9,8 +10,10 @@ default parameters (log to stderr with DEBUG level).
 After that, user can call the L{configure_logger} function and
 configure logging to file and stderr.
 
+
 Usage
 =====
+
 >>> import logging
 >>> import tempfile
 >>> from tea.logger import configure_logging
@@ -40,4 +43,4 @@ __copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
 
 __all__ = ['configure_logging']
 
-from .log import configure_logging
+from tea.logger.log import configure_logging
