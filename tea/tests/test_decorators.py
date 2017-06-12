@@ -4,7 +4,7 @@ __copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
 
 import pytest
 import itertools
-from tea.decorators import docstring, combomethod
+from tea.decorators import docstring, combomethod, ComboMethodError
 
 
 JOINS = ['\n', '\n\n\n', '', '---']
@@ -73,7 +73,7 @@ def test_muliti_line_documentation(doc, join):
     assert func.__doc__ == '\n'.join([doc.strip(), join, 'Func docs\n'])
 
 
-def test_static_instance_combo():
+def test_static_and_instance_method_combo():
     class Foo(object):
         def __init__(self):
             self.instance_variable = 2
@@ -90,7 +90,7 @@ def test_static_instance_combo():
     assert Foo().static_and_instance(100) == 102
 
 
-def test_class_and_instance_combo():
+def test_class_and_instance_method_combo():
     class Foo(object):
         class_variable = 1
 
@@ -109,3 +109,21 @@ def test_class_and_instance_combo():
 
     assert Foo.class_and_instance(100) == 101
     assert Foo().class_and_instance(100) == 102
+
+
+def test_combomethod_error():
+    class Foo(object):
+        @combomethod
+        def foo(cls):
+            return 0
+
+    assert Foo.foo() == 0
+    pytest.raises(ComboMethodError, lambda: Foo().foo())
+
+    class Bar(object):
+        @combomethod(static=True)
+        def bar():
+            return 0
+
+    assert Bar.bar() == 0
+    pytest.raises(ComboMethodError, lambda: Bar().bar())

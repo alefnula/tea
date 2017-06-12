@@ -26,8 +26,6 @@ def docstring(documentation, prepend=False, join=''):
 
         Appended this line
 
-        >>>
-
     :param str documentation: Documentation string that should be added,
         appended or prepended to the current documentation string.
     :param bool prepend: Prepend the documentation string to the current
@@ -53,15 +51,37 @@ def docstring(documentation, prepend=False, join=''):
     return decorator
 
 
-class ComboMethod(object):
-    def __get__(self, obj, type=None):
-        if obj is not None:
-            @functools.wraps(self.instancemethod)
-            def wrapper(*args, **kwargs):
-                return self.instancemethod(obj, *args, **kwargs)
+class ComboMethodError(Exception):
+    """Exception raised in case of inappropriate initialization of the
+    combo method descriptor.
+    """
+    pass
 
-            return wrapper
-        else:
+
+class ComboMethod(object):
+    """Combo method descriptor
+
+    Descriptor is initializes eater by passing in the staticmethod or the
+    class method. After that an instance method can be added using the instance
+    decorator.
+
+    This class should never be used. Use the ``combomethod`` function instead.
+    """
+    def __init__(self, staticmethod=None, classmethod=None):
+        if staticmethod is None and classmethod is None:
+            raise ComboMethodError(
+                'Either static method or class method has to be provided'
+            )
+        self.staticmethod = staticmethod
+        self.classmethod = classmethod
+        self.instancemethod = None
+
+    def instance(self, instancemethod):
+        self.instancemethod = instancemethod
+        return self
+
+    def __get__(self, obj, type=None):
+        if obj is None:
             if self.staticmethod is not None:
                 return self.staticmethod
             else:
@@ -70,14 +90,15 @@ class ComboMethod(object):
                     return self.classmethod(type, *args, **kwargs)
 
                 return wrapper
+        else:
+            if self.instancemethod is None:
+                raise ComboMethodError('Instance method is not provided')
 
-    def __init__(self, staticmethod=None, classmethod=None):
-        self.staticmethod = staticmethod
-        self.classmethod = classmethod
+            @functools.wraps(self.instancemethod)
+            def wrapper(*args, **kwargs):
+                return self.instancemethod(obj, *args, **kwargs)
 
-    def instance(self, instancemethod):
-        self.instancemethod = instancemethod
-        return self
+            return wrapper
 
 
 def combomethod(method=None, static=False):
