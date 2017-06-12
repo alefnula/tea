@@ -78,17 +78,20 @@ class Process(six.with_metaclass(abc.ABCMeta)):
             process will be started.
         """
 
-    @abc.abstractclassmethod
+    @classmethod
+    @abc.abstractmethod
     def immutable(cls, pid, command):
         """Create an immutable process object used for listing processes on the
         system
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def command(self):
         """Command"""
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def arguments(self):
         """Arguments"""
 
@@ -121,7 +124,8 @@ class Process(six.with_metaclass(abc.ABCMeta)):
             ``False``.
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def is_running(self):
         """Property that indicates if the process is still running.
 
@@ -129,7 +133,8 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         :return: True if the process is still running False otherwise
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def pid(self):
         """Property that returns the PID of the process if it is
         running.
@@ -138,7 +143,8 @@ class Process(six.with_metaclass(abc.ABCMeta)):
         :return: process id of the running process
         """
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def exit_code(self):
         """Property that returns the exit code if the process has
         finished running.
