@@ -20,6 +20,7 @@
 import os
 import sys
 import sphinx_rtd_theme
+from recommonmark.transform import AutoStructify
 
 # Add project root to pythonpath
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
@@ -36,8 +37,13 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
     'sphinx.ext.mathjax',
+    'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages',
+    'sphinx.ext.napoleon',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +53,10 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+source_parsers = {
+   '.md': 'recommonmark.parser.CommonMarkParser',
+}
 
 # The master toctree document.
 master_doc = 'index'
@@ -98,12 +107,26 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'collapse_navigation': True,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# Custom sidebar templates, must be a dictionary that maps document names
+# to template names.
+#
+# This is required for the alabaster theme
+# refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
+html_sidebars = {
+    '**': [
+        'relations.html',  # needs 'show_related': True theme option to display
+        'searchbox.html',
+    ]
+}
 
 
 # -- Options for HTMLHelp output ------------------------------------------
@@ -169,3 +192,18 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 # autodoc configuration
 autoclass_content = 'both'
 autodoc_member_order = 'bysource'
+
+
+git_doc_root = 'https://github.com/alefnula/tea/tree/master/docs/'
+
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        'enable_auto_toc_tree': True,
+        'enable_auto_doc_ref': True,
+        'enable_math': True,
+        'enable_inline_math': True,
+        'enable_eval_rst': True,
+        'url_resolver': lambda url: git_doc_root + url,
+    }, True)
+    app.add_transform(AutoStructify)
