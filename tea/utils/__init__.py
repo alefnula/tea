@@ -42,8 +42,8 @@ def get_object(path='', obj=None):
             this object.
 
     Returns:
-        object: Object at the end of the path, or list of non hidden objects
-            if we use the star query.
+        Object at the end of the path, or list of non hidden objects if we use
+        the star query.
 
     Example for full paths::
 

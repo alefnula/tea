@@ -22,7 +22,15 @@ logger = logging.getLogger(__name__)
 
 
 def split(s, posix=True):
-    """Split the string s using shell-like syntax"""
+    """Split the string s using shell-like syntax
+
+    Args:
+        s (str): String to split
+        posix (bool): Use posix split
+
+    Returns:
+        list of str: List of string parts
+    """
     if isinstance(s, six.binary_type):
         s = s.decode('utf-8')
     return shlex.split(s, posix=posix)
@@ -31,11 +39,15 @@ def split(s, posix=True):
 def search(path, matcher='*', dirs=False, files=True):
     """Recursive search function.
 
-    :param path: path to search recursively
-    :param matcher: string pattern to search for or function that returns
-        True/False for a file argument
-    :param dirs: if True returns directories that match the pattern
-    :param files: if True returns files that match the patter
+    Args:
+        path (str): Path to search recursively
+        matcher (str or callable): String pattern to search for or function
+            that returns True/False for a file argument
+        dirs (bool): if True returns directories that match the pattern
+        files(bool): if True returns files that match the patter
+
+    Yields:
+        str: Found files and directories
     """
     if callable(matcher):
         def fnmatcher(items):
@@ -54,7 +66,11 @@ def search(path, matcher='*', dirs=False, files=True):
 
 
 def chdir(directory):
-    """Change the current working directory"""
+    """Change the current working directory
+
+    Args:
+        directory (str): Directory to go to
+    """
     directory = os.path.abspath(directory)
     logger.info('chdir -> %s' % directory)
     try:
@@ -72,6 +88,10 @@ def chdir(directory):
 @contextlib.contextmanager
 def goto(directory, create=False):
     """Context object for changing directory.
+
+    Args:
+        directory (str): Directory to go to
+        create (bool): Create directory if it doesn't exists
 
     Usage::
 
@@ -107,11 +127,13 @@ def mkdir(path, mode=0o755, delete=False):
     just the rightmost) will be created if it does not exist.  This is
     recursive.
 
-    :param str path: directory to create
-    :param int mode: directory mode
-    :param bool delete: delete directory/file if exists
-    :rtype: :obj:`bool`
-    :return: True if succeeded else False
+    Args:
+        path (str): Directory to create
+        mode (int): Directory mode
+        delete (bool): Delete directory/file if exists
+
+    Returns:
+        bool: True if succeeded else False
     """
     logger.info('mkdir: %s' % path)
     if os.path.isdir(path):
@@ -139,10 +161,12 @@ def __copyfile(source, destination):
 
     The destination may be a directory.
 
-    :param str source: Source file (file to copy).
-    :param str destination: Destination file or directory (where to copy).
-    :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise.
+    Args:
+        source (str): Source file (file to copy).
+        destination (str): Destination file or directory (where to copy).
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     logger.info('copyfile: %s -> %s' % (source, destination))
     try:
@@ -160,10 +184,12 @@ def __copyfile2(source, destination):
 
     The destination may be a directory.
 
-    :param str source: Source file (file to copy).
-    :param str destination: Destination file or directory (where to copy).
-    :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise.
+    Args:
+        source (str): Source file (file to copy).
+        destination (str): Destination file or directory (where to copy).
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     logger.info('copyfile2: %s -> %s' % (source, destination))
     try:
@@ -186,11 +212,13 @@ def __copytree(source, destination, symlinks=False):
     it is false, the contents of the files pointed to by symbolic
     links are copied.
 
-    :param str source: Source directory (directory to copy).
-    :param str destination: Destination directory (where to copy).
-    :param bool symlinks: Follow symbolic links.
-    :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise.
+    Args:
+        source (str): Source directory (directory to copy).
+        destination (str): Destination directory (where to copy).
+        symlinks (bool): Follow symbolic links.
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     logger.info('copytree: %s -> %s' % (source, destination))
     try:
@@ -204,7 +232,15 @@ def __copytree(source, destination, symlinks=False):
 
 
 def copy(source, destination):
-    """Copy file or directory"""
+    """Copy file or directory
+
+    Args:
+        source (str): Source file or directory
+        destination (str): Destination file or directory (where to copy).
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
+    """
     if os.path.isdir(source):
         return __copytree(source, destination)
     else:
@@ -212,7 +248,15 @@ def copy(source, destination):
 
 
 def gcopy(pattern, destination):
-    """Copy all file found by glob.glob(pattern) to destination directory"""
+    """Copy all file found by glob.glob(pattern) to destination directory.
+
+    Args:
+        pattern (str): Glob pattern
+        destination (str): Path to the destination directory.
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
+    """
     for item in glob.glob(pattern):
         if not copy(item, destination):
             return False
@@ -226,10 +270,12 @@ def move(source, destination):
     rename. Otherwise, copy source to the destination and then remove
     source.
 
-    :param str source: Source file or directory (file or directory to move).
-    :param str destination: Destination file or directory (where to move).
-    :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise.
+    Args:
+        source (str): Source file or directory (file or directory to move).
+        destination (str): Destination file or directory (where to move).
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     logger.info('Move: %s -> %s' % (source, destination))
     try:
@@ -242,7 +288,15 @@ def move(source, destination):
 
 
 def gmove(pattern, destination):
-    """Move all file found by glob.glob(pattern) to destination directory"""
+    """Move all file found by glob.glob(pattern) to destination directory.
+
+    Args:
+        pattern (str): Glob pattern
+        destination (str): Path to the destination directory.
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
+    """
     for item in glob.glob(pattern):
         if not move(item, destination):
             return False
@@ -252,9 +306,11 @@ def gmove(pattern, destination):
 def __rmfile(path):
     """Delete a file
 
-    :param str path: Path to the file that needs to be deleted.
-    :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise.
+    Args:
+        path (str): Path to the file that needs to be deleted.
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     logger.info('rmfile: %s' % path)
     try:
@@ -268,9 +324,11 @@ def __rmfile(path):
 def __rmtree(path):
     """Recursively delete a directory tree.
 
-    :param str path: Path to the directory that needs to be deleted.
-    :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise.
+    Args:
+        path (str): Path to the directory that needs to be deleted.
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     logger.info('rmtree: %s' % path)
     try:
@@ -284,9 +342,11 @@ def __rmtree(path):
 def remove(path):
     """Delete a file or directory
 
-    :param str path: Path to the file or directory that needs to be deleted.
-    :rtype: :obj:`bool`
-    :return: True if the operation is successful, False otherwise.
+    Args:
+        path (str): Path to the file or directory that needs to be deleted.
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     if os.path.isdir(path):
         return __rmtree(path)
@@ -297,7 +357,10 @@ def remove(path):
 def gremove(pattern):
     """Remove all file found by glob.glob(pattern)
 
-    :param str pattern: Pattern of files to remove
+    Args:
+        pattern (str): Pattern of files to remove
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     for item in glob.glob(pattern):
         if not remove(item):
@@ -305,16 +368,39 @@ def gremove(pattern):
     return True
 
 
-def touch(path, content='', encoding='utf-8'):
+def read(path, encoding='utf-8'):
+    """Reads the content of the file
+
+    Args:
+        path (str): Path to the file
+        encoding (str): File encoding. Default: utf-8
+
+    Returns:
+        str: File content or empty string if there was an error
+    """
+    try:
+        with io.open(path, encoding=encoding) as f:
+            return f.read()
+    except Exception as e:
+        logger.error('read: %s failed. Error: %s', path, e)
+        return ''
+
+
+def touch(path, content='', encoding='utf-8', overwrite=False):
     """Create a file at the given path if it does not already exists.
 
-    :param str path: Path to the file.
-    :param str content: Optional content that will be written in the file.
-    :param str encoding: Encoding in which to write the content.
-        Default: ``utf-8``
+    Args:
+        path (str): Path to the file.
+        content (str): Optional content that will be written in the file.
+        encoding (str): Encoding in which to write the content.
+            Default: ``utf-8``
+        overwrite (bool): Overwrite the file if exists.
+
+    Returns:
+        bool: True if the operation is successful, False otherwise.
     """
     path = os.path.abspath(path)
-    if os.path.exists(path):
+    if not overwrite and os.path.exists(path):
         logger.warning('touch: "%s" already exists', path)
         return False
     try:
