@@ -126,7 +126,7 @@ class Loader(object):
         self.errors = {}
 
     def load(self, *modules):
-        """Load one or modre modules.
+        """Load one or more modules.
 
         :param modules: Either a string full path to a module or an actual
             module object.
