@@ -1,6 +1,4 @@
-"""
-Logging module
-==============
+"""Logging module.
 
 This logging module is designed as a wrapper around the python
 :ref:`logging` module.
@@ -37,10 +35,10 @@ Traceback (most recent call last):
 Exception: Test exception
 """
 
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '27 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "27 November 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
-__all__ = ['configure_logging']
+__all__ = ["configure_logging"]
 
 from tea.logger.log import configure_logging

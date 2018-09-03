@@ -1,6 +1,6 @@
-__author__ = 'Viktor Kerkez <viktor.kerkez@gmail.com>'
-__date__ = '20 January 2010'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <viktor.kerkez@gmail.com>"
+__date__ = "20 January 2010"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
 import tempfile
 import unittest
@@ -8,7 +8,7 @@ import logging
 from tea.logger import configure_logging
 
 
-DATE = r'\d{4}\.\d{2}\.\d{2} \d{2}:\d{2}:\d{2}.\d{3}'
+DATE = r"\d{4}\.\d{2}\.\d{2} \d{2}:\d{2}:\d{2}.\d{3}"
 
 
 class TestLogger(unittest.TestCase):
@@ -26,40 +26,41 @@ class TestLogger(unittest.TestCase):
         # os.remove(self.output_filename)
 
     def test_debug(self):
-        self.logger.debug('Debug message #01')
-        regexp = DATE + r'\s+ DEBUG: Debug message #01 \[[\w\.]+:\d{2,3}\]'
+        self.logger.debug("Debug message #01")
+        regexp = DATE + r"\s+ DEBUG: Debug message #01 \[[\w\.]+:\d{2,3}\]"
         self.assertRegexpMatches(self.output_test_file.readline(), regexp)
 
     def test_info(self):
-        self.logger.info('Info message #02')
-        regexp = DATE + r'\s+ INFO: Info message #02 \[[\w\.]+:\d{2,3}\]'
+        self.logger.info("Info message #02")
+        regexp = DATE + r"\s+ INFO: Info message #02 \[[\w\.]+:\d{2,3}\]"
         self.assertRegexpMatches(self.output_test_file.readline(), regexp)
 
     def test_warning(self):
-        self.logger.warning('Warning message #03')
-        regexp = DATE + r'\s+ WARNING: Warning message #03 \[[\w\.]+:\d{2,3}\]'
+        self.logger.warning("Warning message #03")
+        regexp = DATE + r"\s+ WARNING: Warning message #03 \[[\w\.]+:\d{2,3}\]"
         self.assertRegexpMatches(self.output_test_file.readline(), regexp)
 
     def test_error(self):
-        self.logger.error('Error message #04')
-        regexp = DATE + r'\s+ ERROR: Error message #04 \[[\w\.]+:\d{2,3}\]'
+        self.logger.error("Error message #04")
+        regexp = DATE + r"\s+ ERROR: Error message #04 \[[\w\.]+:\d{2,3}\]"
         self.assertRegexpMatches(self.output_test_file.readline(), regexp)
 
     def test_critical(self):
-        self.logger.critical('Critical message #06')
-        regexp = (DATE +
-                  r'\s+ CRITICAL: Critical message #06 \[[\w\.]+:\d{2,3}\]')
+        self.logger.critical("Critical message #06")
+        regexp = (
+            DATE + r"\s+ CRITICAL: Critical message #06 \[[\w\.]+:\d{2,3}\]"
+        )
         self.assertRegexpMatches(self.output_test_file.readline(), regexp)
 
     def test_exception(self):
         try:
-            raise Exception('Error')
+            raise Exception("Error")
         except:
-            self.logger.exception('Exception #08')
-        regexp = DATE + r'\s+ ERROR: Exception #08 \[[\w\.]+:\d{2,3}\]'
+            self.logger.exception("Exception #08")
+        regexp = DATE + r"\s+ ERROR: Exception #08 \[[\w\.]+:\d{2,3}\]"
         self.assertRegexpMatches(self.output_test_file.readline(), regexp)
         traceback = self.output_test_file.read().strip()
         self.assertTrue(
-            traceback.startswith('Traceback (most recent call last):')
+            traceback.startswith("Traceback (most recent call last):")
         )
-        self.assertTrue(traceback.endswith('Exception: Error'))
+        self.assertTrue(traceback.endswith("Exception: Error"))

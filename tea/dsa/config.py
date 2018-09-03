@@ -1,8 +1,8 @@
 from __future__ import print_function, unicode_literals
 
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '25 July 2013'
-__copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "25 July 2013"
+__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
 
 import os
 import io
@@ -23,24 +23,33 @@ def locked(func):
     def wrapper(self, *args, **kwargs):
         with self.lock:
             return func(self, *args, **kwargs)
+
     return wrapper
 
 
 class Config(object):
-    """Configuration class"""
-    DICT = 'dict'
-    JSON = 'json'
-    YAML = 'yaml'
+    """Configuration class."""
 
-    def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8',
-                 auto_save=True):
+    DICT = "dict"
+    JSON = "json"
+    YAML = "yaml"
+
+    def __init__(
+        self,
+        filename=None,
+        data=None,
+        fmt=None,
+        encoding="utf-8",
+        auto_save=True,
+    ):
         self.lock = threading.Lock()
         self.encoding = encoding
         self.auto_save = auto_save
         if filename is not None:
             self.filename = os.path.abspath(filename)
             self.fmt = (
-                fmt if fmt is not None
+                fmt
+                if fmt is not None
                 else os.path.splitext(self.filename)[-1].lower()[1:]
             )
             self.data = self._read_file()
@@ -57,23 +66,29 @@ class Config(object):
 
     def _read_file(self):
         if not os.path.isfile(self.filename):
-            logger.warning('Configuration file "%s" does not exist',
-                           self.filename)
+            logger.warning(
+                'Configuration file "%s" does not exist', self.filename
+            )
             return {}
         try:
             if self.fmt == Config.JSON:
-                with io.open(self.filename, 'r', encoding=self.encoding) as f:
+                with io.open(self.filename, "r", encoding=self.encoding) as f:
                     return json.loads(f.read())
             elif self.fmt == Config.YAML:
                 import yaml
-                with io.open(self.filename, 'r', encoding=self.encoding) as f:
+
+                with io.open(self.filename, "r", encoding=self.encoding) as f:
                     return yaml.safe_load(f)
             else:
-                logger.error('Unsupported configuration format: %s', self.fmt)
+                logger.error("Unsupported configuration format: %s", self.fmt)
                 return {}
         except Exception as e:
-            logger.error('Failed to load file "%s" in format "%s". %s',
-                         self.filename, self.fmt, e)
+            logger.error(
+                'Failed to load file "%s" in format "%s". %s',
+                self.filename,
+                self.fmt,
+                e,
+            )
             return {}
 
     def _read_string(self, data):
@@ -84,9 +99,10 @@ class Config(object):
                 return json.loads(data)
             elif self.fmt == Config.YAML:
                 import yaml
+
                 return yaml.safe_load(data)
             else:
-                logger.error('Unsupported configuration format: %s', self.fmt)
+                logger.error("Unsupported configuration format: %s", self.fmt)
                 return {}
         except Exception as e:
             logger.error('Failed to load data in format "%s". %s', self.fmt, e)
@@ -98,18 +114,19 @@ class Config(object):
             if not os.path.isdir(dirname):
                 shell.mkdir(dirname)
             if self.fmt == Config.JSON:
-                with io.open(self.filename, 'w', encoding=self.encoding) as f:
+                with io.open(self.filename, "w", encoding=self.encoding) as f:
                     f.write(json.dumps(self.data, indent=2))
             elif self.fmt == Config.YAML:
                 import yaml
-                with io.open(self.filename, 'w', encoding=self.encoding) as f:
+
+                with io.open(self.filename, "w", encoding=self.encoding) as f:
                     yaml.safe_dump(self.data, f, default_flow_style=False)
             else:
-                logger.error('Unsupported configuration format: %s', self.fmt)
+                logger.error("Unsupported configuration format: %s", self.fmt)
 
     def __get(self, var, create=False):
         current = self.data
-        for part in var.split('.'):
+        for part in var.split("."):
             if isinstance(current, dict):
                 if part in current:
                     current = current[part]
@@ -128,8 +145,8 @@ class Config(object):
         return current
 
     def __set(self, var, value):
-        if '.' in var:
-            path, _, item = var.rpartition('.')
+        if "." in var:
+            path, _, item = var.rpartition(".")
             current = self.__get(path, create=True)
         else:
             current = self.data
@@ -143,8 +160,8 @@ class Config(object):
             self.save()
 
     def __del(self, var):
-        if '.' in var:
-            path, _, item = var.rpartition('.')
+        if "." in var:
+            path, _, item = var.rpartition(".")
             current = self.__get(path)
         else:
             current = self.data
@@ -159,12 +176,15 @@ class Config(object):
 
     @locked
     def keys(self):
-        """Returns a set of top level keys in this configuration"""
+        """Return a set of top level keys in this configuration."""
         return set(self.data.keys())
 
     @locked
     def __getitem__(self, item):
-        """Unsafe version, may raise KeyError or IndexError"""
+        """Return a value from configuration.
+
+        Unsafe version, may raise KeyError or IndexError.
+        """
         return self.__get(item)
 
     @locked
@@ -173,7 +193,10 @@ class Config(object):
 
     @locked
     def __delitem__(self, item):
-        """Unsafe version, may raise KeyError or IndexError"""
+        """Delete an item from configuration.
+
+        Unsafe version, may raise KeyError or IndexError.
+        """
         return self.__del(item)
 
     @locked
@@ -186,7 +209,11 @@ class Config(object):
 
     @locked
     def get(self, var, default=None):
-        """Safe version which always returns a default value"""
+        """Return a value from configuration.
+
+        Safe version which always returns a default value if the value is not
+        found.
+        """
         try:
             return self.__get(var)
         except (KeyError, IndexError):
@@ -198,7 +225,10 @@ class Config(object):
 
     @locked
     def delete(self, var):
-        """Safe version, never, raises an error"""
+        """Delete an item from configuration.
+
+        Safe version, never, raises an error.
+        """
         try:
             return self.__del(var)
         except:
@@ -206,12 +236,13 @@ class Config(object):
 
     @locked
     def insert(self, var, value, index=None):
-        """Inserts at the index, and if the index is not provided
-        appends to the end of the list
+        """Insert at the index.
+
+        If the index is not provided appends to the end of the list.
         """
         current = self.__get(var)
         if not isinstance(current, list):
-            raise KeyError('%s: is not a list' % var)
+            raise KeyError("%s: is not a list" % var)
         if index is None:
             current.append(value)
         else:
@@ -220,23 +251,37 @@ class Config(object):
             self.save()
 
     def __repr__(self):
-        return ('Config(filename="%(filename)s", format="%(fmt)s", '
-                'encoding="%(encoding)s", auto_save=%(auto_save)s)' %
-                self.__dict__)
+        return (
+            'Config(filename="%(filename)s", format="%(fmt)s", '
+            'encoding="%(encoding)s", auto_save=%(auto_save)s)' % self.__dict__
+        )
 
 
 class MultiConfig(object):
-    """Base class for configuration management"""
+    """Base class for configuration management."""
 
-    def __init__(self, filename=None, data=None, fmt=None, encoding='utf-8',
-                 auto_save=True):
+    def __init__(
+        self,
+        filename=None,
+        data=None,
+        fmt=None,
+        encoding="utf-8",
+        auto_save=True,
+    ):
         self.lock = threading.Lock()
         self.__configs = []
         self.attach(filename, data, fmt, encoding, auto_save)
 
     @locked
-    def attach(self, filename=None, data=None, fmt=None, encoding='utf-8',
-               auto_save=True, index=None):
+    def attach(
+        self,
+        filename=None,
+        data=None,
+        fmt=None,
+        encoding="utf-8",
+        auto_save=True,
+        index=None,
+    ):
         config = Config(filename, data, fmt, encoding, auto_save)
         if index is None:
             self.__configs.insert(0, config)
@@ -281,9 +326,7 @@ class MultiConfig(object):
 
     @locked
     def keys(self):
-        """Returns a merged set of top level keys from all the configuration
-        files
-        """
+        """Return a merged set of top level keys from all configurations."""
         s = set()
         for config in self.__configs:
             s |= config.keys()
@@ -291,7 +334,10 @@ class MultiConfig(object):
 
     @locked
     def __getitem__(self, item):
-        """Unsafe version, may raise KeyError or IndexError"""
+        """Return a value from configuration.
+
+        Unsafe version, may raise KeyError or IndexError.
+        """
         return self.__get(item)
 
     @locked
@@ -300,7 +346,10 @@ class MultiConfig(object):
 
     @locked
     def __delitem__(self, item):
-        """Unsafe version, may raise KeyError or IndexError"""
+        """Delete an item from configuration.
+
+        Unsafe version, may raise KeyError or IndexError.
+        """
         self.__del(item)
 
     @locked
@@ -313,7 +362,11 @@ class MultiConfig(object):
 
     @locked
     def get(self, var, default=None):
-        """Safe version always returns a default value"""
+        """Return a value from configuration.
+
+        Safe version which always returns a default value if the value is not
+        found.
+        """
         try:
             return self.__get(var)
         except (KeyError, IndexError):
@@ -325,7 +378,10 @@ class MultiConfig(object):
 
     @locked
     def delete(self, var):
-        """Safe version, never raises an error"""
+        """Delete an item from configuration.
+
+        Safe version, never, raises an error.
+        """
         try:
             self.__del(var)
         except (KeyError, IndexError):
@@ -336,5 +392,6 @@ class MultiConfig(object):
         self.current.insert(var, value, index)
 
     def __repr__(self):
-        return ('MultiConfig(\n  %s\n)' %
-                (',\n  '.join(reversed(map(repr, self.__configs)))))
+        return "MultiConfig(\n  %s\n)" % (
+            ",\n  ".join(reversed(map(repr, self.__configs)))
+        )

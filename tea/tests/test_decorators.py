@@ -1,76 +1,88 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '06 October 2013'
-__copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "06 October 2013"
+__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
 
 import pytest
 import itertools
 from tea.decorators import docstring, combomethod, ComboMethodError
 
 
-JOINS = ['\n', '\n\n\n', '', '---']
+JOINS = ["\n", "\n\n\n", "", "---"]
 
 ONE_LINE_DOCS = [
-    'Test documentation',
-    ' Test documentation', 'Test Documentation ', ' Test documentation ',
-    '\nTest documentation', 'Test Documentation\n', '\nTest documentation\n',
-    '\n\n\nTest documentation\n\n\n',
+    "Test documentation",
+    " Test documentation",
+    "Test Documentation ",
+    " Test documentation ",
+    "\nTest documentation",
+    "Test Documentation\n",
+    "\nTest documentation\n",
+    "\n\n\nTest documentation\n\n\n",
 ]
 
 MULTI_LINE_DOC = [
-    'Some documentation\nthat spans\nmultiple\nlines',
-    '\nSome documentation\nthat spans\nmultiple\nlines\n',
-    '\n\n\nSome documentation\nthat spans\nmultiple\nlines\n\n\n',
+    "Some documentation\nthat spans\nmultiple\nlines",
+    "\nSome documentation\nthat spans\nmultiple\nlines\n",
+    "\n\n\nSome documentation\nthat spans\nmultiple\nlines\n\n\n",
 ]
 
 
-@pytest.mark.parametrize('doc,join', itertools.product(ONE_LINE_DOCS, JOINS))
+@pytest.mark.parametrize("doc,join", itertools.product(ONE_LINE_DOCS, JOINS))
 def test_one_line_documentation(doc, join):
     @docstring(doc)
     def func():
         pass
+
     assert func.__doc__ == doc.strip()
 
     @docstring(doc, prepend=True)
     def func():
         pass
+
     assert func.__doc__ == doc.strip()
 
     @docstring(doc, join=join)
     def func():
         """Func docs"""
         pass
-    assert func.__doc__ == '\n'.join(['Func docs', join, doc.strip() + '\n'])
+
+    assert func.__doc__ == "\n".join(["Func docs", join, doc.strip() + "\n"])
 
     @docstring(doc, prepend=True, join=join)
     def func():
         """Func docs"""
         pass
-    assert func.__doc__ == '\n'.join([doc.strip(), join, 'Func docs\n'])
+
+    assert func.__doc__ == "\n".join([doc.strip(), join, "Func docs\n"])
 
 
-@pytest.mark.parametrize('doc,join', itertools.product(MULTI_LINE_DOC, JOINS))
+@pytest.mark.parametrize("doc,join", itertools.product(MULTI_LINE_DOC, JOINS))
 def test_muliti_line_documentation(doc, join):
     @docstring(doc)
     def func():
         pass
-    assert func.__doc__ == doc.strip() + '\n'
+
+    assert func.__doc__ == doc.strip() + "\n"
 
     @docstring(doc, prepend=True)
     def func():
         pass
-    assert func.__doc__ == doc.strip() + '\n'
+
+    assert func.__doc__ == doc.strip() + "\n"
 
     @docstring(doc, join=join)
     def func():
         """Func docs"""
         pass
-    assert func.__doc__ == '\n'.join(['Func docs', join, doc.strip() + '\n'])
+
+    assert func.__doc__ == "\n".join(["Func docs", join, doc.strip() + "\n"])
 
     @docstring(doc, prepend=True, join=join)
     def func():
         """Func docs"""
         pass
-    assert func.__doc__ == '\n'.join([doc.strip(), join, 'Func docs\n'])
+
+    assert func.__doc__ == "\n".join([doc.strip(), join, "Func docs\n"])
 
 
 def test_static_and_instance_method_combo():

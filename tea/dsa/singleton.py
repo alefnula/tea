@@ -1,12 +1,12 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '18 February 2010'
-__copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "18 February 2010"
+__copyright__ = "Copyright (c) 2010 Viktor Kerkez"
 
 import six
 
 
 class SingletonMetaclass(type):
-    """Singleton Metaclass
+    """Singleton Metaclass.
 
     This metaclass is used for creating singletons.
     It changes the class __new__ method to maintain only one instance of the
@@ -36,19 +36,21 @@ class SingletonMetaclass(type):
         'First initialization'
         >>>
     """
+
     def __init__(cls, *args, **kwargs):
         super(SingletonMetaclass, cls).__init__(*args, **kwargs)
         cls._instance = None
 
     def __call__(cls, *args, **kwargs):  # @NoSelf
         if cls._instance is None:
-            cls._instance = super(SingletonMetaclass, cls).__call__(*args,
-                                                                    **kwargs)
+            cls._instance = super(SingletonMetaclass, cls).__call__(
+                *args, **kwargs
+            )
         return cls._instance
 
 
 class Singleton(six.with_metaclass(SingletonMetaclass)):
-    """Singleton class
+    """Singleton class.
 
     Inherit from this class if you want to have a singleton class.
     Never use SingletonMetaclass!
@@ -77,4 +79,5 @@ class Singleton(six.with_metaclass(SingletonMetaclass)):
     >>> assert first.data == second.data
     >>>
     """
+
     pass

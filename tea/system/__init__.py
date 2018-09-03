@@ -1,28 +1,36 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '19 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "19 November 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
-__all__ = ['platform', 'get_username', 'get_appdata']
+__all__ = ["platform", "get_username", "get_appdata"]
 
 import sys
+
 _names = sys.builtin_module_names
 
 
 class __platform(object):
 
     (POSIX, MAC, DARWIN, WINDOWS, WINDOWS_CE, DOTNET, OS2, RISCOS) = (
-        1, 2, 4, 8, 16, 32, 64, 128
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
     )
 
     NAMES = {
-        POSIX: 'POSIX',
-        MAC: 'MAC',
-        DARWIN: 'DARWIN',
-        WINDOWS: 'Windows NT',
-        WINDOWS_CE: 'Windows CE',
-        DOTNET: '.NET',
-        OS2: 'OS2',
-        RISCOS: 'RISC OS'
+        POSIX: "POSIX",
+        MAC: "MAC",
+        DARWIN: "DARWIN",
+        WINDOWS: "Windows NT",
+        WINDOWS_CE: "Windows CE",
+        DOTNET: ".NET",
+        OS2: "OS2",
+        RISCOS: "RISC OS",
     }
 
     ORDER = [DOTNET, DARWIN, POSIX, WINDOWS, OS2, MAC, WINDOWS_CE, RISCOS]
@@ -33,30 +41,32 @@ class __platform(object):
             self.message = message
 
         def __repr__(self):
-            return 'PlatformNotSupportedError [%s]: %s' % (
-                __platform.NAMES[self.platform], self.message
+            return "PlatformNotSupportedError [%s]: %s" % (
+                __platform.NAMES[self.platform],
+                self.message,
             )
+
         __str__ = __repr__
 
     def __init__(self):
         self.__platforms = 0
         self.__default = 0
 
-        if 'posix' in _names:
+        if "posix" in _names:
             self.__platforms |= self.POSIX
-        if 'mac' in _names:
+        if "mac" in _names:
             self.__platforms |= self.MAC
-        if 'darwin' == sys.platform:
+        if "darwin" == sys.platform:
             self.__platforms |= self.DARWIN
-        if 'nt' in _names:
+        if "nt" in _names:
             self.__platforms |= self.WINDOWS
-        if 'ce' in _names:
+        if "ce" in _names:
             self.__platforms |= self.WINDOWS_CE
-        if 'clr' in _names:
+        if "clr" in _names:
             self.__platforms |= self.DOTNET
-        if 'os2' in _names:
+        if "os2" in _names:
             self.__platforms |= self.OS2
-        if 'riscos' in _names:
+        if "riscos" in _names:
             self.__platforms |= self.RISCOS
         for platform in self.ORDER:
             if self.__platforms & platform:
@@ -89,7 +99,7 @@ class __platform(object):
     def not_supported(self, module):
         return self.PlatformNotSupportedError(
             self.__default,
-            '"%s" module is not supported on this platform!' % module
+            '"%s" module is not supported on this platform!' % module,
         )
 
 
@@ -103,4 +113,4 @@ elif platform.is_a(platform.DOTNET):
 elif platform.is_a(platform.WINDOWS):
     from tea.system.win_system import get_username, get_appdata
 else:
-    raise platform.not_supported('tea.system')
+    raise platform.not_supported("tea.system")

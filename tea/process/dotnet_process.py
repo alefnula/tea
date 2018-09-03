@@ -1,6 +1,6 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '01 January 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "01 January 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
 import os
 import re
@@ -13,18 +13,19 @@ from tea.process import base
 from tea.decorators import docstring
 import clr
 from System import IO
-clr.AddReference('System.Management')
+
+clr.AddReference("System.Management")
 from System.Diagnostics import Process as CSharpProcess  # noqa
-from System.Management import ManagementObjectSearcher   # noqa
+from System.Management import ManagementObjectSearcher  # noqa
 
 
 def _list_processes():
     searcher = ManagementObjectSearcher(
-        'SELECT ProcessID, CommandLine FROM Win32_Process'
+        "SELECT ProcessID, CommandLine FROM Win32_Process"
     )
     for process in searcher.Get():
         yield DotnetProcess.immutable(
-            int(process['ProcessID']), process['CommandLine']
+            int(process["ProcessID"]), process["CommandLine"]
         )
 
 
@@ -39,28 +40,36 @@ def kill(pid):
 def _get_cmd(command, arguments):
     if arguments is None:
         arguments = []
-    if command.endswith('.py'):
-        return [
-            os.path.join(sys.prefix, 'ipy.exe'), command
-        ] + list(arguments)
-    elif command.endswith('.pyw'):
-        return [
-            os.path.join(sys.prefix, 'ipyw.exe'), command
-        ] + list(arguments)
+    if command.endswith(".py"):
+        return [os.path.join(sys.prefix, "ipy.exe"), command] + list(arguments)
+    elif command.endswith(".pyw"):
+        return [os.path.join(sys.prefix, "ipyw.exe"), command] + list(
+            arguments
+        )
     else:
         return [command] + list(arguments)
 
 
 def _escape(cmdline):
-    return ' '.join([
-        r'"%s"' % argument if re.search(r'\s', argument) else argument
-        for argument in cmdline
-    ])
+    return " ".join(
+        [
+            r'"%s"' % argument if re.search(r"\s", argument) else argument
+            for argument in cmdline
+        ]
+    )
 
 
 class DotnetProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, stdout=None,
-                 stderr=None, redirect_output=True, working_dir=None):
+    def __init__(
+        self,
+        command,
+        arguments=None,
+        env=None,
+        stdout=None,
+        stderr=None,
+        redirect_output=True,
+        working_dir=None,
+    ):
         self._cmdline = _get_cmd(command, arguments)
         self._process = CSharpProcess()
         self._started = False
@@ -74,7 +83,7 @@ class DotnetProcess(base.Process):
 
         self._stdout = os.path.abspath(stdout) if stdout else None
         self._stderr = os.path.abspath(stderr) if stderr else None
-        self._redirect_output = (stdout or stderr or redirect_output)
+        self._redirect_output = stdout or stderr or redirect_output
         if self._redirect_output:
             start_info.UseShellExecute = False
             start_info.RedirectStandardInput = True
@@ -87,33 +96,41 @@ class DotnetProcess(base.Process):
                 if os.path.isfile(self._stdout):
                     shell.remove(self._stdout)
                 self._stdout_ostream = IO.FileStream(
-                    self._stdout, IO.FileMode.Append, IO.FileAccess.Write,
-                    IO.FileShare.Read
+                    self._stdout,
+                    IO.FileMode.Append,
+                    IO.FileAccess.Write,
+                    IO.FileShare.Read,
                 )
                 self._stdout_istream = IO.FileStream(
-                    self._stdout, IO.FileMode.Open, IO.FileAccess.Read,
-                    IO.FileShare.ReadWrite
+                    self._stdout,
+                    IO.FileMode.Open,
+                    IO.FileAccess.Read,
+                    IO.FileShare.ReadWrite,
                 )
                 self._stdout_writer = IO.StreamWriter(self._stdout_ostream)
                 self._stdout_reader = IO.StreamReader(self._stdout_istream)
             else:
-                self._stdout_buffer = b''
+                self._stdout_buffer = b""
             self._stderr_lock = threading.Lock()
             if self._stderr:
                 if os.path.isfile(self._stderr):
                     shell.remove(self._stderr)
                 self._stderr_ostream = IO.FileStream(
-                    self._stderr, IO.FileMode.Append, IO.FileAccess.Write,
-                    IO.FileShare.Read
+                    self._stderr,
+                    IO.FileMode.Append,
+                    IO.FileAccess.Write,
+                    IO.FileShare.Read,
                 )
                 self._stderr_istream = IO.FileStream(
-                    self._stderr, IO.FileMode.Open, IO.FileAccess.Read,
-                    IO.FileShare.ReadWrite
+                    self._stderr,
+                    IO.FileMode.Open,
+                    IO.FileAccess.Read,
+                    IO.FileShare.ReadWrite,
                 )
                 self._stderr_writer = IO.StreamWriter(self._stderr_ostream)
                 self._stderr_reader = IO.StreamReader(self._stderr_istream)
             else:
-                self._stderr_buffer = b''
+                self._stderr_buffer = b""
         else:
             start_info.UseShellExecute = True
             start_info.RedirectStandardInput = False
@@ -204,9 +221,9 @@ class DotnetProcess(base.Process):
     @property
     def pid(self):
         return (
-            self._pid if self._immutable else (
-                self._process.Id if self._started else 0
-            )
+            self._pid
+            if self._immutable
+            else (self._process.Id if self._started else 0)
         )
 
     @property
@@ -235,9 +252,9 @@ class DotnetProcess(base.Process):
                     return self._stdout_reader.ReadToEnd()
                 else:
                     result = self._stdout_buffer
-                    self._stdout_buffer = b''
+                    self._stdout_buffer = b""
                     return result
-        return b''
+        return b""
 
     def eread(self):
         if self._immutable:
@@ -249,6 +266,6 @@ class DotnetProcess(base.Process):
                     return self._stderr_reader.ReadToEnd()
                 else:
                     result = self._stderr_buffer
-                    self._stderr_buffer = b''
+                    self._stderr_buffer = b""
                     return result
-        return b''
+        return b""

@@ -1,8 +1,8 @@
-"""Context library - providing usefull context managers"""
+"""Context library - providing usefull context managers."""
 
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '14 February 2014'
-__copyright__ = 'Copyright (c) 2014 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "14 February 2014"
+__copyright__ = "Copyright (c) 2014 Viktor Kerkez"
 
 
 import contextlib
@@ -10,7 +10,7 @@ import contextlib
 
 @contextlib.contextmanager
 def suppress(*exceptions):
-    """Ignores an exception or exception list
+    """Ignore an exception or exception list.
 
     Usage::
 

@@ -1,8 +1,8 @@
 from __future__ import print_function
 
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '29 July 2013'
-__copyright__ = 'Copyright (c) 2013 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "29 July 2013"
+__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
 
 import types
 import pkgutil
@@ -14,17 +14,21 @@ logger = logging.getLogger(__name__)
 
 
 def anotate(name):
-    """Annotate an object with a name"""
+    """Annotate an object with a name."""
+
     def decorator(obj):
-        setattr(obj, '_tea_ds_plugin', name)
+        setattr(obj, "_tea_ds_plugin", name)
         return obj
+
     return decorator
 
 
 def load_plugins(modules, cls=None, annotation=None, subclasses=False):
     if cls is None and annotation is None:
-        logger.warning('Either the cls or the annotation has to be provided '
-                       'to the load_plugins function.')
+        logger.warning(
+            "Either the cls or the annotation has to be provided "
+            "to the load_plugins function."
+        )
         return []
     if not isinstance(modules, (list, tuple)):
         modules = [modules]
@@ -34,10 +38,12 @@ def load_plugins(modules, cls=None, annotation=None, subclasses=False):
         if not isinstance(module, types.ModuleType):
             module = get_object(module)
         loaded_modules.append(module)
-        for (loader, module_name,
-             is_pkg) in pkgutil.walk_packages(module.__path__):
-            loaded_modules.append(loader.find_module(module_name)
-                                        .load_module(module_name))
+        for (loader, module_name, is_pkg) in pkgutil.walk_packages(
+            module.__path__
+        ):
+            loaded_modules.append(
+                loader.find_module(module_name).load_module(module_name)
+            )
     # If cls is provided then check the classes
     if cls is not None:
         if subclasses:
@@ -57,6 +63,6 @@ def load_plugins(modules, cls=None, annotation=None, subclasses=False):
         items = []
         for module in loaded_modules:
             for obj in module.__dict__.values():
-                if getattr(obj, '_tea_ds_plugin', None) == annotation:
+                if getattr(obj, "_tea_ds_plugin", None) == annotation:
                     items.append(obj)
         return items

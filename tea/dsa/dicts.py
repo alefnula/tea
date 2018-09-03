@@ -1,6 +1,6 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '16 March 2017'
-__copyright__ = 'Copyright (c) 2017 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "16 March 2017"
+__copyright__ = "Copyright (c) 2017 Viktor Kerkez"
 
 import collections
 
@@ -55,7 +55,7 @@ class DictObject(object):
         self.__ref__[key] = value
 
     def __setattr__(self, attr, value):
-        if attr == '__ref__':
+        if attr == "__ref__":
             object.__setattr__(self, attr, value)
         else:
             self.__ref__[attr] = value

@@ -1,6 +1,6 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '27 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "27 November 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
 import six
 import sys
@@ -15,8 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def _package(module):
-    """This is a hack for python2 since it does not have __package__ always set
-    up correctly
+    """Hack for python2 since it does not have __package__ always set up.
 
     Args:
         module: Module for which we want the package name
@@ -28,8 +27,8 @@ def _package(module):
     )
 
 
-def get_object(path='', obj=None):
-    """Returns an object from a dot path.
+def get_object(path="", obj=None):
+    """Return an object from a dot path.
 
     Path can either be a full path, in which case the `get_object` function
     will try to import the modules in the path and follow it to the final
@@ -72,19 +71,20 @@ def get_object(path='', obj=None):
     """
     if not path:
         return obj
-    path = path.split('.')
+    path = path.split(".")
     if obj is None:
         obj = importlib.import_module(path[0])
         path = path[1:]
     for item in path:
-        if item == '*':
+        if item == "*":
             # This is the star query, returns non hidden objects
             return [
-                getattr(obj, name) for name in dir(obj)
-                if not name.startswith('__')
+                getattr(obj, name)
+                for name in dir(obj)
+                if not name.startswith("__")
             ]
         if isinstance(obj, types.ModuleType):
-            submodule = '{}.{}'.format(_package(obj), item)
+            submodule = "{}.{}".format(_package(obj), item)
             try:
                 obj = importlib.import_module(submodule)
             except Exception as import_error:
@@ -121,6 +121,7 @@ class Loader(object):
         import baz
         loader.load(baz)
     """
+
     def __init__(self):
         self.modules = {}
         self.errors = {}
@@ -128,8 +129,9 @@ class Loader(object):
     def load(self, *modules):
         """Load one or more modules.
 
-        :param modules: Either a string full path to a module or an actual
-            module object.
+        Args:
+            modules: Either a string full path to a module or an actual module
+                object.
         """
         for module in modules:
             if isinstance(module, six.string_types):
@@ -140,8 +142,9 @@ class Loader(object):
                     continue
             self.modules[module.__package__] = module
             for (loader, module_name, is_pkg) in pkgutil.walk_packages(
-                    module.__path__):
-                full_name = '{}.{}'.format(_package(module), module_name)
+                module.__path__
+            ):
+                full_name = "{}.{}".format(_package(module), module_name)
                 try:
                     self.modules[full_name] = get_object(full_name)
                     if is_pkg:
@@ -151,8 +154,7 @@ class Loader(object):
 
 
 def load_subclasses(klass, modules=None):
-    """Load recursively all submodules of the modules and return all the
-    subclasses of the provided class
+    """Load recursively all all subclasses from a module.
 
     Args:
         klass (str or list of str): Class whose subclasses we want to load.
@@ -173,19 +175,20 @@ def load_subclasses(klass, modules=None):
 
 
 def get_exception():
-    """Returns full formatted traceback as a string."""
-    trace = ''
-    exception = ''
-    exc_list = traceback.format_exception_only(sys.exc_info()[0],
-                                               sys.exc_info()[1])
+    """Return full formatted traceback as a string."""
+    trace = ""
+    exception = ""
+    exc_list = traceback.format_exception_only(
+        sys.exc_info()[0], sys.exc_info()[1]
+    )
     for entry in exc_list:
         exception += entry
     tb_list = traceback.format_tb(sys.exc_info()[2])
     for entry in tb_list:
         trace += entry
-    return '%s\n%s' % (exception, trace)
+    return "%s\n%s" % (exception, trace)
 
 
 def cmp(x, y):
-    """Compare function from python2"""
+    """Compare function from python2."""
     return (x > y) - (x < y)

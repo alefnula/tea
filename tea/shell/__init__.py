@@ -1,11 +1,12 @@
-"""This module mimics some of the behaviors of the builtin :mod:`shutil`
-module, adding logging to all operations and abstracting some other useful
-shell commands (functions).
+"""This module mimics some of the behaviors of the builtin :mod:`shutil`.
+
+It adds logging to all operations and abstracting some other useful shell
+commands (functions).
 """
 
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '27 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "27 November 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
 import os
 import io
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 def split(s, posix=True):
-    """Split the string s using shell-like syntax
+    """Split the string s using shell-like syntax.
 
     Args:
         s (str): String to split
@@ -32,11 +33,11 @@ def split(s, posix=True):
         list of str: List of string parts
     """
     if isinstance(s, six.binary_type):
-        s = s.decode('utf-8')
+        s = s.decode("utf-8")
     return shlex.split(s, posix=posix)
 
 
-def search(path, matcher='*', dirs=False, files=True):
+def search(path, matcher="*", dirs=False, files=True):
     """Recursive search function.
 
     Args:
@@ -50,11 +51,15 @@ def search(path, matcher='*', dirs=False, files=True):
         str: Found files and directories
     """
     if callable(matcher):
+
         def fnmatcher(items):
             return list(filter(matcher, items))
+
     else:
+
         def fnmatcher(items):
             return fnmatch.filter(items, matcher)
+
     for root, directories, filenames in os.walk(os.path.abspath(path)):
         to_match = []
         if dirs:
@@ -66,22 +71,23 @@ def search(path, matcher='*', dirs=False, files=True):
 
 
 def chdir(directory):
-    """Change the current working directory
+    """Change the current working directory.
 
     Args:
-        directory (str): Directory to go to
+        directory (str): Directory to go to.
     """
     directory = os.path.abspath(directory)
-    logger.info('chdir -> %s' % directory)
+    logger.info("chdir -> %s" % directory)
     try:
         if not os.path.isdir(directory):
-            logger.error('chdir -> %s failed! Directory does not exist!',
-                         directory)
+            logger.error(
+                "chdir -> %s failed! Directory does not exist!", directory
+            )
             return False
         os.chdir(directory)
         return True
     except Exception as e:
-        logger.error('chdir -> %s failed! %s' % (directory, e))
+        logger.error("chdir -> %s failed! %s" % (directory, e))
         return False
 
 
@@ -90,8 +96,8 @@ def goto(directory, create=False):
     """Context object for changing directory.
 
     Args:
-        directory (str): Directory to go to
-        create (bool): Create directory if it doesn't exists
+        directory (str): Directory to go to.
+        create (bool): Create directory if it doesn't exists.
 
     Usage::
 
@@ -106,26 +112,27 @@ def goto(directory, create=False):
     directory = os.path.abspath(directory)
 
     if os.path.isdir(directory) or (create and mkdir(directory)):
-        logger.info('goto -> %s', directory)
+        logger.info("goto -> %s", directory)
         os.chdir(directory)
         try:
             yield True
         finally:
-            logger.info('goto <- %s', directory)
+            logger.info("goto <- %s", directory)
             os.chdir(current)
     else:
-        logger.info('goto(%s) - directory does not exist, or cannot be '
-                    'created.', directory)
+        logger.info(
+            "goto(%s) - directory does not exist, or cannot be " "created.",
+            directory,
+        )
         yield False
 
 
 def mkdir(path, mode=0o755, delete=False):
-    """mkdir(path [, mode=0755])
+    """Make a directory.
 
     Create a leaf directory and all intermediate ones.
-    Works like mkdir, except that any intermediate path segment (not
-    just the rightmost) will be created if it does not exist.  This is
-    recursive.
+    Works like ``mkdir``, except that any intermediate path segment (not just
+    the rightmost) will be created if it does not exist. This is recursive.
 
     Args:
         path (str): Directory to create
@@ -135,7 +142,7 @@ def mkdir(path, mode=0o755, delete=False):
     Returns:
         bool: True if succeeded else False
     """
-    logger.info('mkdir: %s' % path)
+    logger.info("mkdir: %s" % path)
     if os.path.isdir(path):
         if not delete:
             return True
@@ -145,7 +152,7 @@ def mkdir(path, mode=0o755, delete=False):
         os.makedirs(path, mode)
         return True
     except:
-        logger.exception('Failed to mkdir: %s' % path)
+        logger.exception("Failed to mkdir: %s" % path)
         return False
 
 
@@ -168,14 +175,15 @@ def __copyfile(source, destination):
     Returns:
         bool: True if the operation is successful, False otherwise.
     """
-    logger.info('copyfile: %s -> %s' % (source, destination))
+    logger.info("copyfile: %s -> %s" % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copy(source, destination)
         return True
     except Exception as e:
-        logger.error('copyfile: %s -> %s failed! Error: %s',
-                     source, destination, e)
+        logger.error(
+            "copyfile: %s -> %s failed! Error: %s", source, destination, e
+        )
         return False
 
 
@@ -191,19 +199,20 @@ def __copyfile2(source, destination):
     Returns:
         bool: True if the operation is successful, False otherwise.
     """
-    logger.info('copyfile2: %s -> %s' % (source, destination))
+    logger.info("copyfile2: %s -> %s" % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copy2(source, destination)
         return True
     except Exception as e:
-        logger.error('copyfile2: %s -> %s failed! Error: %s',
-                     source, destination, e)
+        logger.error(
+            "copyfile2: %s -> %s failed! Error: %s", source, destination, e
+        )
         return False
 
 
 def __copytree(source, destination, symlinks=False):
-    """Recursively copy a directory tree using copy2().
+    """Copy a directory tree recursively using copy2().
 
     The destination directory must not already exist.
 
@@ -220,19 +229,20 @@ def __copytree(source, destination, symlinks=False):
     Returns:
         bool: True if the operation is successful, False otherwise.
     """
-    logger.info('copytree: %s -> %s' % (source, destination))
+    logger.info("copytree: %s -> %s" % (source, destination))
     try:
         __create_destdir(destination)
         shutil.copytree(source, destination, symlinks)
         return True
     except Exception as e:
-        logger.exception('copytree: %s -> %s failed! Error: %s',
-                         source, destination, e)
+        logger.exception(
+            "copytree: %s -> %s failed! Error: %s", source, destination, e
+        )
         return False
 
 
 def copy(source, destination):
-    """Copy file or directory
+    """Copy file or directory.
 
     Args:
         source (str): Source file or directory
@@ -264,7 +274,7 @@ def gcopy(pattern, destination):
 
 
 def move(source, destination):
-    """Recursively move a file or directory to another location.
+    """Move a file or directory (recursively) to another location.
 
     If the destination is on our current file system, then simply use
     rename. Otherwise, copy source to the destination and then remove
@@ -277,13 +287,13 @@ def move(source, destination):
     Returns:
         bool: True if the operation is successful, False otherwise.
     """
-    logger.info('Move: %s -> %s' % (source, destination))
+    logger.info("Move: %s -> %s" % (source, destination))
     try:
         __create_destdir(destination)
         shutil.move(source, destination)
         return True
     except:
-        logger.exception('Failed to Move: %s -> %s' % (source, destination))
+        logger.exception("Failed to Move: %s -> %s" % (source, destination))
         return False
 
 
@@ -304,7 +314,7 @@ def gmove(pattern, destination):
 
 
 def __rmfile(path):
-    """Delete a file
+    """Delete a file.
 
     Args:
         path (str): Path to the file that needs to be deleted.
@@ -312,12 +322,12 @@ def __rmfile(path):
     Returns:
         bool: True if the operation is successful, False otherwise.
     """
-    logger.info('rmfile: %s' % path)
+    logger.info("rmfile: %s" % path)
     try:
         os.remove(path)
         return True
     except Exception as e:
-        logger.error('rmfile: %s failed! Error: %s' % (path, e))
+        logger.error("rmfile: %s failed! Error: %s" % (path, e))
         return False
 
 
@@ -330,17 +340,17 @@ def __rmtree(path):
     Returns:
         bool: True if the operation is successful, False otherwise.
     """
-    logger.info('rmtree: %s' % path)
+    logger.info("rmtree: %s" % path)
     try:
         shutil.rmtree(path)
         return True
     except Exception as e:
-        logger.error('rmtree: %s failed! Error: %s' % (path, e))
+        logger.error("rmtree: %s failed! Error: %s" % (path, e))
         return False
 
 
 def remove(path):
-    """Delete a file or directory
+    """Delete a file or directory.
 
     Args:
         path (str): Path to the file or directory that needs to be deleted.
@@ -355,7 +365,7 @@ def remove(path):
 
 
 def gremove(pattern):
-    """Remove all file found by glob.glob(pattern)
+    """Remove all file found by glob.glob(pattern).
 
     Args:
         pattern (str): Pattern of files to remove
@@ -368,8 +378,8 @@ def gremove(pattern):
     return True
 
 
-def read(path, encoding='utf-8'):
-    """Reads the content of the file
+def read(path, encoding="utf-8"):
+    """Read the content of the file.
 
     Args:
         path (str): Path to the file
@@ -382,11 +392,11 @@ def read(path, encoding='utf-8'):
         with io.open(path, encoding=encoding) as f:
             return f.read()
     except Exception as e:
-        logger.error('read: %s failed. Error: %s', path, e)
-        return ''
+        logger.error("read: %s failed. Error: %s", path, e)
+        return ""
 
 
-def touch(path, content='', encoding='utf-8', overwrite=False):
+def touch(path, content="", encoding="utf-8", overwrite=False):
     """Create a file at the given path if it does not already exists.
 
     Args:
@@ -404,12 +414,12 @@ def touch(path, content='', encoding='utf-8', overwrite=False):
         logger.warning('touch: "%s" already exists', path)
         return False
     try:
-        logger.info('touch: %s', path)
-        with io.open(path, 'wb') as f:
+        logger.info("touch: %s", path)
+        with io.open(path, "wb") as f:
             if not isinstance(content, six.binary_type):
                 content = content.encode(encoding)
             f.write(content)
         return True
     except Exception as e:
-        logger.error('touch: %s failed. Error: %s', path, e)
+        logger.error("touch: %s failed. Error: %s", path, e)
         return False

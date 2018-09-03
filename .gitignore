@@ -1,6 +1,7 @@
 *.py[cod]
 .DS_Store
 .coverage
+.pytest_cache
 dist
 build
 tea.egg-info

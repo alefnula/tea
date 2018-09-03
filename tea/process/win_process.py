@@ -1,6 +1,6 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '01 January 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "01 January 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
 import io
 import os
@@ -35,60 +35,79 @@ def _list_processes():
 @docstring(base.doc_kill)
 def kill(pid):
     process = WinProcess(
-        os.path.join(os.environ['windir'], 'system32', 'taskkill.exe'),
-        ['/PID', str(pid), '/F', '/T']
+        os.path.join(os.environ["windir"], "system32", "taskkill.exe"),
+        ["/PID", str(pid), "/F", "/T"],
     )
     process.start()
     process.wait()
     return process.exit_code == 0
 
 
-def create_file(filename, mode='rw'):
-    if mode == 'r':
+def create_file(filename, mode="rw"):
+    if mode == "r":
         desired_access = win32con.GENERIC_READ
-    elif mode == 'w':
+    elif mode == "w":
         desired_access = win32con.GENERIC_WRITE
-    elif mode in ('rw', 'wr'):
+    elif mode in ("rw", "wr"):
         desired_access = win32con.GENERIC_READ | win32con.GENERIC_WRITE
     else:
-        raise ValueError('Invalid access mode')
-    share_mode = (win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE |
-                  win32con.FILE_SHARE_DELETE)
+        raise ValueError("Invalid access mode")
+    share_mode = (
+        win32con.FILE_SHARE_READ
+        | win32con.FILE_SHARE_WRITE
+        | win32con.FILE_SHARE_DELETE
+    )
     attributes = win32security.SECURITY_ATTRIBUTES()
     creation_disposition = win32con.OPEN_ALWAYS
     flags_and_attributes = win32con.FILE_ATTRIBUTE_NORMAL
 
-    handle = win32file.CreateFile(filename, desired_access, share_mode,
-                                  attributes, creation_disposition,
-                                  flags_and_attributes, 0)
+    handle = win32file.CreateFile(
+        filename,
+        desired_access,
+        share_mode,
+        attributes,
+        creation_disposition,
+        flags_and_attributes,
+        0,
+    )
     return handle
 
 
 def _get_cmd(command, arguments):
     if arguments is None:
         arguments = []
-    if command.endswith('.py'):
-        return [
-            os.path.join(sys.prefix, 'python.exe'), command
-        ] + list(arguments)
-    elif command.endswith('.pyw'):
-        return [
-            os.path.join(sys.prefix, 'pythonw.exe'), command
-        ] + list(arguments)
+    if command.endswith(".py"):
+        return [os.path.join(sys.prefix, "python.exe"), command] + list(
+            arguments
+        )
+    elif command.endswith(".pyw"):
+        return [os.path.join(sys.prefix, "pythonw.exe"), command] + list(
+            arguments
+        )
     else:
         return [command] + list(arguments)
 
 
 def _escape(cmdline):
-    return ' '.join([
-        r'"%s"' % argument if re.search(r'\s', argument) else argument
-        for argument in cmdline
-    ])
+    return " ".join(
+        [
+            r'"%s"' % argument if re.search(r"\s", argument) else argument
+            for argument in cmdline
+        ]
+    )
 
 
 class WinProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, stdout=None,
-                 stderr=None, redirect_output=True, working_dir=None):
+    def __init__(
+        self,
+        command,
+        arguments=None,
+        env=None,
+        stdout=None,
+        stderr=None,
+        redirect_output=True,
+        working_dir=None,
+    ):
         self._cmdline = _get_cmd(command, arguments)
         self._env = env
         self._stdout = os.path.abspath(stdout) if stdout else None
@@ -127,13 +146,14 @@ class WinProcess(base.Process):
         sa = win32security.SECURITY_ATTRIBUTES()
         sa.bInheritHandle = 1
         self._stdin_read, self._stdin_write = win32pipe.CreatePipe(sa, 0)
-        win32api.SetHandleInformation(self._stdin_write,
-                                      win32con.HANDLE_FLAG_INHERIT, 0)
+        win32api.SetHandleInformation(
+            self._stdin_write, win32con.HANDLE_FLAG_INHERIT, 0
+        )
         if self._stdout:
             if os.path.isfile(self._stdout):
                 shell.remove(self._stdout)
             shell.touch(self._stdout)
-            self.stdout_reader = io.open(self._stdout, 'rb+')
+            self.stdout_reader = io.open(self._stdout, "rb+")
         else:
             self._stdout_reader = tempfile.TemporaryFile()
         self._stdout_handle = create_file(self._stdout_reader.name)
@@ -141,7 +161,7 @@ class WinProcess(base.Process):
             if os.path.isfile(self._stderr):
                 shell.remove(self._stderr)
             shell.touch(self._stderr)
-            self._stderr_reader = io.open(self._stderr, 'rb+')
+            self._stderr_reader = io.open(self._stderr, "rb+")
         else:
             self._stderr_reader = tempfile.TemporaryFile()
         self._stderr_handle = create_file(self._stderr_reader.name)
@@ -168,12 +188,20 @@ class WinProcess(base.Process):
             self._startupinfo.hStdError = self._stderr_handle
             self._startupinfo.dwFlags |= win32process.STARTF_USESTDHANDLES
         (
-            self._hProcess, self._hThread, self._dwProcessId, self._dwThreadId
+            self._hProcess,
+            self._hThread,
+            self._dwProcessId,
+            self._dwThreadId,
         ) = win32process.CreateProcess(
-            self._appName, _escape(self._cmdline), self._processAttributes,
-            self._threadAttributes, self._bInheritHandles,
-            self._dwCreationFlags, self._create_env(self._env),
-            self._currentDirectory, self._startupinfo
+            self._appName,
+            _escape(self._cmdline),
+            self._processAttributes,
+            self._threadAttributes,
+            self._bInheritHandles,
+            self._dwCreationFlags,
+            self._create_env(self._env),
+            self._currentDirectory,
+            self._startupinfo,
         )
 
     def kill(self):
@@ -187,8 +215,9 @@ class WinProcess(base.Process):
             while self.is_running:
                 win32api.Sleep(1000)
         else:
-            result = win32event.WaitForSingleObject(self._hProcess,
-                                                    timeout * 1000)
+            result = win32event.WaitForSingleObject(
+                self._hProcess, timeout * 1000
+            )
             if result != win32event.WAIT_OBJECT_0:
                 return False
         return True
@@ -224,8 +253,8 @@ class WinProcess(base.Process):
             raise NotImplemented
 
         if self._redirect_output:
-            if not string.endswith('\n'):
-                string += '\n'
+            if not string.endswith("\n"):
+                string += "\n"
             win32file.WriteFile(self._stdin_write, string)
             win32file.FlushFileBuffers(self._stdin_write)
 
@@ -235,7 +264,7 @@ class WinProcess(base.Process):
 
         if self._redirect_output:
             return self._stdout_reader.read()
-        return ''
+        return ""
 
     def eread(self):
         if self._immutable:
@@ -243,4 +272,4 @@ class WinProcess(base.Process):
 
         if self._redirect_output:
             return self._stderr_reader.read()
-        return ''
+        return ""

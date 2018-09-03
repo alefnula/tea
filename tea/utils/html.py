@@ -1,9 +1,13 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '25 October 2010'
-__copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "25 October 2010"
+__copyright__ = "Copyright (c) 2010 Viktor Kerkez"
 
+import logging
 from re import sub
 from six.moves import html_parser
+
+
+logger = logging.getLogger(__name__)
 
 
 class _StripTagsParser(html_parser.HTMLParser):
@@ -14,21 +18,21 @@ class _StripTagsParser(html_parser.HTMLParser):
     def handle_data(self, data):
         text = data.strip()
         if len(text) > 0:
-            text = sub('[ \t\r\n]+', ' ', text)
-            self.__text.append(text + ' ')
+            text = sub("[ \t\r\n]+", " ", text)
+            self.__text.append(text + " ")
 
     def handle_starttag(self, tag, attrs):
-        if tag == 'p':
-            self.__text.append('\n\n')
-        elif tag == 'br':
-            self.__text.append('\n')
+        if tag == "p":
+            self.__text.append("\n\n")
+        elif tag == "br":
+            self.__text.append("\n")
 
     def handle_startendtag(self, tag, attrs):
-        if tag == 'br':
-            self.__text.append('\n\n')
+        if tag == "br":
+            self.__text.append("\n\n")
 
     def text(self):
-        return ''.join(self.__text).strip()
+        return "".join(self.__text).strip()
 
 
 def strip_tags(html):
@@ -37,5 +41,6 @@ def strip_tags(html):
         parser.feed(html)
         parser.close()
         return parser.text()
-    except:
+    except Exception as e:
+        logger.debug("Failed to strip tags. Error: %s", e)
         return html

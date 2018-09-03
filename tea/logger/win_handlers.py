@@ -1,17 +1,16 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '27 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "27 November 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
 import os
 import logging
-from .win_file import WindowsFile
+from tea.logger.win_file import WindowsFile
 
 
 class FileHandler(logging.StreamHandler):
-    """A handler class which writes formatted logging records to disk
-    files.
-    """
-    def __init__(self, filename, mode='a', encoding=None):
+    """A handler class which writes formatted logging records to disk files."""
+
+    def __init__(self, filename, mode="a", encoding=None):
         """Open the specified file and use it as the stream for logging."""
         stream = WindowsFile(filename, mode, encoding)
         logging.StreamHandler.__init__(self, stream)
@@ -21,7 +20,7 @@ class FileHandler(logging.StreamHandler):
         self.mode = mode
 
     def close(self):
-        """Closes the stream."""
+        """Close the stream."""
         self.flush()
         self.stream.close()
         logging.StreamHandler.close(self)
@@ -33,8 +32,9 @@ class BaseRotatingHandler(FileHandler):
     Not meant to be instantiated directly. Instead, use
     :ref:`RotatingFileHandler` or :ref:`TimedRotatingFileHandler`.
     """
+
     def __init__(self, filename, mode, encoding=None):
-        """Use the specified filename for streamed logging"""
+        """Use the specified filename for streamed logging."""
         FileHandler.__init__(self, filename, mode, encoding)
         self.mode = mode
         self.encoding = encoding
@@ -56,11 +56,15 @@ class BaseRotatingHandler(FileHandler):
 
 
 class RotatingFileHandler(BaseRotatingHandler):
-    """Handler for logging to a set of files, which switches from one file
-    to the next when the current file reaches a certain size.
+    """Handler for logging to a set of files.
+
+    Files are switched from one to the next when the current file reaches a
+    certain size.
     """
-    def __init__(self, filename, mode='a', maxBytes=0, backupCount=0,
-                 encoding=None):
+
+    def __init__(
+        self, filename, mode="a", maxBytes=0, backupCount=0, encoding=None
+    ):
         """Open the specified file and use it as the stream for logging.
 
         By default, the file grows indefinitely. You can specify particular
@@ -81,7 +85,7 @@ class RotatingFileHandler(BaseRotatingHandler):
         If maxBytes is zero, rollover never occurs.
         """
         if maxBytes > 0:
-            mode = 'a'  # doesn't make sense otherwise!
+            mode = "a"  # doesn't make sense otherwise!
         BaseRotatingHandler.__init__(self, filename, mode, encoding)
         self.maxBytes = maxBytes
         self.backupCount = backupCount
@@ -91,11 +95,11 @@ class RotatingFileHandler(BaseRotatingHandler):
         self.stream.close()
         try:
             if self.backupCount > 0:
-                tmp_location = '%s.0' % self.baseFilename
+                tmp_location = "%s.0" % self.baseFilename
                 os.rename(self.baseFilename, tmp_location)
                 for i in range(self.backupCount - 1, 0, -1):
-                    sfn = '%s.%d' % (self.baseFilename, i)
-                    dfn = '%s.%d' % (self.baseFilename, i + 1)
+                    sfn = "%s.%d" % (self.baseFilename, i)
+                    dfn = "%s.%d" % (self.baseFilename, i + 1)
                     if os.path.exists(sfn):
                         if os.path.exists(dfn):
                             os.remove(dfn)
@@ -107,7 +111,7 @@ class RotatingFileHandler(BaseRotatingHandler):
         except:
             pass
         finally:
-            self.stream = WindowsFile(self.baseFilename, 'a', self.encoding)
+            self.stream = WindowsFile(self.baseFilename, "a", self.encoding)
 
     def shouldRollover(self, record):
         """Determine if rollover should occur.

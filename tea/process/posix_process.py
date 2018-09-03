@@ -1,6 +1,6 @@
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '01 January 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "01 January 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
 import io
 import os
@@ -40,18 +40,26 @@ def kill(pid):
 
 
 def _get_cmd(command, arguments):
-    """Helper function for merging command with arguments"""
+    """Merge command with arguments."""
     if arguments is None:
         arguments = []
-    if command.endswith('.py') or command.endswith('.pyw'):
+    if command.endswith(".py") or command.endswith(".pyw"):
         return [sys.executable, command] + list(arguments)
     else:
         return [command] + list(arguments)
 
 
 class PosixProcess(base.Process):
-    def __init__(self, command, arguments=None, env=None, stdout=None,
-                 stderr=None, redirect_output=True, working_dir=None):
+    def __init__(
+        self,
+        command,
+        arguments=None,
+        env=None,
+        stdout=None,
+        stderr=None,
+        redirect_output=True,
+        working_dir=None,
+    ):
         self._commandline = _get_cmd(command, arguments)
         self._env = env
         self._process = None
@@ -62,7 +70,7 @@ class PosixProcess(base.Process):
         self._stderr = os.path.abspath(stderr) if stderr else None
         self._stderr_reader = None
         self._stderr_writer = None
-        self._redirect_output = (stdout or stderr or redirect_output)
+        self._redirect_output = stdout or stderr or redirect_output
         self._working_dir = working_dir
         self._pid = None
         self._immutable = False
@@ -88,28 +96,34 @@ class PosixProcess(base.Process):
 
         if self._redirect_output:
             if self._stdout:
-                self._stdout_writer = io.open(self._stdout, 'wb')
-                self._stdout_reader = io.open(self._stdout, 'rb')
+                self._stdout_writer = io.open(self._stdout, "wb")
+                self._stdout_reader = io.open(self._stdout, "rb")
             else:
                 self._stdout_writer = tempfile.NamedTemporaryFile()
-                self._stdout_reader = io.open(self._stdout_writer.name, 'rb')
+                self._stdout_reader = io.open(self._stdout_writer.name, "rb")
 
             if self._stderr:
-                self._stderr_writer = io.open(self._stderr, 'wb')
-                self._stderr_reader = io.open(self._stderr, 'rb')
+                self._stderr_writer = io.open(self._stderr, "wb")
+                self._stderr_reader = io.open(self._stderr, "rb")
             else:
                 self._stderr_writer = tempfile.NamedTemporaryFile()
-                self._stderr_reader = io.open(self._stderr_writer.name, 'rb')
+                self._stderr_reader = io.open(self._stderr_writer.name, "rb")
             try:
                 self._process = subprocess.Popen(
                     self._commandline,
                     stdin=subprocess.PIPE,
-                    stdout=(self._stdout_writer if self._stdout else
-                            self._stdout_writer.file),
-                    stderr=(self._stderr_writer if self._stderr else
-                            self._stderr_writer.file),
+                    stdout=(
+                        self._stdout_writer
+                        if self._stdout
+                        else self._stdout_writer.file
+                    ),
+                    stderr=(
+                        self._stderr_writer
+                        if self._stderr
+                        else self._stderr_writer.file
+                    ),
                     env=self._create_env(self._env),
-                    cwd=self._working_dir
+                    cwd=self._working_dir,
                 )
             except OSError:
                 raise base.NotFound(
@@ -120,10 +134,10 @@ class PosixProcess(base.Process):
                 self._process = subprocess.Popen(
                     self._commandline,
                     stdin=None,
-                    stdout=io.open(os.devnull, 'wb'),
+                    stdout=io.open(os.devnull, "wb"),
                     stderr=subprocess.STDOUT,
                     env=self._create_env(self._env),
-                    cwd=self._working_dir
+                    cwd=self._working_dir,
                 )
             except OSError:
                 raise base.NotFound(
@@ -191,8 +205,8 @@ class PosixProcess(base.Process):
             raise NotImplemented
 
         if self._redirect_output:
-            if string[-1] != b'\n':
-                string += b'\n'
+            if string[-1] != b"\n":
+                string += b"\n"
             self._process.stdin.write(string)
             self._process.stdin.flush()
 
@@ -202,7 +216,7 @@ class PosixProcess(base.Process):
 
         if self._redirect_output:
             return self._stdout_reader.read()
-        return b''
+        return b""
 
     def eread(self):
         if self._immutable:
@@ -210,4 +224,4 @@ class PosixProcess(base.Process):
 
         if self._redirect_output:
             return self._stderr_reader.read()
-        return b''
+        return b""

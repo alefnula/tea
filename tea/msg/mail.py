@@ -1,11 +1,16 @@
-"""Simple and complete library for sending emails"""
+"""Simple and complete library for sending emails."""
 
-__author__ = 'Viktor Kerkez <alefnula@gmail.com>'
-__date__ = '27 November 2009'
-__copyright__ = 'Copyright (c) 2009 Viktor Kerkez'
+__author__ = "Viktor Kerkez <alefnula@gmail.com>"
+__date__ = "27 November 2009"
+__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
 
-__all__ = ['SMTPConnection', 'EmailMessage', 'EmailMultiAlternatives',
-           'send_mail', 'send_mass_mail']
+__all__ = [
+    "SMTPConnection",
+    "EmailMessage",
+    "EmailMultiAlternatives",
+    "send_mail",
+    "send_mass_mail",
+]
 
 
 import os
@@ -21,6 +26,7 @@ from tea.utils.encoding import smart_text, smart_bytes
 from six.moves.email_mime_text import MIMEText
 from six.moves.email_mime_base import MIMEBase
 from six.moves.email_mime_multipart import MIMEMultipart
+
 if six.PY3:
     from email import charset as Charset
     from email.header import Header
@@ -38,14 +44,14 @@ logger = logging.getLogger(__name__)
 
 # Don't BASE64-encode UTF-8 messages so that we avoid unwanted attention from
 # some spam filters.
-Charset.add_charset('utf-8', Charset.SHORTEST, Charset.QP, 'utf-8')
+Charset.add_charset("utf-8", Charset.SHORTEST, Charset.QP, "utf-8")
 
 # Default MIME type to use on attachments (if it is not explicitly given
 # and cannot be guessed).
-DEFAULT_ATTACHMENT_MIME_TYPE = 'application/octet-stream'
+DEFAULT_ATTACHMENT_MIME_TYPE = "application/octet-stream"
 
 # Default charset
-DEFAULT_CHARSET = 'utf-8'
+DEFAULT_CHARSET = "utf-8"
 
 
 # Cache the hostname, but do it lazily: socket.getfqdn() can take a couple of
@@ -55,7 +61,7 @@ class CachedDnsName(object):
         return self.get_fqdn()
 
     def get_fqdn(self):
-        if not hasattr(self, '_fqdn'):
+        if not hasattr(self, "_fqdn"):
             self._fqdn = socket.getfqdn()
         return self._fqdn
 
@@ -67,9 +73,9 @@ DNS_NAME = CachedDnsName()
 # * Used cached hostname for performance.
 # * Added try/except to support lack of getpid() in Jython (#5496).
 def make_msgid(idstring=None, utc=False):
-    """Returns a string suitable for RFC 2822 compliant Message-ID, e.g:
+    """Return a string suitable for RFC 2822 compliant Message-ID.
 
-    <20020201195627.33539.96671@nightshade.la.mastaler.com>
+    E.g: <20020201195627.33539.96671@nightshade.la.mastaler.com>
 
     Optional idstring if given is a string used to strengthen the
     uniqueness of the message id.
@@ -78,7 +84,7 @@ def make_msgid(idstring=None, utc=False):
         timestamp = time.gmtime()
     else:
         timestamp = time.localtime()
-    utcdate = time.strftime('%Y%m%d%H%M%S', timestamp)
+    utcdate = time.strftime("%Y%m%d%H%M%S", timestamp)
     try:
         pid = os.getpid()
     except AttributeError:
@@ -86,11 +92,11 @@ def make_msgid(idstring=None, utc=False):
         pid = 1
     randint = random.randrange(100000)
     if idstring is None:
-        idstring = ''
+        idstring = ""
     else:
-        idstring = '.' + idstring
+        idstring = "." + idstring
     idhost = DNS_NAME
-    msgid = '<%s.%s.%s%s@%s>' % (utcdate, pid, randint, idstring, idhost)
+    msgid = "<%s.%s.%s%s@%s>" % (utcdate, pid, randint, idstring, idhost)
     return msgid
 
 
@@ -99,25 +105,27 @@ class BadHeaderError(ValueError):
 
 
 def forbid_multi_line_headers(name, val):
-    """Forbids multi-line headers, to prevent header injection."""
+    """Forbid multi-line headers, to prevent header injection."""
     val = smart_text(val)
-    if '\n' in val or '\r' in val:
-        raise BadHeaderError('Header values can\'t contain newlines '
-                             '(got %r for header %r)' % (val, name))
+    if "\n" in val or "\r" in val:
+        raise BadHeaderError(
+            "Header values can't contain newlines "
+            "(got %r for header %r)" % (val, name)
+        )
     try:
-        val = val.encode('ascii')
+        val = val.encode("ascii")
     except UnicodeEncodeError:
-        if name.lower() in ('to', 'from', 'cc'):
+        if name.lower() in ("to", "from", "cc"):
             result = []
-            for item in val.split(', '):
+            for item in val.split(", "):
                 nm, addr = parseaddr(item)
                 nm = str(Header(nm, DEFAULT_CHARSET))
                 result.append(formataddr((nm, str(addr))))
-            val = ', '.join(result)
+            val = ", ".join(result)
         else:
             val = Header(val, DEFAULT_CHARSET)
     else:
-        if name.lower() == 'subject':
+        if name.lower() == "subject":
             val = Header(val)
     return name, val
 
@@ -135,9 +143,17 @@ class SafeMIMEMultipart(MIMEMultipart):
 
 
 class SMTPConnection(object):
-    """A wrapper that manages the SMTP network connection."""
-    def __init__(self, host=None, port=None, username=None, password=None,
-                 use_tls=None, fail_silently=False):
+    """Wrapper that manages the SMTP network connection."""
+
+    def __init__(
+        self,
+        host=None,
+        port=None,
+        username=None,
+        password=None,
+        use_tls=None,
+        fail_silently=False,
+    ):
         self.host = host
         self.port = port
         self.username = username
@@ -147,8 +163,9 @@ class SMTPConnection(object):
         self.connection = None
 
     def open(self):
-        """Ensures we have a connection to the email server. Returns whether or
-        not a new connection was required (True or False).
+        """Ensure we have a connection to the email server.
+
+        Returns whether or not a new connection was required (True or False).
         """
         if self.connection:
             # Nothing to do if the connection is already open.
@@ -156,8 +173,9 @@ class SMTPConnection(object):
         try:
             # If local_hostname is not specified, socket.getfqdn() gets used.
             # For performance, we use the cached FQDN for local_hostname.
-            self.connection = smtplib.SMTP(self.host, self.port,
-                                           local_hostname=DNS_NAME.get_fqdn())
+            self.connection = smtplib.SMTP(
+                self.host, self.port, local_hostname=DNS_NAME.get_fqdn()
+            )
             if self.use_tls:
                 self.connection.ehlo()
                 self.connection.starttls()
@@ -166,13 +184,17 @@ class SMTPConnection(object):
                 self.connection.login(self.username, self.password)
             return True
         except Exception as e:
-            logger.error('Error trying to connect to server %s:%s: %s',
-                         self.host, self.port, e)
+            logger.error(
+                "Error trying to connect to server %s:%s: %s",
+                self.host,
+                self.port,
+                e,
+            )
             if not self.fail_silently:
                 raise
 
     def close(self):
-        """Closes the connection to the email server."""
+        """Close the connection to the email server."""
         try:
             try:
                 self.connection.quit()
@@ -181,8 +203,12 @@ class SMTPConnection(object):
                 # sometimes.
                 self.connection.close()
             except Exception as e:
-                logger.error('Error trying to close connection to server '
-                             '%s:%s: %s', self.host, self.port, e)
+                logger.error(
+                    "Error trying to close connection to server " "%s:%s: %s",
+                    self.host,
+                    self.port,
+                    e,
+                )
                 if self.fail_silently:
                     return
                 raise
@@ -190,8 +216,10 @@ class SMTPConnection(object):
             self.connection = None
 
     def send_messages(self, messages):
-        """Sends one or more EmailMessage objects and returns the number of
-        email messages sent.
+        """Send one or more EmailMessage objects.
+
+        Returns:
+             int: Number of email messages sent.
         """
         if not messages:
             return
@@ -209,16 +237,25 @@ class SMTPConnection(object):
         return num_sent
 
     def _send(self, message):
-        """A helper method that does the actual sending."""
+        """Send an email.
+
+        Helper method that does the actual sending.
+        """
         if not message.recipients():
             return False
         try:
-            self.connection.sendmail(message.sender,
-                                     message.recipients(),
-                                     message.message().as_string())
+            self.connection.sendmail(
+                message.sender,
+                message.recipients(),
+                message.message().as_string(),
+            )
         except Exception as e:
-            logger.error('Error sending a message to server %s:%s: %s',
-                         self.host, self.port, e)
+            logger.error(
+                "Error sending a message to server %s:%s: %s",
+                self.host,
+                self.port,
+                e,
+            )
             if not self.fail_silently:
                 raise
             return False
@@ -226,15 +263,27 @@ class SMTPConnection(object):
 
 
 class EmailMessage(object):
-    """A container for email information."""
-    content_subtype = 'plain'
-    multipart_subtype = 'mixed'
+    """Container for email information."""
+
+    content_subtype = "plain"
+    multipart_subtype = "mixed"
     encoding = None  # None => use settings default
 
-    def __init__(self, subject='', body='', sender=None, to=None, cc=None,
-                 bcc=None, attachments=None, headers=None, connection=None):
-        """Initialize a single email message (which can be sent to multiple
-        recipients).
+    def __init__(
+        self,
+        subject="",
+        body="",
+        sender=None,
+        to=None,
+        cc=None,
+        bcc=None,
+        attachments=None,
+        headers=None,
+        connection=None,
+    ):
+        """Initialize a single email message.
+
+        (It can be sent to multiple recipients.)
 
         All strings used to create the message can be unicode strings (or UTF-8
         bytestrings). The SafeMIMEText class will handle any necessary encoding
@@ -262,7 +311,7 @@ class EmailMessage(object):
         self.subject = subject
         self.body = body
         self.attachments = []
-        for attachment in (attachments or []):
+        for attachment in attachments or []:
             if isinstance(attachment, (tuple, list)):
                 self.attach(*attachment)
             else:
@@ -277,8 +326,11 @@ class EmailMessage(object):
 
     def message(self):
         encoding = self.encoding or DEFAULT_CHARSET
-        msg = SafeMIMEText(smart_bytes(self.body, DEFAULT_CHARSET),
-                           self.content_subtype, encoding)
+        msg = SafeMIMEText(
+            smart_bytes(self.body, DEFAULT_CHARSET),
+            self.content_subtype,
+            encoding,
+        )
         if self.attachments:
             body_msg = msg
             msg = SafeMIMEMultipart(_subtype=self.multipart_subtype)
@@ -289,35 +341,37 @@ class EmailMessage(object):
                     msg.attach(attachment)
                 else:
                     msg.attach(self._create_attachment(*attachment))
-        msg['Subject'] = self.subject
-        msg['From'] = self.sender
-        msg['To'] = ', '.join(self.to)
-        msg['Cc'] = ', '.join(self.cc)
+        msg["Subject"] = self.subject
+        msg["From"] = self.sender
+        msg["To"] = ", ".join(self.to)
+        msg["Cc"] = ", ".join(self.cc)
         # Email header names are case-insensitive (RFC 2045), so we have to
         # accommodate that when doing comparisons.
         header_names = [key.lower() for key in self.extra_headers]
-        if 'date' not in header_names:
-            msg['Date'] = formatdate()
-        if 'message-id' not in header_names:
-            msg['Message-ID'] = make_msgid()
+        if "date" not in header_names:
+            msg["Date"] = formatdate()
+        if "message-id" not in header_names:
+            msg["Message-ID"] = make_msgid()
         for name, value in self.extra_headers.items():
             msg[name] = value
         return msg
 
     def recipients(self):
-        """Returns a list of all recipients of the email (includes direct
-        addressees as well as Bcc entries).
+        """Return a list of all recipients of the email.
+
+        Includes direct addressees as well as Bcc entries.
         """
         return self.to + self.cc + self.bcc
 
     def send(self, fail_silently=False):
-        """Sends the email message."""
+        """Send the email message."""
         return self.get_connection(fail_silently).send_messages([self])
 
     def attach(self, filename=None, content=None, mimetype=None):
-        """Attaches a file with the given filename and content. The filename
-        can be omitted (useful for multipart/alternative messages) and the
-        mimetype is guessed, if not provided.
+        """Attache a file with the given filename and content.
+
+        The filename can be omitted (useful for multipart/alternative messages)
+        and the mimetype is guessed, if not provided.
 
         If the first parameter is a MIMEBase subclass it is inserted directly
         into the resulting message attachments.
@@ -332,82 +386,120 @@ class EmailMessage(object):
             self.attachments.append((filename, content, mimetype))
 
     def attach_file(self, path, mimetype=None):
-        """Attaches a file from the filesystem."""
+        """Attache a file from the filesystem."""
         filename = os.path.basename(path)
-        content = open(path, 'rb').read()
+        content = open(path, "rb").read()
         self.attach(filename, content, mimetype)
 
     def _create_attachment(self, filename, content, mimetype=None):
-        """Converts the filename, content, mimetype triple into a MIME
-        attachment object.
-        """
+        """Convert the filename, content, mimetype triple to attachment."""
         if mimetype is None:
             mimetype, _ = mimetypes.guess_type(filename)
             if mimetype is None:
                 mimetype = DEFAULT_ATTACHMENT_MIME_TYPE
-        basetype, subtype = mimetype.split('/', 1)
-        if basetype == 'text':
-            attachment = SafeMIMEText(smart_bytes(content, DEFAULT_CHARSET),
-                                      subtype, DEFAULT_CHARSET)
+        basetype, subtype = mimetype.split("/", 1)
+        if basetype == "text":
+            attachment = SafeMIMEText(
+                smart_bytes(content, DEFAULT_CHARSET), subtype, DEFAULT_CHARSET
+            )
         else:
             # Encode non-text attachments with base64.
             attachment = MIMEBase(basetype, subtype)
             attachment.set_payload(content)
             encode_base64(attachment)
         if filename:
-            attachment.add_header('Content-Disposition', 'attachment',
-                                  filename=filename)
+            attachment.add_header(
+                "Content-Disposition", "attachment", filename=filename
+            )
         return attachment
 
 
 class EmailMultiAlternatives(EmailMessage):
-    """A version of EmailMessage that makes it easy to send
+    """Email message with multipart/alternative content.
+
+    A version of EmailMessage that makes it easy to send
     multipart/alternative messages. For example, including text and HTML
     versions of the text is made easier.
     """
-    multipart_subtype = 'alternative'
+
+    multipart_subtype = "alternative"
 
     def attach_alternative(self, content, mimetype=None):
         """Attach an alternative content representation."""
         self.attach(content=content, mimetype=mimetype)
 
 
-def send_mail(subject, sender, to, message, html_message=None, cc=None,
-              bcc=None, attachments=None, host=None, port=None, auth_user=None,
-              auth_password=None, use_tls=False, fail_silently=False):
-    """Easy wrapper for sending a single message to a recipient list. All
-    members of the recipient list will see the other recipients in the 'To'
+def send_mail(
+    subject,
+    sender,
+    to,
+    message,
+    html_message=None,
+    cc=None,
+    bcc=None,
+    attachments=None,
+    host=None,
+    port=None,
+    auth_user=None,
+    auth_password=None,
+    use_tls=False,
+    fail_silently=False,
+):
+    """Send a single email to a recipient list.
+
+    All members of the recipient list will see the other recipients in the 'To'
     field.
 
     Note: The API for this method is frozen. New code wanting to extend the
     functionality should use the EmailMessage class directly.
     """
     if message is None and html_message is None:
-        raise ValueError('Either message or html_message must be provided')
+        raise ValueError("Either message or html_message must be provided")
     if message is None:
         message = strip_tags(html_message)
-    connection = SMTPConnection(host=host, port=port, username=auth_user,
-                                password=auth_password, use_tls=use_tls,
-                                fail_silently=fail_silently)
+    connection = SMTPConnection(
+        host=host,
+        port=port,
+        username=auth_user,
+        password=auth_password,
+        use_tls=use_tls,
+        fail_silently=fail_silently,
+    )
     # Convert the to field just for easier usage
     if isinstance(to, six.string_types):
         to = [to]
     if html_message is None:
-        email = EmailMessage(subject=subject, body=message, sender=sender,
-                             to=to, cc=cc, bcc=bcc, attachments=attachments,
-                             connection=connection)
+        email = EmailMessage(
+            subject=subject,
+            body=message,
+            sender=sender,
+            to=to,
+            cc=cc,
+            bcc=bcc,
+            attachments=attachments,
+            connection=connection,
+        )
     else:
-        email = EmailMultiAlternatives(subject=subject, body=message,
-                                       sender=sender, to=to, cc=cc, bcc=bcc,
-                                       attachments=attachments,
-                                       connection=connection)
-        email.attach_alternative(html_message, 'text/html')
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=message,
+            sender=sender,
+            to=to,
+            cc=cc,
+            bcc=bcc,
+            attachments=attachments,
+            connection=connection,
+        )
+        email.attach_alternative(html_message, "text/html")
     return email.send()
 
 
-def send_mass_mail(datatuple, fail_silently=False, auth_user=None,
-                   auth_password=None):
-    """Given a datatuple of (subject, message, sender, recipient_list), sends
+def send_mass_mail(
+    datatuple, fail_silently=False, auth_user=None, auth_password=None
+):
+    """Send multiple emails to multiple recipients.
+
+    Given a datatuple of (subject, message, sender, recipient_list), sends
     each message to each recipient list. Returns the number of e-mails sent.
 
     If auth_user and auth_password are set, they're used to log in.
@@ -415,8 +507,11 @@ def send_mass_mail(datatuple, fail_silently=False, auth_user=None,
     Note: The API for this method is frozen. New code wanting to extend the
     functionality should use the EmailMessage class directly.
     """
-    connection = SMTPConnection(username=auth_user, password=auth_password,
-                                fail_silently=fail_silently)
-    messages = [EmailMessage(subject, message, sender, recipient)
-                for subject, message, sender, recipient in datatuple]
+    connection = SMTPConnection(
+        username=auth_user, password=auth_password, fail_silently=fail_silently
+    )
+    messages = [
+        EmailMessage(subject, message, sender, recipient)
+        for subject, message, sender, recipient in datatuple
+    ]
     return connection.send_messages(messages)
