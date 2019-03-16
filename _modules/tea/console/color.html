@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.console.color &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">tea api documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>tea.console.color</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tea.console.color</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Viktor Kerkez &lt;alefnula@gmail.com&gt;&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;20 October 2010&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2010 Viktor Kerkez&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+
+<span class="kn">from</span> <span class="nn">tea.system</span> <span class="k">import</span> <span class="n">platform</span>
+
+
+<span class="k">class</span> <span class="nc">Color</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">black</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span>
+    <span class="n">blue</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span>
+    <span class="n">green</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
+    <span class="n">cyan</span> <span class="o">=</span> <span class="s2">&quot;cyan&quot;</span>
+    <span class="n">red</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+    <span class="n">purple</span> <span class="o">=</span> <span class="s2">&quot;purple&quot;</span>
+    <span class="n">yellow</span> <span class="o">=</span> <span class="s2">&quot;yellow&quot;</span>
+    <span class="n">gray</span> <span class="o">=</span> <span class="s2">&quot;gray&quot;</span>
+    <span class="n">white</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span>
+    <span class="n">normal</span> <span class="o">=</span> <span class="s2">&quot;normal&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">colors</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">black</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">blue</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">green</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">cyan</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">red</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">purple</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">yellow</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">white</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">color_re</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;\[(?P&lt;dark&gt;dark )?(?P&lt;color&gt;</span><span class="si">%s</span><span class="s2">)\]&quot;</span> <span class="o">%</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">colors</span><span class="p">()),</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">WINDOWS</span> <span class="o">|</span> <span class="n">platform</span><span class="o">.</span><span class="n">DOTNET</span><span class="p">):</span>
+
+    <span class="c1"># COLORS[fg or bg][is dark][color]</span>
+    <span class="n">COLORS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;fg&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="kc">True</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">:</span> <span class="mh">0x00</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">:</span> <span class="mh">0x01</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">:</span> <span class="mh">0x02</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">cyan</span><span class="p">:</span> <span class="mh">0x03</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">:</span> <span class="mh">0x04</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">purple</span><span class="p">:</span> <span class="mh">0x05</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">yellow</span><span class="p">:</span> <span class="mh">0x06</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">:</span> <span class="mh">0x07</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">gray</span><span class="p">:</span> <span class="mh">0x08</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span> <span class="mh">0x07</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="kc">False</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">:</span> <span class="mh">0x00</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">:</span> <span class="mh">0x09</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">:</span> <span class="mh">0x0A</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">cyan</span><span class="p">:</span> <span class="mh">0x0B</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">:</span> <span class="mh">0x0C</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">purple</span><span class="p">:</span> <span class="mh">0x0D</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">yellow</span><span class="p">:</span> <span class="mh">0x0E</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">:</span> <span class="mh">0x0F</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">gray</span><span class="p">:</span> <span class="mh">0x07</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span> <span class="mh">0x07</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;bg&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="kc">True</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">:</span> <span class="mh">0x00</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">:</span> <span class="mh">0x10</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">:</span> <span class="mh">0x20</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">cyan</span><span class="p">:</span> <span class="mh">0x30</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">:</span> <span class="mh">0x40</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">purple</span><span class="p">:</span> <span class="mh">0x50</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">yellow</span><span class="p">:</span> <span class="mh">0x60</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">:</span> <span class="mh">0x70</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">gray</span><span class="p">:</span> <span class="mh">0x80</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span> <span class="mh">0x00</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="kc">False</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">:</span> <span class="mh">0x00</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">:</span> <span class="mh">0x90</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">:</span> <span class="mh">0xA0</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">cyan</span><span class="p">:</span> <span class="mh">0xB0</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">:</span> <span class="mh">0xC0</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">purple</span><span class="p">:</span> <span class="mh">0xD0</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">yellow</span><span class="p">:</span> <span class="mh">0xE0</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">:</span> <span class="mh">0xF0</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">gray</span><span class="p">:</span> <span class="mh">0x70</span><span class="p">,</span>
+                <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span> <span class="mh">0x00</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_set_color</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">fg_dark</span><span class="p">,</span> <span class="n">bg_dark</span><span class="p">,</span> <span class="n">underlined</span><span class="p">):</span>
+        <span class="c1"># System is Windows</span>
+        <span class="c1"># STD_INPUT_HANDLE = -10</span>
+        <span class="n">STD_OUTPUT_HANDLE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">11</span>
+        <span class="c1"># STD_ERROR_HANDLE = -12</span>
+
+        <span class="n">std_out_handle</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">windll</span><span class="o">.</span><span class="n">kernel32</span><span class="o">.</span><span class="n">GetStdHandle</span><span class="p">(</span><span class="n">STD_OUTPUT_HANDLE</span><span class="p">)</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">COLORS</span><span class="p">[</span><span class="s2">&quot;fg&quot;</span><span class="p">][</span><span class="n">fg_dark</span><span class="p">][</span><span class="n">fg</span><span class="p">]</span> <span class="o">|</span> <span class="n">COLORS</span><span class="p">[</span><span class="s2">&quot;bg&quot;</span><span class="p">][</span><span class="n">bg_dark</span><span class="p">][</span><span class="n">bg</span><span class="p">]</span>
+        <span class="n">ctypes</span><span class="o">.</span><span class="n">windll</span><span class="o">.</span><span class="n">kernel32</span><span class="o">.</span><span class="n">SetConsoleTextAttribute</span><span class="p">(</span><span class="n">std_out_handle</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+
+<span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">POSIX</span><span class="p">):</span>
+
+    <span class="n">COLORS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;fg&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">yellow</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">purple</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">cyan</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">gray</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span> <span class="mi">00</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;bg&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">:</span> <span class="mi">41</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">yellow</span><span class="p">:</span> <span class="mi">43</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">purple</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">cyan</span><span class="p">:</span> <span class="mi">46</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">gray</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
+            <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span> <span class="mi">00</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_set_color</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">fg_dark</span><span class="p">,</span> <span class="n">bg_dark</span><span class="p">,</span> <span class="n">underlined</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">fg</span> <span class="o">!=</span> <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">fg_dark</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">&quot;fg&quot;</span><span class="p">][</span><span class="n">fg</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">bg</span> <span class="o">!=</span> <span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">&quot;bg&quot;</span><span class="p">][</span><span class="n">bg</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">underlined</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="c1"># White and gray are special cases</span>
+        <span class="k">if</span> <span class="n">fg</span> <span class="o">==</span> <span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fg</span> <span class="o">==</span> <span class="n">Color</span><span class="o">.</span><span class="n">gray</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fg_dark</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">37</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\33</span><span class="s2">[</span><span class="si">%s</span><span class="s2">m&quot;</span> <span class="o">%</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">args</span><span class="p">)))</span>
+
+
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">platform</span><span class="o">.</span><span class="n">not_supported</span><span class="p">(</span><span class="s2">&quot;tea.console.color&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="set_color"><a class="viewcode-back" href="../../../api/console.html#tea.console.color.set_color">[docs]</a><span class="k">def</span> <span class="nf">set_color</span><span class="p">(</span>
+    <span class="n">fg</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span>
+    <span class="n">bg</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span>
+    <span class="n">fg_dark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">bg_dark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">underlined</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the console color.</span>
+
+<span class="sd">    &gt;&gt;&gt; set_color(Color.red, Color.blue)</span>
+<span class="sd">    &gt;&gt;&gt; set_color(&#39;red&#39;, &#39;blue&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; set_color() # returns back to normal</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_set_color</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">fg_dark</span><span class="p">,</span> <span class="n">bg_dark</span><span class="p">,</span> <span class="n">underlined</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="strip_colors"><a class="viewcode-back" href="../../../api/console.html#tea.console.color.strip_colors">[docs]</a><span class="k">def</span> <span class="nf">strip_colors</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Strip out the color tags.</span>
+
+<span class="sd">    This is used so that other functions can determine the real text line</span>
+<span class="sd">    lengths.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Text to strip color tags from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Stripped text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Color</span><span class="o">.</span><span class="n">color_re</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cprint"><a class="viewcode-back" href="../../../api/console.html#tea.console.color.cprint">[docs]</a><span class="k">def</span> <span class="nf">cprint</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">,</span>
+    <span class="n">fg</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span>
+    <span class="n">bg</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span>
+    <span class="n">fg_dark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">bg_dark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">underlined</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">parse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print string in to stdout using colored font.</span>
+
+<span class="sd">    See L{set_color} for more details about colors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Text that needs to be printed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">parse</span><span class="p">:</span>
+        <span class="n">color_re</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">color_re</span><span class="p">()</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">color_re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="n">previous</span> <span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()])</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                <span class="n">set_color</span><span class="p">(</span>
+                    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span> <span class="n">fg_dark</span><span class="o">=</span><span class="kc">False</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;dark&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span>
+                <span class="p">)</span>
+                <span class="n">previous</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="n">line</span><span class="p">[</span><span class="n">previous</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+                <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">set_color</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">fg_dark</span><span class="p">,</span> <span class="n">bg_dark</span><span class="p">,</span> <span class="n">underlined</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">set_color</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="colorize_output"><a class="viewcode-back" href="../../../api/console.html#tea.console.color.colorize_output">[docs]</a><span class="k">def</span> <span class="nf">colorize_output</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Print output to console using provided color mappings.</span>
+
+<span class="sd">    Color mapping is dict with regular expressions as key and tuple of two as</span>
+<span class="sd">    values. Key is used to match if line should be colorized and tuple contains</span>
+<span class="sd">    color to be used and boolean value that indicates if dark foreground</span>
+<span class="sd">    is used.</span>
+<span class="sd">    For example:</span>
+
+<span class="sd">        &gt;&gt;&gt; CLS = {</span>
+<span class="sd">        &gt;&gt;&gt;     re.compile(r&#39;^(--- .*)$&#39;): (Color.red, False)</span>
+<span class="sd">        &gt;&gt;&gt; }</span>
+
+<span class="sd">    will colorize lines that start with &#39;---&#39; to red.</span>
+
+<span class="sd">    If different parts of line needs to be in different color then dict must be</span>
+<span class="sd">    supplied in colors with keys that are named group from regular expression</span>
+<span class="sd">    and values that are tuples of color and boolean that indicates if dark</span>
+<span class="sd">    foreground is used.</span>
+<span class="sd">    For example:</span>
+
+<span class="sd">        &gt;&gt;&gt; CLS = {</span>
+<span class="sd">        &gt;&gt;&gt;     re.compile(r&#39;^(?P&lt;key&gt;user:\s+)(?P&lt;user&gt;.*)$&#39;): {</span>
+<span class="sd">        &gt;&gt;&gt;         &#39;key&#39;: (Color.yellow, True),</span>
+<span class="sd">        &gt;&gt;&gt;         &#39;user&#39;: (Color.cyan,   False)</span>
+<span class="sd">        &gt;&gt;&gt;     }</span>
+<span class="sd">        &gt;&gt;&gt; }</span>
+
+<span class="sd">    will colorize line &#39;user: Some user&#39; so that &#39;user:&#39; part is yellow with</span>
+<span class="sd">    dark foreground and &#39;Some user&#39; part is cyan without dark foreground.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="n">cprint</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">indent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">regexp</span><span class="p">,</span> <span class="n">color_def</span> <span class="ow">in</span> <span class="n">colors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">regexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">_colorize_single_line</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">regexp</span><span class="p">,</span> <span class="n">color_def</span><span class="p">)</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">line</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_colorize_single_line</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">regexp</span><span class="p">,</span> <span class="n">color_def</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print single line to console with ability to colorize parts of it.&quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">groupdict</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">groupdict</span><span class="p">:</span>
+        <span class="c1"># no named groups, just colorize whole line</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">color_def</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dark</span> <span class="o">=</span> <span class="n">color_def</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">line</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">fg_dark</span><span class="o">=</span><span class="n">dark</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rev_groups</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">groupdict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">rev_groups</span> <span class="ow">and</span> <span class="n">rev_groups</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="ow">in</span> <span class="n">color_def</span><span class="p">:</span>
+                <span class="n">group_name</span> <span class="o">=</span> <span class="n">rev_groups</span><span class="p">[</span><span class="n">part</span><span class="p">]</span>
+                <span class="n">cprint</span><span class="p">(</span>
+                    <span class="n">part</span><span class="p">,</span>
+                    <span class="n">color_def</span><span class="p">[</span><span class="n">group_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">fg_dark</span><span class="o">=</span><span class="n">color_def</span><span class="p">[</span><span class="n">group_name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cprint</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+        <span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

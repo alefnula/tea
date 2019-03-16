@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.logger.log &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">tea api documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>tea.logger.log</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tea.logger.log</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Viktor Kerkez &lt;alefnula@gmail.com&gt;&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;27 November 2009&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2009 Viktor Kerkez&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">tea</span> <span class="k">import</span> <span class="n">shell</span>
+<span class="kn">from</span> <span class="nn">tea.system</span> <span class="k">import</span> <span class="n">platform</span>
+
+<span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">is_only</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">WINDOWS</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">tea.logger.win_handlers</span> <span class="k">import</span> <span class="n">RotatingFileHandler</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">logging.handlers</span> <span class="k">import</span> <span class="n">RotatingFileHandler</span>
+
+<span class="c1"># Constants</span>
+<span class="n">FMT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2">.</span><span class="si">%(msecs)03d</span><span class="s2">   </span><span class="si">%(levelname)11s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2"> &quot;</span>
+    <span class="s2">&quot;[</span><span class="si">%(name)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">]&quot;</span>
+<span class="p">)</span>
+<span class="n">FMT_SHORT</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)11s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">]&quot;</span>
+<span class="n">FMT_STDOUT</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(levelname)-11s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">]&quot;</span>
+<span class="n">FMT_DATE</span> <span class="o">=</span> <span class="s2">&quot;%Y.%m.</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">FMT_SHORT</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="n">FMT_DATE</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="configure_logging"><a class="viewcode-back" href="../../../api/logger.html#tea.logger.configure_logging">[docs]</a><span class="k">def</span> <span class="nf">configure_logging</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">filemode</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
+    <span class="n">datefmt</span><span class="o">=</span><span class="n">FMT_DATE</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="o">=</span><span class="n">FMT</span><span class="p">,</span>
+    <span class="n">stdout_fmt</span><span class="o">=</span><span class="n">FMT_STDOUT</span><span class="p">,</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+    <span class="n">stdout_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>
+    <span class="n">initial_file_message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">max_size</span><span class="o">=</span><span class="mi">1048576</span><span class="p">,</span>
+    <span class="n">rotations_number</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">remove_handlers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Configure logging module.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): Specifies a filename to log to.</span>
+<span class="sd">        filemode (str): Specifies the mode to open the log file.</span>
+<span class="sd">            Values: ``&#39;a&#39;``, ``&#39;w&#39;``. *Default:* ``a``.</span>
+<span class="sd">        datefmt (str): Use the specified date/time format.</span>
+<span class="sd">        fmt (str): Format string for the file handler.</span>
+<span class="sd">        stdout_fmt (str): Format string for the stdout handler.</span>
+<span class="sd">        level (int): Log level for the file handler. Log levels are the same</span>
+<span class="sd">            as the log levels from the standard :mod:`logging` module.</span>
+<span class="sd">            *Default:* ``logging.DEBUG``</span>
+<span class="sd">        stdout_level (int): Log level for the stdout handler. Log levels are</span>
+<span class="sd">            the same as the log levels from the standard :mod:`logging` module.</span>
+<span class="sd">            *Default:* ``logging.WARNING``</span>
+<span class="sd">        initial_file_message (str): First log entry written in file.</span>
+<span class="sd">        max_size (int): Maximal size of the logfile. If the size of the file</span>
+<span class="sd">            exceed the maximal size it will be rotated.</span>
+<span class="sd">        rotations_number (int): Number of rotations to save.</span>
+<span class="sd">        remove_handlers (bool): Remove all existing handlers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span>
+    <span class="c1"># Remove all handlers</span>
+    <span class="k">if</span> <span class="n">remove_handlers</span><span class="p">:</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hdlr</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">hdlr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">hdlr</span><span class="p">)</span>
+    <span class="c1"># Create stdout handler</span>
+    <span class="k">if</span> <span class="n">stdout_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">stdout_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="n">stdout_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">stdout_level</span><span class="p">)</span>
+        <span class="n">stdout_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">stdout_fmt</span><span class="p">,</span> <span class="n">datefmt</span><span class="p">)</span>
+        <span class="c1"># stdoutFormatter.converter = time.gmtime</span>
+        <span class="n">stdout_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">stdout_formatter</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">stdout_handler</span><span class="p">)</span>
+    <span class="c1"># Create file handler if filename is provided</span>
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Check if filename directory exists and creates it if it doesn&#39;t</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="n">shell</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="c1"># Create file handler</span>
+        <span class="n">file_handler</span> <span class="o">=</span> <span class="n">RotatingFileHandler</span><span class="p">(</span>
+            <span class="n">filename</span><span class="p">,</span> <span class="n">filemode</span><span class="p">,</span> <span class="n">max_size</span><span class="p">,</span> <span class="n">rotations_number</span>
+        <span class="p">)</span>
+        <span class="n">file_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="n">file_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">datefmt</span><span class="p">)</span>
+        <span class="n">file_formatter</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span>
+        <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">file_formatter</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">initial_file_message</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot; </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">initial_file_message</span>
+            <span class="n">file_handler</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

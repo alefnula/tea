@@ -1,0 +1,708 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.msg.mail &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">tea api documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>tea.msg.mail</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tea.msg.mail</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simple and complete library for sending emails.&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Viktor Kerkez &lt;alefnula@gmail.com&gt;&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;27 November 2009&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2009 Viktor Kerkez&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;SMTPConnection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;EmailMessage&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;EmailMultiAlternatives&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;send_mail&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;send_mass_mail&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">mimetypes</span>
+<span class="kn">from</span> <span class="nn">tea.utils.html</span> <span class="k">import</span> <span class="n">strip_tags</span>
+<span class="kn">from</span> <span class="nn">tea.utils.encoding</span> <span class="k">import</span> <span class="n">smart_text</span><span class="p">,</span> <span class="n">smart_bytes</span>
+<span class="kn">from</span> <span class="nn">six.moves.email_mime_text</span> <span class="k">import</span> <span class="n">MIMEText</span>
+<span class="kn">from</span> <span class="nn">six.moves.email_mime_base</span> <span class="k">import</span> <span class="n">MIMEBase</span>
+<span class="kn">from</span> <span class="nn">six.moves.email_mime_multipart</span> <span class="k">import</span> <span class="n">MIMEMultipart</span>
+
+<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">email</span> <span class="k">import</span> <span class="n">charset</span> <span class="k">as</span> <span class="n">Charset</span>
+    <span class="kn">from</span> <span class="nn">email.header</span> <span class="k">import</span> <span class="n">Header</span>
+    <span class="kn">from</span> <span class="nn">email.encoders</span> <span class="k">import</span> <span class="n">encode_base64</span>
+    <span class="kn">from</span> <span class="nn">email.utils</span> <span class="k">import</span> <span class="n">formatdate</span><span class="p">,</span> <span class="n">parseaddr</span><span class="p">,</span> <span class="n">formataddr</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">email</span> <span class="k">import</span> <span class="n">Charset</span>
+    <span class="kn">from</span> <span class="nn">email.Header</span> <span class="k">import</span> <span class="n">Header</span>
+    <span class="kn">from</span> <span class="nn">email.Encoders</span> <span class="k">import</span> <span class="n">encode_base64</span>
+    <span class="kn">from</span> <span class="nn">email.Utils</span> <span class="k">import</span> <span class="n">formatdate</span><span class="p">,</span> <span class="n">parseaddr</span><span class="p">,</span> <span class="n">formataddr</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># Don&#39;t BASE64-encode UTF-8 messages so that we avoid unwanted attention from</span>
+<span class="c1"># some spam filters.</span>
+<span class="n">Charset</span><span class="o">.</span><span class="n">add_charset</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">Charset</span><span class="o">.</span><span class="n">SHORTEST</span><span class="p">,</span> <span class="n">Charset</span><span class="o">.</span><span class="n">QP</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+<span class="c1"># Default MIME type to use on attachments (if it is not explicitly given</span>
+<span class="c1"># and cannot be guessed).</span>
+<span class="n">DEFAULT_ATTACHMENT_MIME_TYPE</span> <span class="o">=</span> <span class="s2">&quot;application/octet-stream&quot;</span>
+
+<span class="c1"># Default charset</span>
+<span class="n">DEFAULT_CHARSET</span> <span class="o">=</span> <span class="s2">&quot;utf-8&quot;</span>
+
+
+<span class="c1"># Cache the hostname, but do it lazily: socket.getfqdn() can take a couple of</span>
+<span class="c1"># seconds, which slows down the restart of the server.</span>
+<span class="k">class</span> <span class="nc">CachedDnsName</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fqdn</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_fqdn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_fqdn&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fqdn</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">getfqdn</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fqdn</span>
+
+
+<span class="n">DNS_NAME</span> <span class="o">=</span> <span class="n">CachedDnsName</span><span class="p">()</span>
+
+
+<span class="c1"># Copied from Python standard library, with the following modifications:</span>
+<span class="c1"># * Used cached hostname for performance.</span>
+<span class="c1"># * Added try/except to support lack of getpid() in Jython (#5496).</span>
+<span class="k">def</span> <span class="nf">make_msgid</span><span class="p">(</span><span class="n">idstring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">utc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a string suitable for RFC 2822 compliant Message-ID.</span>
+
+<span class="sd">    E.g: &lt;20020201195627.33539.96671@nightshade.la.mastaler.com&gt;</span>
+
+<span class="sd">    Optional idstring if given is a string used to strengthen the</span>
+<span class="sd">    uniqueness of the message id.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">utc</span><span class="p">:</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+    <span class="n">utcdate</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c1"># No getpid() in Jython, for example.</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">randint</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">idstring</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">idstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">idstring</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">idstring</span>
+    <span class="n">idhost</span> <span class="o">=</span> <span class="n">DNS_NAME</span>
+    <span class="n">msgid</span> <span class="o">=</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">utcdate</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">randint</span><span class="p">,</span> <span class="n">idstring</span><span class="p">,</span> <span class="n">idhost</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">msgid</span>
+
+
+<span class="k">class</span> <span class="nc">BadHeaderError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">forbid_multi_line_headers</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Forbid multi-line headers, to prevent header injection.&quot;&quot;&quot;</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">smart_text</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">val</span> <span class="ow">or</span> <span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BadHeaderError</span><span class="p">(</span>
+            <span class="s2">&quot;Header values can&#39;t contain newlines &quot;</span>
+            <span class="s2">&quot;(got </span><span class="si">%r</span><span class="s2"> for header </span><span class="si">%r</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">UnicodeEncodeError</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">,</span> <span class="s2">&quot;cc&quot;</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">):</span>
+                <span class="n">nm</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">parseaddr</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Header</span><span class="p">(</span><span class="n">nm</span><span class="p">,</span> <span class="n">DEFAULT_CHARSET</span><span class="p">))</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">formataddr</span><span class="p">((</span><span class="n">nm</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">addr</span><span class="p">))))</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">DEFAULT_CHARSET</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;subject&quot;</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span>
+
+
+<span class="k">class</span> <span class="nc">SafeMIMEText</span><span class="p">(</span><span class="n">MIMEText</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">forbid_multi_line_headers</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="n">MIMEText</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SafeMIMEMultipart</span><span class="p">(</span><span class="n">MIMEMultipart</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">forbid_multi_line_headers</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="n">MIMEMultipart</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SMTPConnection"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.SMTPConnection">[docs]</a><span class="k">class</span> <span class="nc">SMTPConnection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper that manages the SMTP network connection.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_tls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_tls</span> <span class="o">=</span> <span class="p">(</span><span class="n">use_tls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="n">use_tls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fail_silently</span> <span class="o">=</span> <span class="n">fail_silently</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SMTPConnection.open"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.SMTPConnection.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ensure we have a connection to the email server.</span>
+
+<span class="sd">        Returns whether or not a new connection was required (True or False).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">:</span>
+            <span class="c1"># Nothing to do if the connection is already open.</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># If local_hostname is not specified, socket.getfqdn() gets used.</span>
+            <span class="c1"># For performance, we use the cached FQDN for local_hostname.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">local_hostname</span><span class="o">=</span><span class="n">DNS_NAME</span><span class="o">.</span><span class="n">get_fqdn</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_tls</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">ehlo</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">starttls</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">ehlo</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Error trying to connect to server </span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+                <span class="n">e</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_silently</span><span class="p">:</span>
+                <span class="k">raise</span></div>
+
+<div class="viewcode-block" id="SMTPConnection.close"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.SMTPConnection.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Close the connection to the email server.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">sslerror</span><span class="p">:</span>
+                <span class="c1"># This happens when calling quit() on a TLS connection</span>
+                <span class="c1"># sometimes.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;Error trying to close connection to server &quot;</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+                    <span class="n">e</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_silently</span><span class="p">:</span>
+                    <span class="k">return</span>
+                <span class="k">raise</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="SMTPConnection.send_messages"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.SMTPConnection.send_messages">[docs]</a>    <span class="k">def</span> <span class="nf">send_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send one or more EmailMessage objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             int: Number of email messages sent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">messages</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">new_conn_created</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">:</span>
+            <span class="c1"># We failed silently on open(). Trying to send would be pointless.</span>
+            <span class="k">return</span>
+        <span class="n">num_sent</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
+            <span class="n">sent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sent</span><span class="p">:</span>
+                <span class="n">num_sent</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">new_conn_created</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">num_sent</span></div>
+
+    <span class="k">def</span> <span class="nf">_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send an email.</span>
+
+<span class="sd">        Helper method that does the actual sending.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="o">.</span><span class="n">recipients</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span>
+                <span class="n">message</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">.</span><span class="n">recipients</span><span class="p">(),</span>
+                <span class="n">message</span><span class="o">.</span><span class="n">message</span><span class="p">()</span><span class="o">.</span><span class="n">as_string</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Error sending a message to server </span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+                <span class="n">e</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_silently</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="EmailMessage"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.EmailMessage">[docs]</a><span class="k">class</span> <span class="nc">EmailMessage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Container for email information.&quot;&quot;&quot;</span>
+
+    <span class="n">content_subtype</span> <span class="o">=</span> <span class="s2">&quot;plain&quot;</span>
+    <span class="n">multipart_subtype</span> <span class="o">=</span> <span class="s2">&quot;mixed&quot;</span>
+    <span class="n">encoding</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># None =&gt; use settings default</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">body</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">sender</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">bcc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">attachments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a single email message.</span>
+
+<span class="sd">        (It can be sent to multiple recipients.)</span>
+
+<span class="sd">        All strings used to create the message can be unicode strings (or UTF-8</span>
+<span class="sd">        bytestrings). The SafeMIMEText class will handle any necessary encoding</span>
+<span class="sd">        conversions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">to</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;&quot;to&quot; argument must be a list or tuple&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">cc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;&quot;cc&quot; argument must be a list or tuple&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cc</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">bcc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bcc</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;&quot;bcc&quot; argument must be a list or tuple&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bcc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bcc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bcc</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">sender</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">subject</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">attachment</span> <span class="ow">in</span> <span class="n">attachments</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attachment</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="o">*</span><span class="n">attachment</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">attachment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_headers</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
+
+    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">SMTPConnection</span><span class="p">(</span><span class="n">fail_silently</span><span class="o">=</span><span class="n">fail_silently</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span>
+
+    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">or</span> <span class="n">DEFAULT_CHARSET</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">SafeMIMEText</span><span class="p">(</span>
+            <span class="n">smart_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">DEFAULT_CHARSET</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">content_subtype</span><span class="p">,</span>
+            <span class="n">encoding</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="p">:</span>
+            <span class="n">body_msg</span> <span class="o">=</span> <span class="n">msg</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">SafeMIMEMultipart</span><span class="p">(</span><span class="n">_subtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multipart_subtype</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">body_msg</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">attachment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attachment</span><span class="p">,</span> <span class="n">MIMEBase</span><span class="p">):</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">attachment</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_attachment</span><span class="p">(</span><span class="o">*</span><span class="n">attachment</span><span class="p">))</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;Subject&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;From&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;To&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">)</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;Cc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cc</span><span class="p">)</span>
+        <span class="c1"># Email header names are case-insensitive (RFC 2045), so we have to</span>
+        <span class="c1"># accommodate that when doing comparisons.</span>
+        <span class="n">header_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_headers</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">header_names</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formatdate</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;message-id&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">header_names</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;Message-ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_msgid</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_headers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">msg</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">msg</span>
+
+<div class="viewcode-block" id="EmailMessage.recipients"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.EmailMessage.recipients">[docs]</a>    <span class="k">def</span> <span class="nf">recipients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of all recipients of the email.</span>
+
+<span class="sd">        Includes direct addressees as well as Bcc entries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cc</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcc</span></div>
+
+<div class="viewcode-block" id="EmailMessage.send"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.EmailMessage.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send the email message.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">fail_silently</span><span class="p">)</span><span class="o">.</span><span class="n">send_messages</span><span class="p">([</span><span class="bp">self</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="EmailMessage.attach"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.EmailMessage.attach">[docs]</a>    <span class="k">def</span> <span class="nf">attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Attache a file with the given filename and content.</span>
+
+<span class="sd">        The filename can be omitted (useful for multipart/alternative messages)</span>
+<span class="sd">        and the mimetype is guessed, if not provided.</span>
+
+<span class="sd">        If the first parameter is a MIMEBase subclass it is inserted directly</span>
+<span class="sd">        into the resulting message attachments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">MIMEBase</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">content</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">mimetype</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">content</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attach_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mimetype</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">filename</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EmailMessage.attach_file"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.EmailMessage.attach_file">[docs]</a>    <span class="k">def</span> <span class="nf">attach_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Attache a file from the filesystem.&quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_attachment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert the filename, content, mimetype triple to attachment.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">mimetype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mimetype</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mimetypes</span><span class="o">.</span><span class="n">guess_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mimetype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">mimetype</span> <span class="o">=</span> <span class="n">DEFAULT_ATTACHMENT_MIME_TYPE</span>
+        <span class="n">basetype</span><span class="p">,</span> <span class="n">subtype</span> <span class="o">=</span> <span class="n">mimetype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">basetype</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
+            <span class="n">attachment</span> <span class="o">=</span> <span class="n">SafeMIMEText</span><span class="p">(</span>
+                <span class="n">smart_bytes</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">DEFAULT_CHARSET</span><span class="p">),</span> <span class="n">subtype</span><span class="p">,</span> <span class="n">DEFAULT_CHARSET</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Encode non-text attachments with base64.</span>
+            <span class="n">attachment</span> <span class="o">=</span> <span class="n">MIMEBase</span><span class="p">(</span><span class="n">basetype</span><span class="p">,</span> <span class="n">subtype</span><span class="p">)</span>
+            <span class="n">attachment</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">encode_base64</span><span class="p">(</span><span class="n">attachment</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">attachment</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span>
+                <span class="s2">&quot;Content-Disposition&quot;</span><span class="p">,</span> <span class="s2">&quot;attachment&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">attachment</span></div>
+
+
+<div class="viewcode-block" id="EmailMultiAlternatives"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.EmailMultiAlternatives">[docs]</a><span class="k">class</span> <span class="nc">EmailMultiAlternatives</span><span class="p">(</span><span class="n">EmailMessage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Email message with multipart/alternative content.</span>
+
+<span class="sd">    A version of EmailMessage that makes it easy to send</span>
+<span class="sd">    multipart/alternative messages. For example, including text and HTML</span>
+<span class="sd">    versions of the text is made easier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">multipart_subtype</span> <span class="o">=</span> <span class="s2">&quot;alternative&quot;</span>
+
+<div class="viewcode-block" id="EmailMultiAlternatives.attach_alternative"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.EmailMultiAlternatives.attach_alternative">[docs]</a>    <span class="k">def</span> <span class="nf">attach_alternative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Attach an alternative content representation.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="n">mimetype</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="send_mail"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.send_mail">[docs]</a><span class="k">def</span> <span class="nf">send_mail</span><span class="p">(</span>
+    <span class="n">subject</span><span class="p">,</span>
+    <span class="n">sender</span><span class="p">,</span>
+    <span class="n">to</span><span class="p">,</span>
+    <span class="n">message</span><span class="p">,</span>
+    <span class="n">html_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">cc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">bcc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">attachments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">auth_user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">auth_password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_tls</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send a single email to a recipient list.</span>
+
+<span class="sd">    All members of the recipient list will see the other recipients in the &#39;To&#39;</span>
+<span class="sd">    field.</span>
+
+<span class="sd">    Note: The API for this method is frozen. New code wanting to extend the</span>
+<span class="sd">    functionality should use the EmailMessage class directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">html_message</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either message or html_message must be provided&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="n">html_message</span><span class="p">)</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">SMTPConnection</span><span class="p">(</span>
+        <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="n">auth_user</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="n">auth_password</span><span class="p">,</span>
+        <span class="n">use_tls</span><span class="o">=</span><span class="n">use_tls</span><span class="p">,</span>
+        <span class="n">fail_silently</span><span class="o">=</span><span class="n">fail_silently</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># Convert the to field just for easier usage</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">to</span> <span class="o">=</span> <span class="p">[</span><span class="n">to</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">html_message</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">EmailMessage</span><span class="p">(</span>
+            <span class="n">subject</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">to</span><span class="o">=</span><span class="n">to</span><span class="p">,</span>
+            <span class="n">cc</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span>
+            <span class="n">bcc</span><span class="o">=</span><span class="n">bcc</span><span class="p">,</span>
+            <span class="n">attachments</span><span class="o">=</span><span class="n">attachments</span><span class="p">,</span>
+            <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">EmailMultiAlternatives</span><span class="p">(</span>
+            <span class="n">subject</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">to</span><span class="o">=</span><span class="n">to</span><span class="p">,</span>
+            <span class="n">cc</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span>
+            <span class="n">bcc</span><span class="o">=</span><span class="n">bcc</span><span class="p">,</span>
+            <span class="n">attachments</span><span class="o">=</span><span class="n">attachments</span><span class="p">,</span>
+            <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">email</span><span class="o">.</span><span class="n">attach_alternative</span><span class="p">(</span><span class="n">html_message</span><span class="p">,</span> <span class="s2">&quot;text/html&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">send</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="send_mass_mail"><a class="viewcode-back" href="../../../api/msg.html#tea.msg.send_mass_mail">[docs]</a><span class="k">def</span> <span class="nf">send_mass_mail</span><span class="p">(</span>
+    <span class="n">datatuple</span><span class="p">,</span> <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auth_user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">auth_password</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send multiple emails to multiple recipients.</span>
+
+<span class="sd">    Given a datatuple of (subject, message, sender, recipient_list), sends</span>
+<span class="sd">    each message to each recipient list. Returns the number of e-mails sent.</span>
+
+<span class="sd">    If auth_user and auth_password are set, they&#39;re used to log in.</span>
+
+<span class="sd">    Note: The API for this method is frozen. New code wanting to extend the</span>
+<span class="sd">    functionality should use the EmailMessage class directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">SMTPConnection</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="n">auth_user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">auth_password</span><span class="p">,</span> <span class="n">fail_silently</span><span class="o">=</span><span class="n">fail_silently</span>
+    <span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">EmailMessage</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">recipient</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">recipient</span> <span class="ow">in</span> <span class="n">datatuple</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

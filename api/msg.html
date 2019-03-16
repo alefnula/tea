@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.msg Module &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tea.process Module" href="process.html" />
+    <link rel="prev" title="tea.logger Module" href="logger.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">tea api documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="console.html"><code class="docutils literal notranslate"><span class="pre">tea.console</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">tea.system</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">tea api documentation</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/msg.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-tea.msg">
+<span id="tea-msg-module"></span><h1><a class="reference internal" href="#module-tea.msg" title="tea.msg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code></a> Module<a class="headerlink" href="#module-tea.msg" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="tea.msg.send_mail">
+<code class="descclassname">tea.msg.</code><code class="descname">send_mail</code><span class="sig-paren">(</span><em>subject</em>, <em>sender</em>, <em>to</em>, <em>message</em>, <em>html_message=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>host=None</em>, <em>port=None</em>, <em>auth_user=None</em>, <em>auth_password=None</em>, <em>use_tls=False</em>, <em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.send_mail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a single email to a recipient list.</p>
+<p>All members of the recipient list will see the other recipients in the ‘To’
+field.</p>
+<p>Note: The API for this method is frozen. New code wanting to extend the
+functionality should use the EmailMessage class directly.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tea.msg.send_mass_mail">
+<code class="descclassname">tea.msg.</code><code class="descname">send_mass_mail</code><span class="sig-paren">(</span><em>datatuple</em>, <em>fail_silently=False</em>, <em>auth_user=None</em>, <em>auth_password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mass_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.send_mass_mail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send multiple emails to multiple recipients.</p>
+<p>Given a datatuple of (subject, message, sender, recipient_list), sends
+each message to each recipient list. Returns the number of e-mails sent.</p>
+<p>If auth_user and auth_password are set, they’re used to log in.</p>
+<p>Note: The API for this method is frozen. New code wanting to extend the
+functionality should use the EmailMessage class directly.</p>
+</dd></dl>
+
+<span class="target" id="module-tea.msg.mail"></span><p>Simple and complete library for sending emails.</p>
+<dl class="class">
+<dt id="tea.msg.mail.SMTPConnection">
+<em class="property">class </em><code class="descclassname">tea.msg.mail.</code><code class="descname">SMTPConnection</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>username=None</em>, <em>password=None</em>, <em>use_tls=None</em>, <em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper that manages the SMTP network connection.</p>
+<dl class="method">
+<dt id="tea.msg.mail.SMTPConnection.open">
+<code class="descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure we have a connection to the email server.</p>
+<p>Returns whether or not a new connection was required (True or False).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.msg.mail.SMTPConnection.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the connection to the email server.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.msg.mail.SMTPConnection.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>messages</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.send_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send one or more EmailMessage objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of email messages sent.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tea.msg.mail.EmailMessage">
+<em class="property">class </em><code class="descclassname">tea.msg.mail.</code><code class="descname">EmailMessage</code><span class="sig-paren">(</span><em>subject=''</em>, <em>body=''</em>, <em>sender=None</em>, <em>to=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>headers=None</em>, <em>connection=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Container for email information.</p>
+<p>Initialize a single email message.</p>
+<p>(It can be sent to multiple recipients.)</p>
+<p>All strings used to create the message can be unicode strings (or UTF-8
+bytestrings). The SafeMIMEText class will handle any necessary encoding
+conversions.</p>
+<dl class="method">
+<dt id="tea.msg.mail.EmailMessage.recipients">
+<code class="descname">recipients</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.recipients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.recipients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all recipients of the email.</p>
+<p>Includes direct addressees as well as Bcc entries.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.msg.mail.EmailMessage.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send the email message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.msg.mail.EmailMessage.attach">
+<code class="descname">attach</code><span class="sig-paren">(</span><em>filename=None</em>, <em>content=None</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.attach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.attach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attache a file with the given filename and content.</p>
+<p>The filename can be omitted (useful for multipart/alternative messages)
+and the mimetype is guessed, if not provided.</p>
+<p>If the first parameter is a MIMEBase subclass it is inserted directly
+into the resulting message attachments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.msg.mail.EmailMessage.attach_file">
+<code class="descname">attach_file</code><span class="sig-paren">(</span><em>path</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.attach_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.attach_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attache a file from the filesystem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tea.msg.mail.EmailMultiAlternatives">
+<em class="property">class </em><code class="descclassname">tea.msg.mail.</code><code class="descname">EmailMultiAlternatives</code><span class="sig-paren">(</span><em>subject=''</em>, <em>body=''</em>, <em>sender=None</em>, <em>to=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>headers=None</em>, <em>connection=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMultiAlternatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMultiAlternatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Email message with multipart/alternative content.</p>
+<p>A version of EmailMessage that makes it easy to send
+multipart/alternative messages. For example, including text and HTML
+versions of the text is made easier.</p>
+<p>Initialize a single email message.</p>
+<p>(It can be sent to multiple recipients.)</p>
+<p>All strings used to create the message can be unicode strings (or UTF-8
+bytestrings). The SafeMIMEText class will handle any necessary encoding
+conversions.</p>
+<dl class="method">
+<dt id="tea.msg.mail.EmailMultiAlternatives.attach_alternative">
+<code class="descname">attach_alternative</code><span class="sig-paren">(</span><em>content</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMultiAlternatives.attach_alternative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMultiAlternatives.attach_alternative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach an alternative content representation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tea.msg.mail.send_mail">
+<code class="descclassname">tea.msg.mail.</code><code class="descname">send_mail</code><span class="sig-paren">(</span><em>subject</em>, <em>sender</em>, <em>to</em>, <em>message</em>, <em>html_message=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>host=None</em>, <em>port=None</em>, <em>auth_user=None</em>, <em>auth_password=None</em>, <em>use_tls=False</em>, <em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.send_mail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a single email to a recipient list.</p>
+<p>All members of the recipient list will see the other recipients in the ‘To’
+field.</p>
+<p>Note: The API for this method is frozen. New code wanting to extend the
+functionality should use the EmailMessage class directly.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tea.msg.mail.send_mass_mail">
+<code class="descclassname">tea.msg.mail.</code><code class="descname">send_mass_mail</code><span class="sig-paren">(</span><em>datatuple</em>, <em>fail_silently=False</em>, <em>auth_user=None</em>, <em>auth_password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mass_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.send_mass_mail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send multiple emails to multiple recipients.</p>
+<p>Given a datatuple of (subject, message, sender, recipient_list), sends
+each message to each recipient list. Returns the number of e-mails sent.</p>
+<p>If auth_user and auth_password are set, they’re used to log in.</p>
+<p>Note: The API for this method is frozen. New code wanting to extend the
+functionality should use the EmailMessage class directly.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="process.html" class="btn btn-neutral float-right" title="tea.process Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="logger.html" class="btn btn-neutral float-left" title="tea.logger Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

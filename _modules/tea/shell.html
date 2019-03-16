@@ -1,0 +1,616 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.shell &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">tea api documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>tea.shell</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tea.shell</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module mimics some of the behaviors of the builtin :mod:`shutil`.</span>
+
+<span class="sd">It adds logging to all operations and abstracting some other useful shell</span>
+<span class="sd">commands (functions).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Viktor Kerkez &lt;alefnula@gmail.com&gt;&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;27 November 2009&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2009 Viktor Kerkez&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">fnmatch</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="split"><a class="viewcode-back" href="../../api/shell.html#tea.shell.split">[docs]</a><span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">posix</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Split the string s using shell-like syntax.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s (str): String to split</span>
+<span class="sd">        posix (bool): Use posix split</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list of str: List of string parts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">binary_type</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">posix</span><span class="o">=</span><span class="n">posix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../api/shell.html#tea.shell.search">[docs]</a><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">dirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Recursive search function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to search recursively</span>
+<span class="sd">        matcher (str or callable): String pattern to search for or function</span>
+<span class="sd">            that returns True/False for a file argument</span>
+<span class="sd">        dirs (bool): if True returns directories that match the pattern</span>
+<span class="sd">        files(bool): if True returns files that match the patter</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        str: Found files and directories</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">matcher</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">fnmatcher</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">items</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">def</span> <span class="nf">fnmatcher</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">matcher</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+        <span class="n">to_match</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">dirs</span><span class="p">:</span>
+            <span class="n">to_match</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">directories</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">to_match</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">fnmatcher</span><span class="p">(</span><span class="n">to_match</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="chdir"><a class="viewcode-back" href="../../api/shell.html#tea.shell.chdir">[docs]</a><span class="k">def</span> <span class="nf">chdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Change the current working directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str): Directory to go to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;chdir -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">directory</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;chdir -&gt; </span><span class="si">%s</span><span class="s2"> failed! Directory does not exist!&quot;</span><span class="p">,</span> <span class="n">directory</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;chdir -&gt; </span><span class="si">%s</span><span class="s2"> failed! </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="goto"><a class="viewcode-back" href="../../api/shell.html#tea.shell.goto">[docs]</a><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">goto</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Context object for changing directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str): Directory to go to.</span>
+<span class="sd">        create (bool): Create directory if it doesn&#39;t exists.</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        &gt;&gt;&gt; with goto(directory) as ok:</span>
+<span class="sd">        ...     if not ok:</span>
+<span class="sd">        ...         print &#39;Error&#39;</span>
+<span class="sd">        ...     else:</span>
+<span class="sd">        ...         print &#39;All OK&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">current</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">create</span> <span class="ow">and</span> <span class="n">mkdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;goto -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">True</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;goto &lt;- </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;goto(</span><span class="si">%s</span><span class="s2">) - directory does not exist, or cannot be &quot;</span> <span class="s2">&quot;created.&quot;</span><span class="p">,</span>
+            <span class="n">directory</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">yield</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="mkdir"><a class="viewcode-back" href="../../api/shell.html#tea.shell.mkdir">[docs]</a><span class="k">def</span> <span class="nf">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mo">0o755</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a directory.</span>
+
+<span class="sd">    Create a leaf directory and all intermediate ones.</span>
+<span class="sd">    Works like ``mkdir``, except that any intermediate path segment (not just</span>
+<span class="sd">    the rightmost) will be created if it does not exist. This is recursive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Directory to create</span>
+<span class="sd">        mode (int): Directory mode</span>
+<span class="sd">        delete (bool): Delete directory/file if exists</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if succeeded else False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mkdir: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">delete</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to mkdir: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<span class="k">def</span> <span class="nf">__create_destdir</span><span class="p">(</span><span class="n">destination</span><span class="p">):</span>
+    <span class="n">destdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">destdir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mkdir</span><span class="p">(</span><span class="n">destdir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Failed to create &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">destdir</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__copyfile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Copy data and mode bits (&quot;cp source destination&quot;).</span>
+
+<span class="sd">    The destination may be a directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (str): Source file (file to copy).</span>
+<span class="sd">        destination (str): Destination file or directory (where to copy).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copyfile: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">__create_destdir</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;copyfile: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2"> failed! Error: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">e</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">__copyfile2</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Copy data and all stat info (&quot;cp -p source destination&quot;).</span>
+
+<span class="sd">    The destination may be a directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (str): Source file (file to copy).</span>
+<span class="sd">        destination (str): Destination file or directory (where to copy).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copyfile2: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">__create_destdir</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;copyfile2: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2"> failed! Error: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">e</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">__copytree</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">symlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Copy a directory tree recursively using copy2().</span>
+
+<span class="sd">    The destination directory must not already exist.</span>
+
+<span class="sd">    If the optional symlinks flag is true, symbolic links in the</span>
+<span class="sd">    source tree result in symbolic links in the destination tree; if</span>
+<span class="sd">    it is false, the contents of the files pointed to by symbolic</span>
+<span class="sd">    links are copied.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (str): Source directory (directory to copy).</span>
+<span class="sd">        destination (str): Destination directory (where to copy).</span>
+<span class="sd">        symlinks (bool): Follow symbolic links.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copytree: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">__create_destdir</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">symlinks</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+            <span class="s2">&quot;copytree: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2"> failed! Error: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">e</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="copy"><a class="viewcode-back" href="../../api/shell.html#tea.shell.copy">[docs]</a><span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Copy file or directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (str): Source file or directory</span>
+<span class="sd">        destination (str): Destination file or directory (where to copy).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">__copytree</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">__copyfile2</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gcopy"><a class="viewcode-back" href="../../api/shell.html#tea.shell.gcopy">[docs]</a><span class="k">def</span> <span class="nf">gcopy</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Copy all file found by glob.glob(pattern) to destination directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pattern (str): Glob pattern</span>
+<span class="sd">        destination (str): Path to the destination directory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="move"><a class="viewcode-back" href="../../api/shell.html#tea.shell.move">[docs]</a><span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Move a file or directory (recursively) to another location.</span>
+
+<span class="sd">    If the destination is on our current file system, then simply use</span>
+<span class="sd">    rename. Otherwise, copy source to the destination and then remove</span>
+<span class="sd">    source.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (str): Source file or directory (file or directory to move).</span>
+<span class="sd">        destination (str): Destination file or directory (where to move).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Move: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">__create_destdir</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to Move: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="gmove"><a class="viewcode-back" href="../../api/shell.html#tea.shell.gmove">[docs]</a><span class="k">def</span> <span class="nf">gmove</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Move all file found by glob.glob(pattern) to destination directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pattern (str): Glob pattern</span>
+<span class="sd">        destination (str): Path to the destination directory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">move</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="k">def</span> <span class="nf">__rmfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete a file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to the file that needs to be deleted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;rmfile: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;rmfile: </span><span class="si">%s</span><span class="s2"> failed! Error: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">__rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Recursively delete a directory tree.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to the directory that needs to be deleted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;rmtree: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;rmtree: </span><span class="si">%s</span><span class="s2"> failed! Error: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="remove"><a class="viewcode-back" href="../../api/shell.html#tea.shell.remove">[docs]</a><span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete a file or directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to the file or directory that needs to be deleted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">__rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">__rmfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gremove"><a class="viewcode-back" href="../../api/shell.html#tea.shell.gremove">[docs]</a><span class="k">def</span> <span class="nf">gremove</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove all file found by glob.glob(pattern).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pattern (str): Pattern of files to remove</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../api/shell.html#tea.shell.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read the content of the file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to the file</span>
+<span class="sd">        encoding (str): File encoding. Default: utf-8</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: File content or empty string if there was an error</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;read: </span><span class="si">%s</span><span class="s2"> failed. Error: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="touch"><a class="viewcode-back" href="../../api/shell.html#tea.shell.touch">[docs]</a><span class="k">def</span> <span class="nf">touch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a file at the given path if it does not already exists.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to the file.</span>
+<span class="sd">        content (str): Optional content that will be written in the file.</span>
+<span class="sd">        encoding (str): Encoding in which to write the content.</span>
+<span class="sd">            Default: ``utf-8``</span>
+<span class="sd">        overwrite (bool): Overwrite the file if exists.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the operation is successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;touch: &quot;</span><span class="si">%s</span><span class="s1">&quot; already exists&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;touch: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">binary_type</span><span class="p">):</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;touch: </span><span class="si">%s</span><span class="s2"> failed. Error: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

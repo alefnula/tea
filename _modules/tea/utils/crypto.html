@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.utils.crypto &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">tea api documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../utils.html">tea.utils</a> &raquo;</li>
+        
+      <li>tea.utils.crypto</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tea.utils.crypto</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Viktor Kerkez &lt;alefnula@gmail.com&gt;&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;11 January 2013&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2013 Viktor Kerkez&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">tea.system</span> <span class="k">import</span> <span class="n">platform</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CryptError&quot;</span><span class="p">,</span> <span class="s2">&quot;encrypt&quot;</span><span class="p">,</span> <span class="s2">&quot;decrypt&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="CryptError"><a class="viewcode-back" href="../../../api/utils.html#tea.utils.crypto.CryptError">[docs]</a><span class="k">class</span> <span class="nc">CryptError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="c1"># key to use for encryption if no other alternative is possible</span>
+<span class="n">_key</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mi">213</span><span class="p">,</span>
+    <span class="mi">21</span><span class="p">,</span>
+    <span class="mi">199</span><span class="p">,</span>
+    <span class="mi">11</span><span class="p">,</span>
+    <span class="mi">17</span><span class="p">,</span>
+    <span class="mi">227</span><span class="p">,</span>
+    <span class="mi">18</span><span class="p">,</span>
+    <span class="mi">7</span><span class="p">,</span>
+    <span class="mi">114</span><span class="p">,</span>
+    <span class="mi">184</span><span class="p">,</span>
+    <span class="mi">27</span><span class="p">,</span>
+    <span class="mi">162</span><span class="p">,</span>
+    <span class="mi">37</span><span class="p">,</span>
+    <span class="mi">112</span><span class="p">,</span>
+    <span class="mi">222</span><span class="p">,</span>
+    <span class="mi">209</span><span class="p">,</span>
+    <span class="mi">241</span><span class="p">,</span>
+    <span class="mi">24</span><span class="p">,</span>
+    <span class="mi">175</span><span class="p">,</span>
+    <span class="mi">144</span><span class="p">,</span>
+    <span class="mi">173</span><span class="p">,</span>
+    <span class="mi">53</span><span class="p">,</span>
+    <span class="mi">196</span><span class="p">,</span>
+    <span class="mi">29</span><span class="p">,</span>
+    <span class="mi">124</span><span class="p">,</span>
+    <span class="mi">26</span><span class="p">,</span>
+    <span class="mi">17</span><span class="p">,</span>
+    <span class="mi">218</span><span class="p">,</span>
+    <span class="mi">131</span><span class="p">,</span>
+    <span class="mi">236</span><span class="p">,</span>
+    <span class="mi">53</span><span class="p">,</span>
+    <span class="mi">209</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># initialization vector for algorithms that requires is</span>
+<span class="n">_vector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">113</span><span class="p">,</span> <span class="mi">119</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+
+<span class="c1"># list of supported encryption algorithms in priority order</span>
+<span class="n">algorithms</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;aes&quot;</span><span class="p">,</span> <span class="s2">&quot;dotnet&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">,</span> <span class="s2">&quot;simple&quot;</span><span class="p">)</span>
+
+<span class="c1"># Map of implemented encryption algorithms</span>
+<span class="c1"># Encryption and decryption holds dict of algorithm name to function that</span>
+<span class="c1"># implements algorithm.</span>
+<span class="c1"># Every function that implements encryption or decryption must receive data to</span>
+<span class="c1"># process and a key to process it with.</span>
+<span class="c1"># encryptior and decryption decorators can be used to register implementations.</span>
+<span class="n">implementations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;encryption&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;decryption&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;get_key&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">_key</span><span class="p">}</span>
+
+
+<span class="c1"># Decorators</span>
+<span class="k">def</span> <span class="nf">encrypter</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Register function as an encryptor.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;encryption&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="k">def</span> <span class="nf">decrypter</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Register function as a decryptor.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;decryption&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="k">def</span> <span class="nf">keygetter</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Register function for getting the encryption key.&quot;&quot;&quot;</span>
+    <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;get_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+
+<span class="c1"># Helpers</span>
+<span class="k">def</span> <span class="nf">_generate_key</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a list of random number in range 0 to 255 inclusive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        length (int): Length of the list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">_to_hex_digest</span><span class="p">(</span><span class="n">bts</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert sequence of bytes to hex digest.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%02x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="n">bts</span><span class="p">)])</span>
+
+
+<span class="k">def</span> <span class="nf">_from_hex_digest</span><span class="p">(</span><span class="n">digest</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert hex digest to sequence of bytes.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">digest</span><span class="p">[</span><span class="n">x</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">digest</span><span class="p">),</span> <span class="mi">2</span><span class="p">)]</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># Try to register AES from pycrypt</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="k">import</span> <span class="n">AES</span>
+
+    <span class="k">def</span> <span class="nf">_get_cipher</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create AES chiper with provided key.&quot;&quot;&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">_vector</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CFB</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span>
+
+    <span class="nd">@encrypter</span><span class="p">(</span><span class="s2">&quot;aes&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_aes_encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Encrypt data using provided key with AES cipher.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_get_cipher</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="nd">@decrypter</span><span class="p">(</span><span class="s2">&quot;aes&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_aes_decrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decrypt data using provided key with AES cipher.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_get_cipher</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">is_only</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">WINDOWS</span><span class="p">):</span>
+    <span class="c1"># if we have win32 installed add native windows crypting</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">ctypes</span>
+        <span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="n">wintypes</span>
+        <span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="n">windll</span>
+
+        <span class="k">class</span> <span class="nc">DATA_BLOB</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">Structure</span><span class="p">):</span>
+            <span class="n">_fields_</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="s2">&quot;cbData&quot;</span><span class="p">,</span> <span class="n">wintypes</span><span class="o">.</span><span class="n">DWORD</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;pbData&quot;</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_char</span><span class="p">)),</span>
+            <span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">data_blob</span><span class="p">):</span>
+            <span class="n">cbData</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_blob</span><span class="o">.</span><span class="n">cbData</span><span class="p">)</span>
+            <span class="n">pbData</span> <span class="o">=</span> <span class="n">data_blob</span><span class="o">.</span><span class="n">pbData</span>
+            <span class="n">cbuffer</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_buffer</span><span class="p">(</span><span class="n">cbData</span><span class="p">)</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">cdll</span><span class="o">.</span><span class="n">msvcrt</span><span class="o">.</span><span class="n">memcpy</span><span class="p">(</span><span class="n">cbuffer</span><span class="p">,</span> <span class="n">pbData</span><span class="p">,</span> <span class="n">cbData</span><span class="p">)</span>
+            <span class="n">windll</span><span class="o">.</span><span class="n">kernel32</span><span class="o">.</span><span class="n">LocalFree</span><span class="p">(</span><span class="n">pbData</span><span class="p">)</span>  <span class="c1"># @UndefinedVariable</span>
+            <span class="k">return</span> <span class="n">cbuffer</span><span class="o">.</span><span class="n">raw</span>
+
+        <span class="n">CRYPTPROTECT_UI_FORBIDDEN</span> <span class="o">=</span> <span class="mh">0x01</span>
+
+        <span class="nd">@encrypter</span><span class="p">(</span><span class="s2">&quot;win&quot;</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">Win32CryptProtectData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">buffer_in</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_buffer</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">blob_in</span> <span class="o">=</span> <span class="n">DATA_BLOB</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">buffer_in</span><span class="p">)</span>
+            <span class="n">blob_out</span> <span class="o">=</span> <span class="n">DATA_BLOB</span><span class="p">()</span>
+            <span class="n">CryptProtectData</span> <span class="o">=</span> <span class="n">windll</span><span class="o">.</span><span class="n">crypt32</span><span class="o">.</span><span class="n">CryptProtectData</span>
+            <span class="k">if</span> <span class="n">CryptProtectData</span><span class="p">(</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">blob_in</span><span class="p">),</span>
+                <span class="s2">&quot;tea-crypt&quot;</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">CRYPTPROTECT_UI_FORBIDDEN</span><span class="p">,</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">blob_out</span><span class="p">),</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="n">get_data</span><span class="p">(</span><span class="n">blob_out</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="nd">@decrypter</span><span class="p">(</span><span class="s2">&quot;win&quot;</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">Win32CryptUnprotectData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">buffer_in</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_buffer</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">blob_in</span> <span class="o">=</span> <span class="n">DATA_BLOB</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">buffer_in</span><span class="p">)</span>
+            <span class="n">blob_out</span> <span class="o">=</span> <span class="n">DATA_BLOB</span><span class="p">()</span>
+            <span class="n">CryptUnprotectData</span> <span class="o">=</span> <span class="n">windll</span><span class="o">.</span><span class="n">crypt32</span><span class="o">.</span><span class="n">CryptUnprotectData</span>
+            <span class="k">if</span> <span class="n">CryptUnprotectData</span><span class="p">(</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">blob_in</span><span class="p">),</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">CRYPTPROTECT_UI_FORBIDDEN</span><span class="p">,</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">blob_out</span><span class="p">),</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="n">get_data</span><span class="p">(</span><span class="n">blob_out</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># import win32crypt</span>
+        <span class="c1"># import win32cryptcon</span>
+        <span class="c1"># @encrypter(&#39;win&#39;)</span>
+        <span class="c1"># def _encrypt(data, key=None):</span>
+        <span class="c1">#     &quot;&quot;&quot;Encrypts data using windows crypt service.</span>
+        <span class="c1">#     Key is not used.</span>
+        <span class="c1">#     &quot;&quot;&quot;</span>
+        <span class="c1">#     windll.c</span>
+        <span class="c1">#     return win32crypt.CryptProtectData(</span>
+        <span class="c1">#         data, &#39;tea-crypt&#39;, None, None, None,</span>
+        <span class="c1">#         win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN</span>
+        <span class="c1">#     )</span>
+        <span class="c1">#</span>
+        <span class="c1"># @decrypter(&#39;win&#39;)</span>
+        <span class="c1"># def _decrypt(data, key=None):</span>
+        <span class="c1">#     &quot;&quot;&quot;Decrypts data using windows crypt service.</span>
+        <span class="c1">#     Key is not used.</span>
+        <span class="c1">#     &quot;&quot;&quot;</span>
+        <span class="c1">#     return win32crypt.CryptUnprotectData(</span>
+        <span class="c1">#         data, None, None, None,</span>
+        <span class="c1">#         win32cryptcon.CRYPTPROTECT_UI_FORBIDDEN</span>
+        <span class="c1">#     )[1]</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># if we have win32 installed try add key storage using windows credentials</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">win32cred</span>
+        <span class="kn">import</span> <span class="nn">pywintypes</span>
+
+        <span class="k">def</span> <span class="nf">_vault_store</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">ident</span><span class="p">,</span> <span class="n">secret</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(ident)s</span><span class="s2">@</span><span class="si">%(service)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">vars</span><span class="p">()</span>
+            <span class="n">credential</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">Type</span><span class="o">=</span><span class="n">win32cred</span><span class="o">.</span><span class="n">CRED_TYPE_GENERIC</span><span class="p">,</span>
+                <span class="n">TargetName</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+                <span class="n">UserName</span><span class="o">=</span><span class="n">ident</span><span class="p">,</span>
+                <span class="n">CredentialBlob</span><span class="o">=</span><span class="n">secret</span><span class="p">,</span>
+                <span class="n">Comment</span><span class="o">=</span><span class="s2">&quot;Stored using tea-crypt&quot;</span><span class="p">,</span>
+                <span class="n">Persist</span><span class="o">=</span><span class="n">win32cred</span><span class="o">.</span><span class="n">CRED_PERSIST_ENTERPRISE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">win32cred</span><span class="o">.</span><span class="n">CredWrite</span><span class="p">(</span><span class="n">credential</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_vault_retrieve</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">ident</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(ident)s</span><span class="s2">@</span><span class="si">%(service)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">vars</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">win32cred</span><span class="o">.</span><span class="n">CredRead</span><span class="p">(</span>
+                    <span class="n">Type</span><span class="o">=</span><span class="n">win32cred</span><span class="o">.</span><span class="n">CRED_TYPE_GENERIC</span><span class="p">,</span> <span class="n">TargetName</span><span class="o">=</span><span class="n">target</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">pywintypes</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">winerror</span> <span class="o">==</span> <span class="mi">1168</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">funcname</span> <span class="o">==</span> <span class="s2">&quot;CredRead&quot;</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">raise</span>
+            <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;CredentialBlob&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-16&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_vault_delete</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">ident</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(ident)s</span><span class="s2">@</span><span class="si">%(service)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">vars</span><span class="p">()</span>
+            <span class="n">win32cred</span><span class="o">.</span><span class="n">CredDelete</span><span class="p">(</span>
+                <span class="n">Type</span><span class="o">=</span><span class="n">win32cred</span><span class="o">.</span><span class="n">CRED_TYPE_GENERIC</span><span class="p">,</span> <span class="n">TargetName</span><span class="o">=</span><span class="n">target</span>
+            <span class="p">)</span>
+
+        <span class="c1"># TODO: There is a bug with saving and getting key from vault</span>
+        <span class="c1">#       probably something with encoding. Sometimes _vault_retrieve</span>
+        <span class="c1">#       returns numbers higher then 255 (even if they were not stored)</span>
+        <span class="nd">@keygetter</span>
+        <span class="k">def</span> <span class="nf">get_key</span><span class="p">():</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">_vault_retrieve</span><span class="p">(</span><span class="s2">&quot;tea&quot;</span><span class="p">,</span> <span class="s2">&quot;tea-crypt&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">%</span> <span class="mi">256</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">_generate_key</span><span class="p">()</span>
+                <span class="n">_vault_store</span><span class="p">(</span><span class="s2">&quot;tea&quot;</span><span class="p">,</span> <span class="s2">&quot;tea-crypt&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">key</span><span class="p">)))</span>
+                <span class="k">return</span> <span class="n">key</span>
+
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">DOTNET</span><span class="p">):</span>
+    <span class="c1"># ironpython - .net implementation of AES can be used</span>
+    <span class="c1"># ironpython can be used on mono so check what options are for key storage</span>
+    <span class="kn">import</span> <span class="nn">clr</span>
+
+    <span class="n">clr</span><span class="o">.</span><span class="n">AddReference</span><span class="p">(</span><span class="s2">&quot;System.Security&quot;</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">System</span> <span class="k">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Byte</span>
+    <span class="kn">from</span> <span class="nn">System.Text</span> <span class="k">import</span> <span class="n">UTF8Encoding</span>
+    <span class="kn">from</span> <span class="nn">System.IO</span> <span class="k">import</span> <span class="n">MemoryStream</span>
+    <span class="kn">from</span> <span class="nn">System.Security.Cryptography</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="n">RijndaelManaged</span><span class="p">,</span>
+        <span class="n">CryptoStream</span><span class="p">,</span>
+        <span class="n">CryptoStreamMode</span><span class="p">,</span>
+        <span class="n">ProtectedData</span><span class="p">,</span>
+        <span class="n">DataProtectionScope</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@encrypter</span><span class="p">(</span><span class="s2">&quot;dotnet&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_dotnet_encrypt</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform crypting of provided text using AES algorithm.</span>
+
+<span class="sd">        If &#39;digest&#39; is True hex_digest will be returned, otherwise bytes of</span>
+<span class="sd">        encrypted data will be returned.</span>
+
+<span class="sd">        This function is symmetrical with decrypt function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">utfEncoder</span> <span class="o">=</span> <span class="n">UTF8Encoding</span><span class="p">()</span>
+        <span class="n">bytes_text</span> <span class="o">=</span> <span class="n">utfEncoder</span><span class="o">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">rm</span> <span class="o">=</span> <span class="n">RijndaelManaged</span><span class="p">()</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">Array</span><span class="p">[</span><span class="n">Byte</span><span class="p">](</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">enc_transform</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">CreateEncryptor</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Array</span><span class="p">[</span><span class="n">Byte</span><span class="p">](</span><span class="n">_vector</span><span class="p">))</span>
+        <span class="n">mem</span> <span class="o">=</span> <span class="n">MemoryStream</span><span class="p">()</span>
+
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">CryptoStream</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">enc_transform</span><span class="p">,</span> <span class="n">CryptoStreamMode</span><span class="o">.</span><span class="n">Write</span><span class="p">)</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">bytes_text</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bytes_text</span><span class="p">))</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">FlushFinalBlock</span><span class="p">()</span>
+        <span class="n">mem</span><span class="o">.</span><span class="n">Position</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">encrypted</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">CreateInstance</span><span class="p">(</span><span class="n">Byte</span><span class="p">,</span> <span class="n">mem</span><span class="o">.</span><span class="n">Length</span><span class="p">)</span>
+        <span class="n">mem</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">encrypted</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mem</span><span class="o">.</span><span class="n">Length</span><span class="p">)</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">encrypted</span><span class="p">))</span>
+
+    <span class="nd">@decrypter</span><span class="p">(</span><span class="s2">&quot;dotnet&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_dotnet_decrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform decrypting of provided encrypted data.</span>
+
+<span class="sd">        If &#39;digest&#39; is True data must be hex digest, otherwise data should be</span>
+<span class="sd">        encrypted bytes.</span>
+
+<span class="sd">        This function is symmetrical with encrypt function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Array</span><span class="p">[</span><span class="n">Byte</span><span class="p">](</span><span class="nb">map</span><span class="p">(</span><span class="n">Byte</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="n">data</span><span class="p">)))</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">Array</span><span class="p">[</span><span class="n">Byte</span><span class="p">](</span><span class="nb">map</span><span class="p">(</span><span class="n">Byte</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+        <span class="n">rm</span> <span class="o">=</span> <span class="n">RijndaelManaged</span><span class="p">()</span>
+        <span class="n">dec_transform</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">CreateDecryptor</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Array</span><span class="p">[</span><span class="n">Byte</span><span class="p">](</span><span class="n">_vector</span><span class="p">))</span>
+
+        <span class="n">mem</span> <span class="o">=</span> <span class="n">MemoryStream</span><span class="p">()</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">CryptoStream</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">dec_transform</span><span class="p">,</span> <span class="n">CryptoStreamMode</span><span class="o">.</span><span class="n">Write</span><span class="p">)</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">Length</span><span class="p">)</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">FlushFinalBlock</span><span class="p">()</span>
+
+        <span class="n">mem</span><span class="o">.</span><span class="n">Position</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">decrypted</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">CreateInstance</span><span class="p">(</span><span class="n">Byte</span><span class="p">,</span> <span class="n">mem</span><span class="o">.</span><span class="n">Length</span><span class="p">)</span>
+        <span class="n">mem</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">decrypted</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">decrypted</span><span class="o">.</span><span class="n">Length</span><span class="p">)</span>
+
+        <span class="n">cs</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+        <span class="n">utfEncoder</span> <span class="o">=</span> <span class="n">UTF8Encoding</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">utfEncoder</span><span class="o">.</span><span class="n">GetString</span><span class="p">(</span><span class="n">decrypted</span><span class="p">)</span>
+
+    <span class="c1"># Can&#39;t find a way to invoke win32api from ironpython without wrapping it</span>
+    <span class="c1"># to C# dll and using pInvoke. So, instead of using windows credentials to</span>
+    <span class="c1"># store a key, key will be stored in file, encrypted with</span>
+    <span class="c1"># ProtedtedData.Protect.</span>
+    <span class="nd">@keygetter</span>
+    <span class="k">def</span> <span class="nf">get_key</span><span class="p">():</span>
+        <span class="kn">from</span> <span class="nn">tea.system</span> <span class="k">import</span> <span class="n">get_appdata</span>
+        <span class="kn">from</span> <span class="nn">tea.shell</span> <span class="k">import</span> <span class="n">mkdir</span>
+
+        <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_appdata</span><span class="p">(),</span> <span class="s2">&quot;Tea&quot;</span><span class="p">)</span>
+        <span class="n">key_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="s2">&quot;key.bin&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">key_path</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">key_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">cr_key</span> <span class="o">=</span> <span class="n">Array</span><span class="p">[</span><span class="n">Byte</span><span class="p">](</span><span class="nb">map</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()))</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">ProtectedData</span><span class="o">.</span><span class="n">Unprotect</span><span class="p">(</span>
+                    <span class="n">cr_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">DataProtectionScope</span><span class="o">.</span><span class="n">CurrentUser</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mkdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">_generate_key</span><span class="p">()</span>
+            <span class="n">arr_key</span> <span class="o">=</span> <span class="n">Array</span><span class="p">[</span><span class="n">Byte</span><span class="p">](</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">cr_key</span> <span class="o">=</span> <span class="n">ProtectedData</span><span class="o">.</span><span class="n">Protect</span><span class="p">(</span>
+                <span class="n">arr_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">DataProtectionScope</span><span class="o">.</span><span class="n">CurrentUser</span>
+            <span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">key_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cr_key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">key</span>
+
+
+<span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">POSIX</span><span class="p">):</span>
+    <span class="c1"># some kind of posix OS - more detail check is needed</span>
+    <span class="k">pass</span>
+<span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">DARWIN</span><span class="p">):</span>
+    <span class="c1"># macOS - dunno what to do here</span>
+    <span class="k">pass</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># this is default cipher - not very secure, but at least password will not</span>
+    <span class="c1"># be in plain text format.</span>
+    <span class="nd">@encrypter</span><span class="p">(</span><span class="s2">&quot;simple&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_simple_encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">key_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">encrypted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">key_c</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="n">key_len</span><span class="p">]</span>
+            <span class="n">msg_c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">encrypted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">((</span><span class="n">msg_c</span> <span class="o">+</span> <span class="n">key_c</span><span class="p">)</span> <span class="o">%</span> <span class="mi">127</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">encrypted</span><span class="p">)</span>
+
+    <span class="nd">@decrypter</span><span class="p">(</span><span class="s2">&quot;simple&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_simple_decrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">key_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">decrypted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">key_c</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="n">key_len</span><span class="p">]</span>
+            <span class="n">enc_c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">decrypted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">((</span><span class="n">enc_c</span> <span class="o">-</span> <span class="n">key_c</span><span class="p">)</span> <span class="o">%</span> <span class="mi">127</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">decrypted</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_best_algorithm</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">alg</span> <span class="ow">in</span> <span class="n">algorithms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">alg</span> <span class="ow">in</span> <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;encryption&quot;</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="n">alg</span> <span class="ow">in</span> <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;decryption&quot;</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">alg</span>
+    <span class="k">raise</span> <span class="n">CryptError</span><span class="p">(</span>
+        <span class="s2">&quot;No crypting algorithms suitable for </span><span class="si">%s</span><span class="s2"> platform&quot;</span> <span class="o">%</span> <span class="n">platform</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># public interface</span>
+<div class="viewcode-block" id="encrypt"><a class="viewcode-back" href="../../../api/utils.html#tea.utils.crypto.encrypt">[docs]</a><span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">digest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform encryption of provided data.&quot;&quot;&quot;</span>
+    <span class="n">alg</span> <span class="o">=</span> <span class="n">get_best_algorithm</span><span class="p">()</span>
+    <span class="n">enc</span> <span class="o">=</span> <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;encryption&quot;</span><span class="p">][</span><span class="n">alg</span><span class="p">](</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;get_key&quot;</span><span class="p">]()</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">$</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="p">(</span><span class="n">_to_hex_digest</span><span class="p">(</span><span class="n">enc</span><span class="p">)</span> <span class="k">if</span> <span class="n">digest</span> <span class="k">else</span> <span class="n">enc</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="decrypt"><a class="viewcode-back" href="../../../api/utils.html#tea.utils.crypto.decrypt">[docs]</a><span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">digest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decrypt provided data.&quot;&quot;&quot;</span>
+    <span class="n">alg</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">alg</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_from_hex_digest</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="n">digest</span> <span class="k">else</span> <span class="n">data</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;decryption&quot;</span><span class="p">][</span><span class="n">alg</span><span class="p">](</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;get_key&quot;</span><span class="p">]()</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CryptError</span><span class="p">(</span><span class="s2">&quot;Can not decrypt key for algorithm: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">alg</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">implementations</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;get_key&quot;</span><span class="p">]</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">implementations</span><span class="p">[</span><span class="s2">&quot;get_key&quot;</span><span class="p">]())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">encrypt</span><span class="p">(</span><span class="s2">&quot;password for encryption&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypt</span><span class="p">(</span><span class="s2">&quot;password for encryption&quot;</span><span class="p">)))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

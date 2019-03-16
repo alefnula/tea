@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.dsa Module &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tea.logger Module" href="logger.html" />
+    <link rel="prev" title="tea.decorators Module" href="decorators.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">tea api documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="console.html"><code class="docutils literal notranslate"><span class="pre">tea.console</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">tea.system</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">tea api documentation</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/dsa.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-tea.dsa">
+<span id="tea-dsa-module"></span><h1><a class="reference internal" href="#module-tea.dsa" title="tea.dsa"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.dsa</span></code></a> Module<a class="headerlink" href="#module-tea.dsa" title="Permalink to this headline">¶</a></h1>
+<p>Data structures and algorithms module.</p>
+<span class="target" id="module-tea.dsa.config"></span><dl class="class">
+<dt id="tea.dsa.config.Config">
+<em class="property">class </em><code class="descclassname">tea.dsa.config.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>filename=None</em>, <em>data=None</em>, <em>fmt=None</em>, <em>encoding='utf-8'</em>, <em>auto_save=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration class.</p>
+<dl class="method">
+<dt id="tea.dsa.config.Config.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#Config.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.Config.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a set of top level keys in this configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.dsa.config.Config.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>var</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#Config.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.Config.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a value from configuration.</p>
+<p>Safe version which always returns a default value if the value is not
+found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.dsa.config.Config.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#Config.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.Config.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an item from configuration.</p>
+<p>Safe version, never, raises an error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.dsa.config.Config.insert">
+<code class="descname">insert</code><span class="sig-paren">(</span><em>var</em>, <em>value</em>, <em>index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#Config.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.Config.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert at the index.</p>
+<p>If the index is not provided appends to the end of the list.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tea.dsa.config.MultiConfig">
+<em class="property">class </em><code class="descclassname">tea.dsa.config.</code><code class="descname">MultiConfig</code><span class="sig-paren">(</span><em>filename=None</em>, <em>data=None</em>, <em>fmt=None</em>, <em>encoding='utf-8'</em>, <em>auto_save=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#MultiConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.MultiConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for configuration management.</p>
+<dl class="method">
+<dt id="tea.dsa.config.MultiConfig.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#MultiConfig.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.MultiConfig.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a merged set of top level keys from all configurations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.dsa.config.MultiConfig.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>var</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#MultiConfig.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.MultiConfig.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a value from configuration.</p>
+<p>Safe version which always returns a default value if the value is not
+found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tea.dsa.config.MultiConfig.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/dsa/config.html#MultiConfig.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.dsa.config.MultiConfig.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an item from configuration.</p>
+<p>Safe version, never, raises an error.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="logger.html" class="btn btn-neutral float-right" title="tea.logger Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="decorators.html" class="btn btn-neutral float-left" title="tea.decorators Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

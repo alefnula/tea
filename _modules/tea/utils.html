@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.utils &mdash; tea 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">tea api documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>tea.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tea.utils</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Viktor Kerkez &lt;alefnula@gmail.com&gt;&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;27 November 2009&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2009 Viktor Kerkez&quot;</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_package</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Hack for python2 since it does not have __package__ always set up.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        module: Module for which we want the package name</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Model&#39;s package name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">__package__</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">module</span><span class="o">.</span><span class="n">__package__</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_object"><a class="viewcode-back" href="../../api/utils.html#tea.utils.get_object">[docs]</a><span class="k">def</span> <span class="nf">get_object</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an object from a dot path.</span>
+
+<span class="sd">    Path can either be a full path, in which case the `get_object` function</span>
+<span class="sd">    will try to import the modules in the path and follow it to the final</span>
+<span class="sd">    object. Or it can be a path relative to the object passed in as the second</span>
+<span class="sd">    argument.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Full or relative dot path to the desired object</span>
+<span class="sd">        obj (object): Starting object. Dot path is calculated relatively to</span>
+<span class="sd">            this object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Object at the end of the path, or list of non hidden objects if we use</span>
+<span class="sd">        the star query.</span>
+
+<span class="sd">    Example for full paths::</span>
+
+<span class="sd">        &gt;&gt;&gt; get_object(&#39;os.path.join&#39;)</span>
+<span class="sd">        &lt;function join at 0x1002d9ed8&gt;</span>
+<span class="sd">        &gt;&gt;&gt; get_object(&#39;tea.process&#39;)</span>
+<span class="sd">        &lt;module &#39;tea.process&#39; from &#39;tea/process/__init__.pyc&#39;&gt;</span>
+
+<span class="sd">    Example for relative paths when an object is passed in::</span>
+
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; get_object(&#39;path.join&#39;, os)</span>
+<span class="sd">        &lt;function join at 0x1002d9ed8&gt;</span>
+
+<span class="sd">    Example for a star query. (Star query can be used only as the last element</span>
+<span class="sd">    of the path::</span>
+
+<span class="sd">        &gt;&gt;&gt; get_object(&#39;tea.dsa.*&#39;)</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; get_object(&#39;tea.dsa.singleton.*&#39;)</span>
+<span class="sd">        [&lt;class &#39;tea.dsa.singleton.Singleton&#39;&gt;,</span>
+<span class="sd">         &lt;class &#39;tea.dsa.singleton.SingletonMetaclass&#39;&gt;</span>
+<span class="sd">         &lt;module &#39;six&#39; from &#39;...&#39;&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; get_object(&#39;tea.dsa.*&#39;)</span>
+<span class="sd">        [&lt;module &#39;tea.dsa.singleton&#39; from &#39;...&#39;&gt;]    # Since we imported it</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+            <span class="c1"># This is the star query, returns non hidden objects</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">):</span>
+            <span class="n">submodule</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_package</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">item</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">submodule</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">import_error</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="c1"># FIXME: I know I should probably merge the errors, but</span>
+                    <span class="c1">#        it&#39;s easier just to throw the import error since</span>
+                    <span class="c1">#        it&#39;s most probably the one user wants to see.</span>
+                    <span class="c1">#        Create a new LoadingError and throw a combination</span>
+                    <span class="c1">#        of the import error and attribute error.</span>
+                    <span class="k">raise</span> <span class="n">import_error</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">obj</span></div>
+
+
+<div class="viewcode-block" id="Loader"><a class="viewcode-back" href="../../api/utils.html#tea.utils.Loader">[docs]</a><span class="k">class</span> <span class="nc">Loader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Module loader class loads recursively a module and all it&#39;s submodules.</span>
+
+<span class="sd">    Loaded modules will be stored in the ``modules`` attribute of the loader as</span>
+<span class="sd">    a dictionary of {module_path: module} key, value pairs.</span>
+
+<span class="sd">    Errors accounted during the loading process will not stop the loading</span>
+<span class="sd">    process. They will be stored in the ``errors`` attribute of the loader as a</span>
+<span class="sd">    dictionary of {module_path: exception} key, value pairs.</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        loader = Loader()</span>
+<span class="sd">        loader.load(&#39;foo&#39;)</span>
+<span class="sd">        loader.load(&#39;baz.bar&#39;, &#39;boo&#39;)</span>
+
+<span class="sd">        import baz</span>
+<span class="sd">        loader.load(baz)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Loader.load"><a class="viewcode-back" href="../../api/utils.html#tea.utils.Loader.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">modules</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load one or more modules.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            modules: Either a string full path to a module or an actual module</span>
+<span class="sd">                object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">module</span> <span class="o">=</span> <span class="n">get_object</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="n">module</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
+                    <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="n">__package__</span><span class="p">]</span> <span class="o">=</span> <span class="n">module</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">is_pkg</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">walk_packages</span><span class="p">(</span>
+                <span class="n">module</span><span class="o">.</span><span class="n">__path__</span>
+            <span class="p">):</span>
+                <span class="n">full_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_package</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="n">module_name</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">is_pkg</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">full_name</span><span class="p">])</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span></div></div>
+
+
+<div class="viewcode-block" id="load_subclasses"><a class="viewcode-back" href="../../api/utils.html#tea.utils.load_subclasses">[docs]</a><span class="k">def</span> <span class="nf">load_subclasses</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load recursively all all subclasses from a module.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        klass (str or list of str): Class whose subclasses we want to load.</span>
+<span class="sd">        modules: List of additional modules or module names that should be</span>
+<span class="sd">            recursively imported in order to find all the subclasses of the</span>
+<span class="sd">            desired class. Default: None</span>
+
+<span class="sd">    FIXME: This function is kept only for backward compatibility reasons, it</span>
+<span class="sd">        should not be used. Deprecation warning should be raised and it should</span>
+<span class="sd">        be replaces by the ``Loader`` class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">modules</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">modules</span><span class="p">]</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">Loader</span><span class="p">()</span>
+        <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="o">*</span><span class="n">modules</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">klass</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_exception"><a class="viewcode-back" href="../../api/utils.html#tea.utils.get_exception">[docs]</a><span class="k">def</span> <span class="nf">get_exception</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return full formatted traceback as a string.&quot;&quot;&quot;</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">exception</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">exc_list</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception_only</span><span class="p">(</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">exc_list</span><span class="p">:</span>
+        <span class="n">exception</span> <span class="o">+=</span> <span class="n">entry</span>
+    <span class="n">tb_list</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">tb_list</span><span class="p">:</span>
+        <span class="n">trace</span> <span class="o">+=</span> <span class="n">entry</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="n">trace</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cmp"><a class="viewcode-back" href="../../api/utils.html#tea.utils.cmp">[docs]</a><span class="k">def</span> <span class="nf">cmp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compare function from python2.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
