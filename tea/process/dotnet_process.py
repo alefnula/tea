@@ -179,7 +179,7 @@ class DotnetProcess(base.Process):
 
     def start(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         # Setup environment variables
         process_env = self._process.StartInfo.EnvironmentVariables
@@ -200,7 +200,7 @@ class DotnetProcess(base.Process):
 
     def wait(self, timeout=None):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._started:
             if timeout is not None:
@@ -214,7 +214,7 @@ class DotnetProcess(base.Process):
     @property
     def is_running(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         return not self._process.HasExited if self._started else False
 
@@ -229,7 +229,7 @@ class DotnetProcess(base.Process):
     @property
     def exit_code(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._started and self._process.HasExited:
             return self._process.ExitCode
@@ -237,14 +237,14 @@ class DotnetProcess(base.Process):
 
     def write(self, string):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             self._process.StandardInput.WriteLine(string)
 
     def read(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             with self._stdout_lock:
@@ -258,7 +258,7 @@ class DotnetProcess(base.Process):
 
     def eread(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             with self._stderr_lock:

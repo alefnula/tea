@@ -1,12 +1,13 @@
 -r requirements.txt
+black
+flake8
+ghp-import
+mock
+pre-commit
+pydocstyle
 pytest
 pytest-cov
-pytest-pep8
-pytest-flake8
-pytest-docstyle
 pytest-xdist
-mock
+recommonmark
 sphinx
 sphinx_rtd_theme
-recommonmark
-black

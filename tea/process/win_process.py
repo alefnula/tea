@@ -25,10 +25,10 @@ def _list_processes():
         try:
             try:
                 cmdline = p.cmdline()
-            except:
+            except Exception:
                 cmdline = [p.exe()]
             yield WinProcess.immutable(p.pid, cmdline)
-        except:
+        except Exception:
             pass
 
 
@@ -176,7 +176,7 @@ class WinProcess(base.Process):
 
     def start(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         # Set up members of the STARTUPINFO structure.
         self._startupinfo = win32process.STARTUPINFO()
@@ -209,7 +209,7 @@ class WinProcess(base.Process):
 
     def wait(self, timeout=None):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if timeout is None:
             while self.is_running:
@@ -225,7 +225,7 @@ class WinProcess(base.Process):
     @property
     def is_running(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._hProcess is None or self._exit_code is not None:
             return False
@@ -242,7 +242,7 @@ class WinProcess(base.Process):
     @property
     def exit_code(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self.is_running:
             return None
@@ -250,7 +250,7 @@ class WinProcess(base.Process):
 
     def write(self, string):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             if not string.endswith("\n"):
@@ -260,7 +260,7 @@ class WinProcess(base.Process):
 
     def read(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             return self._stdout_reader.read()
@@ -268,7 +268,7 @@ class WinProcess(base.Process):
 
     def eread(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             return self._stderr_reader.read()

@@ -66,8 +66,8 @@ def test_write():
     p.start()
     p.write(b"my hello text")
     p.wait()
-    assert re.match("^Said: my hello text\s*$", p.read().decode("ascii"))
-    assert re.match("^$", p.eread().decode("ascii"))
+    assert re.match(r"^Said: my hello text\s*$", p.read().decode("ascii"))
+    assert re.match(r"^$", p.eread().decode("ascii"))
 
 
 def test_read():
@@ -139,8 +139,8 @@ def test_environment():
     p.start()
     p.wait()
     assert p.exit_code == 0
-    assert re.match("^My value\s*$", p.read().decode("ascii"))
-    assert re.match("^$", p.eread().decode("ascii"))
+    assert re.match(r"^My value\s*$", p.read().decode("ascii"))
+    assert re.match(r"^$", p.eread().decode("ascii"))
 
 
 def test_override_environment():
@@ -151,21 +151,21 @@ def test_override_environment():
         env={"PATH": "PATH"},
     )
     assert status == 0
-    assert re.match("^PATH\s*$", output.decode("ascii"))
-    assert re.match("^$", error.decode("ascii"))
+    assert re.match(r"^PATH\s*$", output.decode("ascii"))
+    assert re.match(r"^$", error.decode("ascii"))
     os.environ["FOO"] = "foo"
     status, output, error = execute(
         sys.executable, "-c", PRINT_VAR.format(var="FOO")
     )
     assert status == 0
-    assert re.match("^foo\s*$", output.decode("ascii"))
-    assert re.match("^$", error.decode("ascii"))
+    assert re.match(r"^foo\s*$", output.decode("ascii"))
+    assert re.match(r"^$", error.decode("ascii"))
     status, output, error = execute(
         sys.executable, "-c", PRINT_VAR.format(var="FOO"), env={"FOO": "bar"}
     )
     assert status == 0
-    assert re.match("^bar\s*$", output.decode("ascii"))
-    assert re.match("^$", error.decode("ascii"))
+    assert re.match(r"^bar\s*$", output.decode("ascii"))
+    assert re.match(r"^$", error.decode("ascii"))
 
 
 def test_working_dir():
@@ -185,15 +185,15 @@ def test_execute_with_error():
         sys.executable, "-c", "import sys; sys.exit(2)"
     )
     assert status == 2
-    assert re.match("^$", output.decode("ascii"))
-    assert re.match("^$", error.decode("ascii"))
+    assert re.match(r"^$", output.decode("ascii"))
+    assert re.match(r"^$", error.decode("ascii"))
 
 
 def test_execute_with_success():
     status, output, error = execute("echo", "Hello world")
     assert status == 0
-    assert re.match("^Hello world\s*$", output.decode("ascii"))
-    assert re.match("^$", error.decode("ascii"))
+    assert re.match(r"^Hello world\s*$", output.decode("ascii"))
+    assert re.match(r"^$", error.decode("ascii"))
 
 
 def test_execute_and_report():

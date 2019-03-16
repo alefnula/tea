@@ -51,7 +51,7 @@ class BaseRotatingHandler(FileHandler):
             FileHandler.emit(self, record)
         except (KeyboardInterrupt, SystemExit):
             raise
-        except:
+        except Exception:
             self.handleError(record)
 
 
@@ -108,7 +108,7 @@ class RotatingFileHandler(BaseRotatingHandler):
                 if os.path.exists(dfn):
                     os.remove(dfn)
                 os.rename(tmp_location, dfn)
-        except:
+        except Exception:
             pass
         finally:
             self.stream = WindowsFile(self.baseFilename, "a", self.encoding)

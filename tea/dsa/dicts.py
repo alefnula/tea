@@ -2,7 +2,7 @@ __author__ = "Viktor Kerkez <alefnula@gmail.com>"
 __date__ = "16 March 2017"
 __copyright__ = "Copyright (c) 2017 Viktor Kerkez"
 
-import collections
+from collections.abc import Mapping
 
 
 class DictError(Exception):
@@ -35,7 +35,7 @@ class DictObject(object):
     def __getattr__(self, attr):
         if attr in self.__ref__:
             value = self.__ref__[attr]
-            if isinstance(value, collections.Mapping):
+            if isinstance(value, Mapping):
                 return DictObject(value)
             else:
                 return value
@@ -44,7 +44,7 @@ class DictObject(object):
     def __getitem__(self, item):
         if item in self.__ref__:
             value = self.__ref__[item]
-            if isinstance(value, collections.Mapping):
+            if isinstance(value, Mapping):
                 return DictObject(value)
             else:
                 return value

@@ -1,4 +1,4 @@
-"""This module mimics some of the behaviors of the builtin :mod:`shutil`.
+"""Module mimics some of the behaviors of the builtin :mod:`shutil`.
 
 It adds logging to all operations and abstracting some other useful shell
 commands (functions).
@@ -151,7 +151,7 @@ def mkdir(path, mode=0o755, delete=False):
     try:
         os.makedirs(path, mode)
         return True
-    except:
+    except Exception:
         logger.exception("Failed to mkdir: %s" % path)
         return False
 
@@ -292,7 +292,7 @@ def move(source, destination):
         __create_destdir(destination)
         shutil.move(source, destination)
         return True
-    except:
+    except Exception:
         logger.exception("Failed to Move: %s -> %s" % (source, destination))
         return False
 

@@ -27,7 +27,7 @@ ERROR       - Error level log entry [test:1]
 CRITICAL    - Critical level log entry [test:1]
 >>> try:
 ...     raise Exception('Test exception')
-... except:
+... except Exception:
 ...     logger.exception('Error level log entry with stack trace')
 ERROR       - Error level log entry with stack trace [test:4]
 Traceback (most recent call last):

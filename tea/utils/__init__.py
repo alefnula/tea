@@ -90,7 +90,7 @@ def get_object(path="", obj=None):
             except Exception as import_error:
                 try:
                     obj = getattr(obj, item)
-                except:
+                except Exception:
                     # FIXME: I know I should probably merge the errors, but
                     #        it's easier just to throw the import error since
                     #        it's most probably the one user wants to see.

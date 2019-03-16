@@ -138,7 +138,7 @@ class Config(object):
                 try:
                     part = int(part, 10)
                     current = current[part]
-                except:
+                except Exception:
                     raise IndexError(var)
             else:
                 raise KeyError(var)
@@ -231,7 +231,7 @@ class Config(object):
         """
         try:
             return self.__del(var)
-        except:
+        except Exception:
             pass
 
     @locked

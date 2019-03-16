@@ -133,18 +133,19 @@ def execute_and_report(command, *args, **kwargs):
                     out,
                     err,
                 )
-            except:
+            except Exception as e:
                 # This fails when some non ASCII characters are returned
                 # from the application
                 logging.error(
-                    "%s failed! Exit Code: %s\nOut: %s\nError: %s",
+                    "%s failed [%s]! Exit Code: %s\nOut: %s\nError: %s",
+                    e,
                     os.path.basename(command),
                     status,
                     repr(out),
                     repr(err),
                 )
             return False
-    except:
+    except Exception:
         logging.exception(
             "%s failed! Exception thrown!", os.path.basename(command)
         )

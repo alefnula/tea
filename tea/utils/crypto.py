@@ -174,7 +174,7 @@ if platform.is_only(platform.WINDOWS):
             CryptProtectData = windll.crypt32.CryptProtectData
             if CryptProtectData(
                 ctypes.byref(blob_in),
-                u"tea-crypt",
+                "tea-crypt",
                 None,
                 None,
                 None,

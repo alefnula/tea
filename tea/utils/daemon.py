@@ -81,7 +81,7 @@ if platform.is_a(platform.POSIX):
             # write pidfile
             atexit.register(self.delpid)
             pid = str(os.getpid())
-            io.open(self.pidfile, "w+").write(u"%s\n" % pid)
+            io.open(self.pidfile, "w+").write("%s\n" % pid)
 
         def delpid(self):
             os.remove(self.pidfile)

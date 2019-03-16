@@ -30,7 +30,7 @@ def setup(module, target="zip", output_path=None, data_dir=None):
                     ["--install-data", os.path.join(dist, data_dir)]
                     if data_dir is not None
                     else []
-                )
+                ),
             )
             with shell.goto(dist) as ok:
                 assert ok
@@ -51,7 +51,7 @@ def setup(module, target="zip", output_path=None, data_dir=None):
                     ["--install-data", os.path.join(dist, data_dir)]
                     if data_dir is not None
                     else []
-                )
+                ),
             )
             with shell.goto(dist) as ok:
                 assert ok

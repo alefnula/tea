@@ -15,14 +15,13 @@ class TestMultiConfig(unittest.TestCase):
         "first": 9,
     }
 
-    json_first = u'{"foo": {"bar": {"baz": 1}, "baz": 2}, "bar": 3, "baz": 4}'
-    json_second = u"""{"foo": {"bar": {"deep": 5}, "baz": 6, "test": 7},
+    json_first = '{"foo": {"bar": {"baz": 1}, "baz": 2}, "bar": 3, "baz": 4}'
+    json_second = """{"foo": {"bar": {"deep": 5}, "baz": 6, "test": 7},
                        "bar": {"baz": 8}, "first": 9}"""
 
-    yaml_first = u"foo:\n bar:\n  baz: 1\n baz: 2\nbar: 3\nbaz: 4"
+    yaml_first = "foo:\n bar:\n  baz: 1\n baz: 2\nbar: 3\nbaz: 4"
     yaml_second = (
-        u"foo:\n bar:\n  deep: 5\n baz: 6\n test: 7\n"
-        u"bar:\n baz: 8\nfirst: 9"
+        "foo:\n bar:\n  deep: 5\n baz: 6\n test: 7\n" "bar:\n baz: 8\nfirst: 9"
     )
 
     def check_structure(self, c):

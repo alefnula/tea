@@ -24,10 +24,10 @@ def _list_processes():
         try:
             try:
                 cmdline = p.cmdline()
-            except:
+            except Exception:
                 cmdline = [p.exe()]
             yield PosixProcess.immutable(p.pid, cmdline)
-        except:
+        except Exception:
             pass
 
 
@@ -92,7 +92,7 @@ class PosixProcess(base.Process):
 
     def start(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             if self._stdout:
@@ -164,7 +164,7 @@ class PosixProcess(base.Process):
 
     def wait(self, timeout=None):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if timeout is not None:
             current_time = time.time()
@@ -181,7 +181,7 @@ class PosixProcess(base.Process):
     @property
     def is_running(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._process is None or self._process.returncode is not None:
             return False
@@ -194,7 +194,7 @@ class PosixProcess(base.Process):
     @property
     def exit_code(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self.is_running:
             return None
@@ -202,7 +202,7 @@ class PosixProcess(base.Process):
 
     def write(self, string):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             if string[-1] != b"\n":
@@ -212,7 +212,7 @@ class PosixProcess(base.Process):
 
     def read(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             return self._stdout_reader.read()
@@ -220,7 +220,7 @@ class PosixProcess(base.Process):
 
     def eread(self):
         if self._immutable:
-            raise NotImplemented
+            raise NotImplementedError
 
         if self._redirect_output:
             return self._stderr_reader.read()

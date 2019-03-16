@@ -135,7 +135,7 @@ def wrap_text(text, width=80):
     Returns:
         str: Wrapped text.
     """
-    text = re.sub("\s+", " ", text).strip()
+    text = re.sub(r"\s+", " ", text).strip()
     wrapper = TextWrapper(
         width=width, break_long_words=False, replace_whitespace=True
     )
@@ -155,7 +155,7 @@ def rjust_text(text, width=80, indent=0, subsequent=None):
         subsequent (int or None): Indentation of all other lines, if it is
             ``None``, then the indentation will be same as for the first line.
     """
-    text = re.sub("\s+", " ", text).strip()
+    text = re.sub(r"\s+", " ", text).strip()
     if subsequent is None:
         subsequent = indent
     wrapper = TextWrapper(

@@ -73,7 +73,7 @@ def main(args):
             for i, arg in enumerate(args):
                 try:
                     parsed_args.append(params[i](arg))
-                except:
+                except Exception:
                     print("Failed to parse argument: %s" % arg)
                     return 1
             try:
