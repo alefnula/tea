@@ -1,7 +1,3 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "01 January 2009"
-__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
-
 __all__ = [
     "execute",
     "execute_and_report",
@@ -15,19 +11,9 @@ import os
 import logging
 from functools import cmp_to_key
 from tea.utils import cmp
-from tea.system import platform
 
-if platform.is_a(platform.DOTNET):
-    from tea.process.dotnet_process import DotnetProcess as Process
-    from tea.process.dotnet_process import _list_processes, kill
-elif platform.is_a(platform.WINDOWS):
-    from tea.process.win_process import WinProcess as Process
-    from tea.process.win_process import _list_processes, kill
-elif platform.is_a(platform.POSIX):
-    from tea.process.posix_process import PosixProcess as Process
-    from tea.process.posix_process import _list_processes, kill
-else:
-    raise platform.not_supported("tea.process")
+from tea.process.posix_process import PosixProcess as Process
+from tea.process.posix_process import _list_processes, kill
 
 
 logger = logging.getLogger(__name__)
@@ -85,7 +71,7 @@ def execute(command, *args, **kwargs):
 
     Arguments should not be quoted!
 
-    Keyword arguments:
+    Keyword Arguments:
         env (dict): Dictionary of additional environment variables.
         wait (bool): Wait for the process to finish.
 

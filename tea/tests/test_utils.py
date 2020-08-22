@@ -1,7 +1,3 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "21 September 2013"
-__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
-
 import decimal
 import unittest
 import datetime

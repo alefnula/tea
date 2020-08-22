@@ -1,3 +1,2 @@
-psutil
-pyyaml
-six
+psutil==5.7.2
+pyyaml==5.3.1

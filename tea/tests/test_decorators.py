@@ -1,7 +1,3 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "06 October 2013"
-__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
-
 import pytest
 import itertools
 from tea.decorators import docstring, combomethod, ComboMethodError
@@ -43,17 +39,17 @@ def test_one_line_documentation(doc, join):
 
     @docstring(doc, join=join)
     def func():
-        """Func docs"""
+        """Func docs."""
         pass
 
-    assert func.__doc__ == "\n".join(["Func docs", join, doc.strip() + "\n"])
+    assert func.__doc__ == "\n".join(["Func docs.", join, doc.strip() + "\n"])
 
     @docstring(doc, prepend=True, join=join)
     def func():
-        """Func docs"""
+        """Func docs."""
         pass
 
-    assert func.__doc__ == "\n".join([doc.strip(), join, "Func docs\n"])
+    assert func.__doc__ == "\n".join([doc.strip(), join, "Func docs.\n"])
 
 
 @pytest.mark.parametrize("doc,join", itertools.product(MULTI_LINE_DOC, JOINS))
@@ -72,17 +68,17 @@ def test_muliti_line_documentation(doc, join):
 
     @docstring(doc, join=join)
     def func():
-        """Func docs"""
+        """Func docs."""
         pass
 
-    assert func.__doc__ == "\n".join(["Func docs", join, doc.strip() + "\n"])
+    assert func.__doc__ == "\n".join(["Func docs.", join, doc.strip() + "\n"])
 
     @docstring(doc, prepend=True, join=join)
     def func():
-        """Func docs"""
+        """Func docs."""
         pass
 
-    assert func.__doc__ == "\n".join([doc.strip(), join, "Func docs\n"])
+    assert func.__doc__ == "\n".join([doc.strip(), join, "Func docs.\n"])
 
 
 def test_static_and_instance_method_combo():

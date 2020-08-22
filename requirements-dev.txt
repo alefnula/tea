@@ -1,13 +1,11 @@
 -r requirements.txt
-black
-flake8
-ghp-import
-mock
-pre-commit
-pydocstyle
-pytest
-pytest-cov
-pytest-xdist
-recommonmark
-sphinx
-sphinx_rtd_theme
+black==19.10b0
+flake8==3.8.3
+ghp-import==1.0.0
+pre-commit==2.7.0
+pydocstyle==5.1.0
+pytest==6.0.1
+pytest-cov==2.10.1
+recommonmark==0.6.0
+sphinx==3.2.1
+sphinx_rtd_theme==0.5.0

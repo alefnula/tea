@@ -1,13 +1,20 @@
+# Run artifacts
+__pycache__/
 *.py[cod]
-.DS_Store
+
+# Build artifacts
+tea.egg-info
+build/
+dist/
+
+
+# Test artifacts
 .coverage
 .pytest_cache
-dist
-build
-tea.egg-info
+
+# Documentation build artifacts.
 docs/_build
-.cache
+
+# IDE Configuration
 .idea
-.settings
-.project
-.pydevproject
+.vscode

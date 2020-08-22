@@ -1,4 +1,4 @@
-.PHONY: help default test format check docs docs-commit
+.PHONY: help default test fmt check docs docs-commit
 .DEFAULT_GOAL := help
 PROJECT := tea
 
@@ -11,7 +11,7 @@ test:                    ## Run tests.
 	py.test --cov "$(PROJECT)"
 
 
-format:                  ## Format the code.
+fmt:                  ## Format the code.
 	@black --target-version=py37 --safe --line-length 79 "$(PROJECT)"
 
 

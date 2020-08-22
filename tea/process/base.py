@@ -1,10 +1,5 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "01 August 2013"
-__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
-
 import os
 import abc
-import six
 
 
 doc_kill = """Kills a process by it's process ID.
@@ -18,7 +13,7 @@ class NotFound(Exception):
     pass
 
 
-class Process(six.with_metaclass(abc.ABCMeta)):
+class Process(metaclass=abc.ABCMeta):
     r"""Abstract base class for platform specific Process class.
 
     Simple example of Process class usage can be::

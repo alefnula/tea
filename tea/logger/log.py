@@ -1,18 +1,10 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "27 November 2009"
-__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
-
 import os
 import sys
 import time
 import logging
-from tea import shell
-from tea.system import platform
+from logging.handlers import RotatingFileHandler
 
-if platform.is_only(platform.WINDOWS):
-    from tea.logger.win_handlers import RotatingFileHandler
-else:
-    from logging.handlers import RotatingFileHandler
+from tea import shell
 
 # Constants
 FMT = (

@@ -1,9 +1,3 @@
-from __future__ import print_function
-
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "29 July 2013"
-__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
-
 import types
 import pkgutil
 import logging

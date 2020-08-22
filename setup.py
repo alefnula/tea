@@ -1,39 +1,43 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "20 October 2010"
-__copyright__ = "Copyright (c) 2010 Viktor Kerkez"
-
 import io
-import os
+import importlib.util
+from pathlib import Path
 from setuptools import setup, find_packages
 
+author = "Viktor Kerkez"
+author_email = "alefnula@gmail.com"
 
-# If version file exists, this happens during the installation phase,
-# read the version from the version file.
-# If the version file does not exist, this is during the build phase,
-# read the version from TRAVIS_TAG and create a version file for packaging.
-VERSION_FILE = "VERSION"
-if os.path.isfile(VERSION_FILE):
-    with io.open(VERSION_FILE, "r", encoding="utf-8") as f:
-        version = f.read()
-else:
-    version = os.environ.get("TRAVIS_TAG", "0.0.0")
-    with io.open(VERSION_FILE, "w", encoding="utf-8") as f:
-        f.write(version)
+
+def get_version():
+    """Import the version module and get the project version from it."""
+    version_py = Path(__file__).parent / "tea" / "version.py"
+    spec = importlib.util.spec_from_file_location("version", version_py)
+    version = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(version)
+    return version.__version__
 
 
 setup(
     name="tea",
-    version=version,
+    version=get_version(),
+    author=author,
+    author_email=author_email,
+    maintainer=author,
+    maintainer_email=author_email,
     description="Set of utility python modules.",
-    long_description=io.open("README.rst", "r", encoding="utf-8").read(),
-    platforms=["Windows", "POSIX", "MacOSX"],
-    author="Viktor Kerkez",
-    author_email="alefnula@gmail.com",
-    maintainer="Viktor Kerkez",
-    maintainer_email="alefnula@gmail.com",
+    long_description=io.open("README.md", "r", encoding="utf-8").read(),
+    long_description_content_type="text/markdown",
     url="https://github.com/alefnula/tea",
-    license="BSD",
+    platforms=["Windows", "POSIX", "MacOSX"],
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+    ],
+    license="Apache-2.0",
     packages=find_packages(),
+    include_package_data=True,
     install_requires=io.open("requirements.txt").read().splitlines(),
     scripts=[],
 )

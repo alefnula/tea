@@ -1,10 +1,3 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "18 February 2010"
-__copyright__ = "Copyright (c) 2010 Viktor Kerkez"
-
-import six
-
-
 class SingletonMetaclass(type):
     """Singleton Metaclass.
 
@@ -49,7 +42,7 @@ class SingletonMetaclass(type):
         return cls._instance
 
 
-class Singleton(six.with_metaclass(SingletonMetaclass)):
+class Singleton(metaclass=SingletonMetaclass):
     """Singleton class.
 
     Inherit from this class if you want to have a singleton class.

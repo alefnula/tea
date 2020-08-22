@@ -1,17 +1,9 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "25 July 2013"
-__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
-
 import os
-import six
-import pytest
-from tea.system import platform
-from tea.dsa.config import Config
+from unittest import mock
 
-if six.PY2:
-    import mock
-else:
-    from unittest import mock
+import pytest
+
+from tea.dsa.config import Config
 
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
@@ -29,7 +21,7 @@ def config():
 
 
 def is_subset(dict1, dict2):
-    """Is dict1 subset of dict2"""
+    """Is dict1 subset of dict2."""
     for key, value in dict1.items():
         if key not in dict2 or value != dict2[key]:
             return False
@@ -57,8 +49,6 @@ def test_data_json():
 
 
 def test_data_yaml():
-    if platform.is_a(platform.DOTNET):
-        pytest.skip("YAML is not supported on .NET")
     check_values(Config(data=YAML_DATA, fmt=Config.YAML))
 
 

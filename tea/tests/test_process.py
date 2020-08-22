@@ -1,14 +1,8 @@
-__author__ = "Viktor Kerkez <viktor.kerkez@gmail.com>"
-__date__ = "20 January 2010"
-__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
-
 import os
 import re
-import six
 import sys
 import time
 import pytest
-from tea.system import platform
 from tea.process import Process, NotFound, execute, execute_and_report as er
 
 
@@ -55,13 +49,7 @@ def test_kill(process):
 
 def test_write():
     p = Process(
-        sys.executable,
-        [
-            "-c",
-            """a = {}(); print('Said: ' + a)""".format(
-                "raw_input" if six.PY2 else "input"
-            ),
-        ],
+        sys.executable, ["-c", """a = input(); print('Said: ' + a)"""],
     )
     p.start()
     p.write(b"my hello text")
@@ -73,35 +61,23 @@ def test_write():
 def test_read():
     p = Process(sys.executable, ["-c", WRITER.format(out="stdout")])
     p.start()
-    if platform.is_a(platform.DOTNET):
-        # TODO: .NET does not flush the outputs
-        p.wait()
-        assert p.read() == b"foobar"
-        assert p.eread() == b""
-    else:
-        time.sleep(1)
-        assert p.read() == b"foo"
-        assert p.eread() == b""
-        p.wait()
-        assert p.read() == b"bar"
-        assert p.eread() == b""
+    time.sleep(1)
+    assert p.read() == b"foo"
+    assert p.eread() == b""
+    p.wait()
+    assert p.read() == b"bar"
+    assert p.eread() == b""
 
 
 def test_eread():
     p = Process(sys.executable, ["-c", WRITER.format(out="stderr")])
     p.start()
-    if platform.is_a(platform.DOTNET):
-        # TODO: .NET does not flush the outputs
-        p.wait()
-        assert p.read() == b""
-        assert p.eread() == b"foobar"
-    else:
-        time.sleep(1)
-        assert p.read() == b""
-        assert p.eread() == b"foo"
-        p.wait()
-        assert p.read() == b""
-        assert p.eread() == b"bar"
+    time.sleep(1)
+    assert p.read() == b""
+    assert p.eread() == b"foo"
+    p.wait()
+    assert p.read() == b""
+    assert p.eread() == b"bar"
 
 
 def test_stdout(tmpdir):

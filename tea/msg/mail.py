@@ -1,9 +1,5 @@
 """Simple and complete library for sending emails."""
 
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "27 November 2009"
-__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
-
 __all__ = [
     "SMTPConnection",
     "EmailMessage",
@@ -14,29 +10,22 @@ __all__ = [
 
 
 import os
-import six
 import time
 import socket
 import random
 import smtplib
 import logging
 import mimetypes
+from email import charset as Charset
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.header import Header
+from email.encoders import encode_base64
+from email.utils import formatdate, parseaddr, formataddr
+
 from tea.utils.html import strip_tags
 from tea.utils.encoding import smart_text, smart_bytes
-from six.moves.email_mime_text import MIMEText
-from six.moves.email_mime_base import MIMEBase
-from six.moves.email_mime_multipart import MIMEMultipart
-
-if six.PY3:
-    from email import charset as Charset
-    from email.header import Header
-    from email.encoders import encode_base64
-    from email.utils import formatdate, parseaddr, formataddr
-else:
-    from email import Charset
-    from email.Header import Header
-    from email.Encoders import encode_base64
-    from email.Utils import formatdate, parseaddr, formataddr
 
 
 logger = logging.getLogger(__name__)
@@ -466,7 +455,7 @@ def send_mail(
         fail_silently=fail_silently,
     )
     # Convert the to field just for easier usage
-    if isinstance(to, six.string_types):
+    if isinstance(to, str):
         to = [to]
     if html_message is None:
         email = EmailMessage(

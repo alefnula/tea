@@ -1,12 +1,5 @@
-from __future__ import print_function, unicode_literals
-
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "25 July 2013"
-__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
-
 import os
 import io
-import six
 import json
 import copy
 import logging
@@ -59,7 +52,7 @@ class Config(object):
             if isinstance(data, dict):
                 self.fmt = Config.DICT
                 self.data = copy.deepcopy(data)
-            elif isinstance(data, six.string_types):
+            elif isinstance(data, (str, bytes)):
                 self.data = self._read_string(data)
             else:
                 self.data = {}

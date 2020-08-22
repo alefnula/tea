@@ -1,19 +1,8 @@
-from __future__ import absolute_import
-
-# Avoid shadowing the standard library json module
-
-"""
-Json Serialization helpers
-==========================
+"""Json Serialization helpers.
 
 This module contains custom classes and methods which help in json
 serialization.
 """
-
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "16 March 2017"
-__copyright__ = "Copyright (c) 2017 Viktor Kerkez"
-
 
 import json
 

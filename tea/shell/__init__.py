@@ -4,13 +4,8 @@ It adds logging to all operations and abstracting some other useful shell
 commands (functions).
 """
 
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "27 November 2009"
-__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
-
 import os
 import io
-import six
 import glob
 import shlex
 import shutil
@@ -32,7 +27,7 @@ def split(s, posix=True):
     Returns:
         list of str: List of string parts
     """
-    if isinstance(s, six.binary_type):
+    if isinstance(s, bytes):
         s = s.decode("utf-8")
     return shlex.split(s, posix=posix)
 
@@ -416,7 +411,7 @@ def touch(path, content="", encoding="utf-8", overwrite=False):
     try:
         logger.info("touch: %s", path)
         with io.open(path, "wb") as f:
-            if not isinstance(content, six.binary_type):
+            if not isinstance(content, bytes):
                 content = content.encode(encoding)
             f.write(content)
         return True

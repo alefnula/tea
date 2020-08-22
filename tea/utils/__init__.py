@@ -1,8 +1,3 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "27 November 2009"
-__copyright__ = "Copyright (c) 2009 Viktor Kerkez"
-
-import six
 import sys
 import types
 import logging
@@ -134,7 +129,7 @@ class Loader(object):
                 object.
         """
         for module in modules:
-            if isinstance(module, six.string_types):
+            if isinstance(module, str):
                 try:
                     module = get_object(module)
                 except Exception as e:
@@ -167,7 +162,7 @@ def load_subclasses(klass, modules=None):
         be replaces by the ``Loader`` class.
     """
     if modules:
-        if isinstance(modules, six.string_types):
+        if isinstance(modules, str):
             modules = [modules]
         loader = Loader()
         loader.load(*modules)

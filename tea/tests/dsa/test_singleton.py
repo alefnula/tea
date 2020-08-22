@@ -1,8 +1,5 @@
-__author__ = "Viktor Kerkez <alefnula@gmail.com>"
-__date__ = "05 August 2013"
-__copyright__ = "Copyright (c) 2013 Viktor Kerkez"
-
 import unittest
+
 from tea.dsa.singleton import Singleton
 
 
