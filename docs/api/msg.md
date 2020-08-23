@@ -1,3 +1,4 @@
+```eval_rst
 :mod:`tea.msg` Module
 =====================
 
@@ -6,3 +7,4 @@
 
 .. automodule:: tea.msg.mail
     :members:
+```

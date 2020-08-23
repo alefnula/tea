@@ -1,3 +1,4 @@
+```eval_rst
 :mod:`tea.utils` Module
 =======================
 
@@ -9,6 +10,4 @@
 
 .. automodule:: tea.utils.html
     :members:
-
-.. automodule:: tea.utils.json
-    :members:
+```

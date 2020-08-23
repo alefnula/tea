@@ -14,11 +14,6 @@ class TestMultiConfig(unittest.TestCase):
     json_second = """{"foo": {"bar": {"deep": 5}, "baz": 6, "test": 7},
                        "bar": {"baz": 8}, "first": 9}"""
 
-    yaml_first = "foo:\n bar:\n  baz: 1\n baz: 2\nbar: 3\nbaz: 4"
-    yaml_second = (
-        "foo:\n bar:\n  deep: 5\n baz: 6\n test: 7\n" "bar:\n baz: 8\nfirst: 9"
-    )
-
     def check_structure(self, c):
         self.assertEqual(c.get("foo.bar.baz"), 1)
         self.assertEqual(c.get("foo.bar.deep"), 5)
@@ -38,11 +33,6 @@ class TestMultiConfig(unittest.TestCase):
         c.attach(data=self.json_second, fmt=Config.JSON)
         self.check_structure(c)
 
-    def test_dict_yaml(self):
-        c = MultiConfig(data=self.dict_first)
-        c.attach(data=self.yaml_second, fmt=Config.YAML)
-        self.check_structure(c)
-
     def test_json_dict(self):
         c = MultiConfig(data=self.json_first, fmt=Config.JSON)
         c.attach(data=self.dict_second)
@@ -51,24 +41,4 @@ class TestMultiConfig(unittest.TestCase):
     def test_json_json(self):
         c = MultiConfig(data=self.json_first, fmt=Config.JSON)
         c.attach(data=self.json_second, fmt=Config.JSON)
-        self.check_structure(c)
-
-    def test_json_yaml(self):
-        c = MultiConfig(data=self.json_first, fmt=Config.JSON)
-        c.attach(data=self.yaml_second, fmt=Config.YAML)
-        self.check_structure(c)
-
-    def test_yaml_dict(self):
-        c = MultiConfig(data=self.yaml_first, fmt=Config.YAML)
-        c.attach(data=self.dict_second)
-        self.check_structure(c)
-
-    def test_yaml_json(self):
-        c = MultiConfig(data=self.yaml_first, fmt=Config.YAML)
-        c.attach(data=self.json_second, fmt=Config.JSON)
-        self.check_structure(c)
-
-    def test_yaml_yaml(self):
-        c = MultiConfig(data=self.yaml_first, fmt=Config.YAML)
-        c.attach(data=self.yaml_second, fmt=Config.YAML)
         self.check_structure(c)

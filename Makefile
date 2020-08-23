@@ -1,4 +1,4 @@
-.PHONY: help default test fmt check docs docs-commit
+.PHONY: help default test fmt check docs docs-commit build release
 .DEFAULT_GOAL := help
 PROJECT := tea
 
@@ -27,3 +27,11 @@ docs:                    ## Build documentation.
 docs-commit:             ## Build and commit documentation to gh-pages branch.
 	@rm -fr docs/_build/html
 	@cd docs && make html && ghp-import _build/html
+
+build:               ## Build the source and wheel distribution packages.
+	@python setup.py sdist bdist_wheel
+
+
+release: build       ## Build and upload the package to PyPI.
+	@twine upload --skip-existing  dist/*
+	@rm -fr build dist "$(PROJECT).egg-info"

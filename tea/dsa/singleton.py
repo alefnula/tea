@@ -8,7 +8,7 @@ class SingletonMetaclass(type):
 
     Usage::
 
-        >>> class MySingleton(object, meta=SingletonMetaclass):
+        >>> class MySingleton(object, metaclass=SingletonMetaclass):
         ...     '''Real singleton class.
         ...
         ...     You have to set the metaclass to SingletonMetaclass,
@@ -16,29 +16,32 @@ class SingletonMetaclass(type):
         ...     be done by metaclass.
         ...     '''
         ...     def __init__(self, data):
-        ...         print 'Initializing'
+        ...         print("Initializing")
         ...         self.data = data
         ...
         >>> # Only this actually happen
-        >>> first = MySingleton('First initialization')
+        >>> first = MySingleton("First initialization")
         Initializing
-        >>> second = MySingleton('Second initialization') # This won't happen
+        >>> second = MySingleton("Second initialization") # This won't happen
         >>> first.data
         'First initialization'
         >>> second.data
         'First initialization'
-        >>>
     """
 
     def __init__(cls, *args, **kwargs):
         super(SingletonMetaclass, cls).__init__(*args, **kwargs)
         cls._instance = None
 
-    def __call__(cls, *args, **kwargs):  # @NoSelf
+    def __call__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(SingletonMetaclass, cls).__call__(
                 *args, **kwargs
             )
+        return cls._instance
+
+    @property
+    def instance(cls):
         return cls._instance
 
 
@@ -46,31 +49,32 @@ class Singleton(metaclass=SingletonMetaclass):
     """Singleton class.
 
     Inherit from this class if you want to have a singleton class.
+
     Never use SingletonMetaclass!
 
-    Usage:
-    >>> class EmptySingleton(Singleton):
-    ...     '''Singleton without __init__ method'''
-    ...     pass
-    ...
-    >>> first = EmptySingleton()
-    >>> second = EmptySingleton()
-    >>> assert id(first) == id(second)
-    >>>
-    >>> class InitSingleton(Singleton):
-    ...     '''Singleton with __init__ method'''
-    ...     def __init__(self, data):
-    ...         print 'Initializing'
-    ...         self.data = data
-    ...
-    >>> # Only this actually happen
-    >>> first = InitSingleton('First initialization')
-    Initializing
-    >>> second = InitSingleton('Second initialization') # This won't happen
-    >>> first.data
-    'First initialization'
-    >>> assert first.data == second.data
-    >>>
+    Usage::
+
+        >>> class EmptySingleton(Singleton):
+        ...     '''Singleton without __init__ method'''
+        ...     pass
+        ...
+        >>> first = EmptySingleton()
+        >>> second = EmptySingleton()
+        >>> assert id(first) == id(second)
+        >>>
+        >>> class InitSingleton(Singleton):
+        ...     '''Singleton with __init__ method'''
+        ...     def __init__(self, data):
+        ...         print("Initializing")
+        ...         self.data = data
+        ...
+        >>> # Only this actually happen
+        >>> first = InitSingleton("First initialization")
+        Initializing
+        >>> second = InitSingleton("Second initialization") # This won't happen
+        >>> first.data
+        'First initialization'
+        >>> assert first.data == second.data
     """
 
     pass

@@ -1,11 +1,14 @@
 # CHANGELOG
 
-## v0.1.0 (XX XX, 2020)
+## v0.1.0 (August 23, 2020)
 
 - Module cleanup. Remove all unused modules.
 - Remove support for python2 and IronPython.
 - Remove unnecessary windows specific modules.
 - License change from BSD to Apache-2.0.
+- Added timestamp module.
+- Process module enhanced.
+- Fixes for python3.
 
 
 ---
