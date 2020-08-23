@@ -25,7 +25,6 @@ class Config(object):
 
     DICT = "dict"
     JSON = "json"
-    YAML = "yaml"
 
     def __init__(
         self,
@@ -67,11 +66,6 @@ class Config(object):
             if self.fmt == Config.JSON:
                 with io.open(self.filename, "r", encoding=self.encoding) as f:
                     return json.loads(f.read())
-            elif self.fmt == Config.YAML:
-                import yaml
-
-                with io.open(self.filename, "r", encoding=self.encoding) as f:
-                    return yaml.safe_load(f)
             else:
                 logger.error("Unsupported configuration format: %s", self.fmt)
                 return {}
@@ -90,10 +84,6 @@ class Config(object):
                 data = data.decode(self.encoding)
             if self.fmt == Config.JSON:
                 return json.loads(data)
-            elif self.fmt == Config.YAML:
-                import yaml
-
-                return yaml.safe_load(data)
             else:
                 logger.error("Unsupported configuration format: %s", self.fmt)
                 return {}
@@ -109,11 +99,6 @@ class Config(object):
             if self.fmt == Config.JSON:
                 with io.open(self.filename, "w", encoding=self.encoding) as f:
                     f.write(json.dumps(self.data, indent=2))
-            elif self.fmt == Config.YAML:
-                import yaml
-
-                with io.open(self.filename, "w", encoding=self.encoding) as f:
-                    yaml.safe_dump(self.data, f, default_flow_style=False)
             else:
                 logger.error("Unsupported configuration format: %s", self.fmt)
 

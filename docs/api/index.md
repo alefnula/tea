@@ -1,0 +1,17 @@
+# Tea api documentation
+
+```eval_rst
+.. toctree::
+   :maxdepth: 3
+
+   ctx.md
+   decorators.md
+   dsa.md
+   logger.md
+   msg.md
+   process.md
+   serde.md
+   shell.md
+   timestamp.md
+   utils.md
+```

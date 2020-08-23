@@ -1,3 +1,4 @@
+```eval_rst
 :mod:`tea.dsa` Module
 =====================
 
@@ -6,3 +7,10 @@
 
 .. automodule:: tea.dsa.config
     :members:
+
+.. automodule:: tea.dsa.plugin
+    :members:
+
+.. automodule:: tea.dsa.singleton
+    :members:
+```

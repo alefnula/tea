@@ -12,7 +12,6 @@ DICT_DATA = {"foo": {"bar": {"baz": 1}, "baz": 2}, "bar": {"baz": 3}, "baz": 4}
 
 INI_DATA = open(os.path.join(DATA_DIR, "config.ini")).read()
 JSON_DATA = open(os.path.join(DATA_DIR, "config.json")).read()
-YAML_DATA = open(os.path.join(DATA_DIR, "config.yaml")).read()
 
 
 @pytest.fixture
@@ -48,20 +47,12 @@ def test_data_json():
     check_values(Config(data=JSON_DATA, fmt=Config.JSON))
 
 
-def test_data_yaml():
-    check_values(Config(data=YAML_DATA, fmt=Config.YAML))
-
-
 def test_file_json():
     check_values(Config(filename=os.path.join(DATA_DIR, "config.json")))
 
 
-def test_file_yaml():
-    check_values(Config(filename=os.path.join(DATA_DIR, "config.yaml")))
-
-
 def test_non_existing_file():
-    config = Config(filename=os.path.join(DATA_DIR, "non_existin.yaml"))
+    config = Config(filename=os.path.join(DATA_DIR, "non_existin.json"))
     assert config.data == {}
 
 
@@ -74,10 +65,10 @@ def test_unsupported_format():
 
 def test_invalid_format():
     config = Config(
-        filename=os.path.join(DATA_DIR, "config.ini"), fmt=Config.YAML
+        filename=os.path.join(DATA_DIR, "config.ini"), fmt=Config.JSON
     )
     assert config.data == {}
-    config = Config(data=INI_DATA, fmt=Config.YAML)
+    config = Config(data=INI_DATA, fmt=Config.JSON)
     assert config.data == {}
 
 
@@ -96,21 +87,6 @@ def test_save_json(io_open, makedirs, isdir):
     io_open.result.write.asswert_called_with(JSON_DATA)
 
 
-@mock.patch("os.path.isdir", return_value=False)
-@mock.patch("os.makedirs")
-@mock.patch("io.open")
-def test_save_yaml(io_open, makedirs, isdir):
-    filename = "some_filename"
-    dirname = os.path.abspath(os.path.dirname(filename))
-    c = Config(data=YAML_DATA, fmt=Config.YAML)
-    c.filename = filename
-    c.save()
-    isdir.assert_called_with(dirname)
-    makedirs.assert_called_with(dirname, 0o755)
-    io_open.assert_called_with(filename, "w", encoding="utf-8")
-    io_open.result.write.asswert_called_with(YAML_DATA)
-
-
 @mock.patch("os.path.isdir")
 @mock.patch("os.makedirs")
 @mock.patch("io.open")
@@ -118,7 +94,7 @@ def test_save_unsupported(io_open, makedirs, isdir):
     isdir.return_value = True
     filename = "some_filename"
     dirname = os.path.abspath(os.path.dirname(filename))
-    c = Config(data=YAML_DATA, fmt=Config.YAML)
+    c = Config(data=JSON_DATA, fmt=Config.JSON)
     c.filename = filename
     c.fmt = "INI"
     c.save()
