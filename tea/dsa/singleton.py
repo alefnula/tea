@@ -1,3 +1,6 @@
+import threading
+
+
 class SingletonMetaclass(type):
     """Singleton Metaclass.
 
@@ -32,17 +35,20 @@ class SingletonMetaclass(type):
     def __init__(cls, *args, **kwargs):
         super(SingletonMetaclass, cls).__init__(*args, **kwargs)
         cls._instance = None
+        cls._lock = threading.Lock()
 
     def __call__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super(SingletonMetaclass, cls).__call__(
-                *args, **kwargs
-            )
-        return cls._instance
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super(SingletonMetaclass, cls).__call__(
+                    *args, **kwargs
+                )
+            return cls._instance
 
     @property
     def instance(cls):
-        return cls._instance
+        with cls._lock:
+            return cls._instance
 
 
 class Singleton(metaclass=SingletonMetaclass):

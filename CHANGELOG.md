@@ -1,5 +1,14 @@
 # CHANGELOG
 
+
+## v0.1.1 (August XX, 2020)
+
+- Make singleton initialization thread safe.
+
+
+---
+
+
 ## v0.1.0 (August 23, 2020)
 
 - Module cleanup. Remove all unused modules.
