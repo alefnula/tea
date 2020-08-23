@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tea.msg Module &mdash; tea 0.0.0 documentation</title>
+  <title>tea.msg Module &mdash; tea 0.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="tea.process Module" href="process.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tea
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> tea
           
 
           
@@ -58,10 +59,6 @@
 
           
             
-            
-              <div class="version">
-                0.0.0
-              </div>
             
           
 
@@ -77,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -85,17 +83,17 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">tea api documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="console.html"><code class="docutils literal notranslate"><span class="pre">tea.console</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">tea.system</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tea api documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serde.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.serde</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timestamp.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.timestamp</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -103,6 +101,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -141,17 +140,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">tea api documentation</a> &raquo;</li>
+          <li><a href="index.html">Tea api documentation</a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/msg.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/msg.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,9 +165,9 @@
             
   <div class="section" id="module-tea.msg">
 <span id="tea-msg-module"></span><h1><a class="reference internal" href="#module-tea.msg" title="tea.msg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code></a> Module<a class="headerlink" href="#module-tea.msg" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="tea.msg.send_mail">
-<code class="descclassname">tea.msg.</code><code class="descname">send_mail</code><span class="sig-paren">(</span><em>subject</em>, <em>sender</em>, <em>to</em>, <em>message</em>, <em>html_message=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>host=None</em>, <em>port=None</em>, <em>auth_user=None</em>, <em>auth_password=None</em>, <em>use_tls=False</em>, <em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.send_mail" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.msg.</code><code class="sig-name descname">send_mail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subject</span></em>, <em class="sig-param"><span class="n">sender</span></em>, <em class="sig-param"><span class="n">to</span></em>, <em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">html_message</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bcc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attachments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auth_user</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auth_password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_tls</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.send_mail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a single email to a recipient list.</p>
 <p>All members of the recipient list will see the other recipients in the ‘To’
 field.</p>
@@ -176,9 +175,9 @@ field.</p>
 functionality should use the EmailMessage class directly.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.msg.send_mass_mail">
-<code class="descclassname">tea.msg.</code><code class="descname">send_mass_mail</code><span class="sig-paren">(</span><em>datatuple</em>, <em>fail_silently=False</em>, <em>auth_user=None</em>, <em>auth_password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mass_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.send_mass_mail" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.msg.</code><code class="sig-name descname">send_mass_mail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">datatuple</span></em>, <em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">auth_user</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auth_password</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mass_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.send_mass_mail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send multiple emails to multiple recipients.</p>
 <p>Given a datatuple of (subject, message, sender, recipient_list), sends
 each message to each recipient list. Returns the number of e-mails sent.</p>
@@ -188,66 +187,105 @@ functionality should use the EmailMessage class directly.</p>
 </dd></dl>
 
 <span class="target" id="module-tea.msg.mail"></span><p>Simple and complete library for sending emails.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="tea.msg.mail.SMTPConnection">
-<em class="property">class </em><code class="descclassname">tea.msg.mail.</code><code class="descname">SMTPConnection</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>username=None</em>, <em>password=None</em>, <em>use_tls=None</em>, <em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tea.msg.mail.</code><code class="sig-name descname">SMTPConnection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_tls</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper that manages the SMTP network connection.</p>
-<dl class="method">
+<dl class="py method">
+<dt id="tea.msg.mail.SMTPConnection.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_tls</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="tea.msg.mail.SMTPConnection.open">
-<code class="descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.open" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.open" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensure we have a connection to the email server.</p>
 <p>Returns whether or not a new connection was required (True or False).</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="tea.msg.mail.SMTPConnection.close">
-<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.close" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the connection to the email server.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="tea.msg.mail.SMTPConnection.send_messages">
-<code class="descname">send_messages</code><span class="sig-paren">(</span><em>messages</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.send_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.send_messages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">send_messages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">messages</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#SMTPConnection.send_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.SMTPConnection.send_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send one or more EmailMessage objects.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of email messages sent.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of email messages sent.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="tea.msg.mail.EmailMessage">
-<em class="property">class </em><code class="descclassname">tea.msg.mail.</code><code class="descname">EmailMessage</code><span class="sig-paren">(</span><em>subject=''</em>, <em>body=''</em>, <em>sender=None</em>, <em>to=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>headers=None</em>, <em>connection=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tea.msg.mail.</code><code class="sig-name descname">EmailMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subject</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">sender</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bcc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attachments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">connection</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Container for email information.</p>
 <p>Initialize a single email message.</p>
 <p>(It can be sent to multiple recipients.)</p>
 <p>All strings used to create the message can be unicode strings (or UTF-8
 bytestrings). The SafeMIMEText class will handle any necessary encoding
 conversions.</p>
-<dl class="method">
+<dl class="py attribute">
+<dt id="tea.msg.mail.EmailMessage.content_subtype">
+<code class="sig-name descname">content_subtype</code><em class="property"> = 'plain'</em><a class="headerlink" href="#tea.msg.mail.EmailMessage.content_subtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="tea.msg.mail.EmailMessage.multipart_subtype">
+<code class="sig-name descname">multipart_subtype</code><em class="property"> = 'mixed'</em><a class="headerlink" href="#tea.msg.mail.EmailMessage.multipart_subtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="tea.msg.mail.EmailMessage.encoding">
+<code class="sig-name descname">encoding</code><em class="property"> = None</em><a class="headerlink" href="#tea.msg.mail.EmailMessage.encoding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="tea.msg.mail.EmailMessage.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subject</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">sender</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bcc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attachments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">connection</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a single email message.</p>
+<p>(It can be sent to multiple recipients.)</p>
+<p>All strings used to create the message can be unicode strings (or UTF-8
+bytestrings). The SafeMIMEText class will handle any necessary encoding
+conversions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tea.msg.mail.EmailMessage.get_connection">
+<code class="sig-name descname">get_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.get_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.get_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="tea.msg.mail.EmailMessage.message">
+<code class="sig-name descname">message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="tea.msg.mail.EmailMessage.recipients">
-<code class="descname">recipients</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.recipients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.recipients" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">recipients</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.recipients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.recipients" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all recipients of the email.</p>
 <p>Includes direct addressees as well as Bcc entries.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="tea.msg.mail.EmailMessage.send">
-<code class="descname">send</code><span class="sig-paren">(</span><em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.send" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the email message.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="tea.msg.mail.EmailMessage.attach">
-<code class="descname">attach</code><span class="sig-paren">(</span><em>filename=None</em>, <em>content=None</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.attach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.attach" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attach</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">content</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mimetype</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.attach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.attach" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attache a file with the given filename and content.</p>
 <p>The filename can be omitted (useful for multipart/alternative messages)
 and the mimetype is guessed, if not provided.</p>
@@ -255,17 +293,17 @@ and the mimetype is guessed, if not provided.</p>
 into the resulting message attachments.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="tea.msg.mail.EmailMessage.attach_file">
-<code class="descname">attach_file</code><span class="sig-paren">(</span><em>path</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.attach_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.attach_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attach_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">mimetype</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMessage.attach_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMessage.attach_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attache a file from the filesystem.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="tea.msg.mail.EmailMultiAlternatives">
-<em class="property">class </em><code class="descclassname">tea.msg.mail.</code><code class="descname">EmailMultiAlternatives</code><span class="sig-paren">(</span><em>subject=''</em>, <em>body=''</em>, <em>sender=None</em>, <em>to=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>headers=None</em>, <em>connection=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMultiAlternatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMultiAlternatives" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tea.msg.mail.</code><code class="sig-name descname">EmailMultiAlternatives</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subject</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">sender</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bcc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attachments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">connection</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMultiAlternatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMultiAlternatives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Email message with multipart/alternative content.</p>
 <p>A version of EmailMessage that makes it easy to send
 multipart/alternative messages. For example, including text and HTML
@@ -275,17 +313,22 @@ versions of the text is made easier.</p>
 <p>All strings used to create the message can be unicode strings (or UTF-8
 bytestrings). The SafeMIMEText class will handle any necessary encoding
 conversions.</p>
-<dl class="method">
+<dl class="py attribute">
+<dt id="tea.msg.mail.EmailMultiAlternatives.multipart_subtype">
+<code class="sig-name descname">multipart_subtype</code><em class="property"> = 'alternative'</em><a class="headerlink" href="#tea.msg.mail.EmailMultiAlternatives.multipart_subtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="tea.msg.mail.EmailMultiAlternatives.attach_alternative">
-<code class="descname">attach_alternative</code><span class="sig-paren">(</span><em>content</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMultiAlternatives.attach_alternative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMultiAlternatives.attach_alternative" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attach_alternative</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">content</span></em>, <em class="sig-param"><span class="n">mimetype</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#EmailMultiAlternatives.attach_alternative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.EmailMultiAlternatives.attach_alternative" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attach an alternative content representation.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.msg.mail.send_mail">
-<code class="descclassname">tea.msg.mail.</code><code class="descname">send_mail</code><span class="sig-paren">(</span><em>subject</em>, <em>sender</em>, <em>to</em>, <em>message</em>, <em>html_message=None</em>, <em>cc=None</em>, <em>bcc=None</em>, <em>attachments=None</em>, <em>host=None</em>, <em>port=None</em>, <em>auth_user=None</em>, <em>auth_password=None</em>, <em>use_tls=False</em>, <em>fail_silently=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.send_mail" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.msg.mail.</code><code class="sig-name descname">send_mail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subject</span></em>, <em class="sig-param"><span class="n">sender</span></em>, <em class="sig-param"><span class="n">to</span></em>, <em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">html_message</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bcc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attachments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auth_user</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auth_password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_tls</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.send_mail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a single email to a recipient list.</p>
 <p>All members of the recipient list will see the other recipients in the ‘To’
 field.</p>
@@ -293,9 +336,9 @@ field.</p>
 functionality should use the EmailMessage class directly.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.msg.mail.send_mass_mail">
-<code class="descclassname">tea.msg.mail.</code><code class="descname">send_mass_mail</code><span class="sig-paren">(</span><em>datatuple</em>, <em>fail_silently=False</em>, <em>auth_user=None</em>, <em>auth_password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mass_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.send_mass_mail" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.msg.mail.</code><code class="sig-name descname">send_mass_mail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">datatuple</span></em>, <em class="sig-param"><span class="n">fail_silently</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">auth_user</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auth_password</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/msg/mail.html#send_mass_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.msg.mail.send_mass_mail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send multiple emails to multiple recipients.</p>
 <p>Given a datatuple of (subject, message, sender, recipient_list), sends
 each message to each recipient list. Returns the number of e-mails sent.</p>
@@ -326,11 +369,19 @@ functionality should use the EmailMessage class directly.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -341,7 +392,6 @@ functionality should use the EmailMessage class directly.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

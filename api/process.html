@@ -1,41 +1,42 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tea.process Module &mdash; tea 0.0.0 documentation</title>
+  <title>tea.process Module &mdash; tea 0.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="tea.shell Module" href="shell.html" />
+    <link rel="next" title="tea.serde Module" href="serde.html" />
     <link rel="prev" title="tea.msg Module" href="msg.html" /> 
 </head>
 
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tea
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> tea
           
 
           
@@ -58,10 +59,6 @@
 
           
             
-            
-              <div class="version">
-                0.0.0
-              </div>
             
           
 
@@ -77,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -85,17 +83,17 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">tea api documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="console.html"><code class="docutils literal notranslate"><span class="pre">tea.console</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">tea.system</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tea api documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serde.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.serde</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timestamp.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.timestamp</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -103,6 +101,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -141,17 +140,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">tea api documentation</a> &raquo;</li>
+          <li><a href="index.html">Tea api documentation</a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.process</span></code> Module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/process.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/process.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,111 +165,12 @@
             
   <div class="section" id="module-tea.process">
 <span id="tea-process-module"></span><h1><a class="reference internal" href="#module-tea.process" title="tea.process"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.process</span></code></a> Module<a class="headerlink" href="#module-tea.process" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="tea.process.execute">
-<code class="descclassname">tea.process.</code><code class="descname">execute</code><span class="sig-paren">(</span><em>command</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/wrapper.html#execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute a command with arguments and wait for output.</p>
-<p>Arguments should not be quoted!</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
-<li><strong>env</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – Dictionary of additional environment variables.</li>
-<li><strong>wait</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Wait for the process to finish.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;import sys;sys.stdout.write(&#39;</span><span class="n">out</span><span class="s1">&#39;);sys.exit(0)&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;status: </span><span class="si">%s</span><span class="s1">, output: </span><span class="si">%s</span><span class="s1">, error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
-<span class="go">status: 0, output: out, error:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;import sys;sys.stderr.write(&#39;</span><span class="n">out</span><span class="s1">&#39;);sys.exit(1)&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;status: </span><span class="si">%s</span><span class="s1">, output: </span><span class="si">%s</span><span class="s1">, error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
-<span class="go">status: 1, output: , error: err</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.process.execute_and_report">
-<code class="descclassname">tea.process.</code><code class="descname">execute_and_report</code><span class="sig-paren">(</span><em>command</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/wrapper.html#execute_and_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.execute_and_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute a command with arguments and wait for output.</p>
-<p>If execution was successful function will return True,
-if not, it will log the output using standard logging and return False.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.process.get_processes">
-<code class="descclassname">tea.process.</code><code class="descname">get_processes</code><span class="sig-paren">(</span><em>sort_by_name=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/wrapper.html#get_processes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.get_processes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve a list of processes sorted by name.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sort_by_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Sort the list by name or by process ID’s.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>List of process id,</dt>
-<dd>process name and optional cmdline tuples.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>) or list of (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>)</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.process.find">
-<code class="descclassname">tea.process.</code><code class="descname">find</code><span class="sig-paren">(</span><em>name</em>, <em>arg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/wrapper.html#find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.find" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find process by name or by argument in command line.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Process name to search for.</li>
-<li><strong>arg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Command line argument for a process to search for.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Process object if found.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tea.process.base.IProcess</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.process.kill">
-<code class="descclassname">tea.process.</code><code class="descname">kill</code><span class="sig-paren">(</span><em>pid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/posix_process.html#kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.kill" title="Permalink to this definition">¶</a></dt>
-<dd><p>Kills a process by it’s process ID.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Process ID of the process to kill.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="class">
-<dt id="tea.process.base.Process">
-<em class="property">class </em><code class="descclassname">tea.process.base.</code><code class="descname">Process</code><span class="sig-paren">(</span><em>command</em>, <em>arguments=None</em>, <em>env=None</em>, <em>stdout=None</em>, <em>stderr=None</em>, <em>redirect_output=True</em>, <em>working_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract base class for platform specific Process class.</p>
+<dl class="py class">
+<dt id="tea.process.Process">
+<em class="property">class </em><code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">Process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">env</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stdout</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stderr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">demux</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redirect_output</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">working_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'utf-8'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#Process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process class.</p>
 <p>Simple example of Process class usage can be:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tea.process</span> <span class="k">import</span> <span class="n">Process</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tea.process</span> <span class="kn">import</span> <span class="n">Process</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;import time;time.sleep(5);print(3)&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">is_running</span>
@@ -278,206 +178,365 @@ if not, it will log the output using standard logging and return False.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<span class="go">b&#39;3\\n&#39;</span>
+<span class="go">&#39;3\\n&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">eread</span><span class="p">()</span>
-<span class="go">b&#39;&#39;</span>
+<span class="go">&#39;&#39;</span>
 </pre></div>
 </div>
 <p>Create a Process object.</p>
 <p>The only required parameter is the command to execute. It’s important
 to note that the constructor only initializes the class, it doesn’t
 executes the process. To actually execute the process you have to call
-<a href="#id1"><span class="problematic" id="id2">:met:`start`</span></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the executable file.</li>
-<li><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – list of command line arguments passed to the
-command</li>
-<li><strong>env</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – added to the subprocess environment or that override currently
-set environment variables.</li>
-<li><strong>stdout</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the file to which standard output would be
-redirected.</li>
-<li><strong>stderr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the file to which standard error would be
-redirected.</li>
-<li><strong>redirect_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – <cite>True</cite> if you want to be able to get the
-standard output and the standard error of the subprocess,
-otherwise it will be redirected to /dev/null. If stdout or
-stderr are provided redirect_output will automatically be set
-to <cite>True</cite>.</li>
-<li><strong>working_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Set the working directory from which the process
-will be started.</li>
+the <cite>start</cite> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> – Path to the executable file or a list with the full
+command and it’s arguments.</p></li>
+<li><p><strong>env</strong> – Optional additional environment variables that will be added
+to the subprocess environment or that override currently set
+environment variables.</p></li>
+<li><p><strong>stdout</strong> – Path to the file to which standard output would be
+redirected.</p></li>
+<li><p><strong>stderr</strong> – Path to the file to which standard error would be
+redirected.</p></li>
+<li><p><strong>demux</strong> – Demux stdout and stderr. Default: <cite>True</cite>. If demux is set to
+<cite>False</cite> <cite>eread</cite> will always return an empty string and all
+stderr will be redirected to stdout.</p></li>
+<li><p><strong>redirect_output</strong> – <cite>True</cite> if you want to be able to get the standard
+output and the standard error of the subprocess, otherwise it
+will be redirected to /dev/null. If stdout or stderr are
+provided redirect_output will automatically be set to <cite>True</cite>.</p></li>
+<li><p><strong>working_dir</strong> – Set the working directory from which the process will
+be started.</p></li>
+<li><p><strong>encoding</strong> – Encoding to use to decode the standard output and
+standard error.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="classmethod">
-<dt id="tea.process.base.Process.immutable">
-<em class="property">classmethod </em><code class="descname">immutable</code><span class="sig-paren">(</span><em>pid</em>, <em>command</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process.immutable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process.immutable" title="Permalink to this definition">¶</a></dt>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="tea.process.Process.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">env</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stdout</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stderr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">demux</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redirect_output</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">working_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'utf-8'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#Process.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Process object.</p>
+<p>The only required parameter is the command to execute. It’s important
+to note that the constructor only initializes the class, it doesn’t
+executes the process. To actually execute the process you have to call
+the <cite>start</cite> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> – Path to the executable file or a list with the full
+command and it’s arguments.</p></li>
+<li><p><strong>env</strong> – Optional additional environment variables that will be added
+to the subprocess environment or that override currently set
+environment variables.</p></li>
+<li><p><strong>stdout</strong> – Path to the file to which standard output would be
+redirected.</p></li>
+<li><p><strong>stderr</strong> – Path to the file to which standard error would be
+redirected.</p></li>
+<li><p><strong>demux</strong> – Demux stdout and stderr. Default: <cite>True</cite>. If demux is set to
+<cite>False</cite> <cite>eread</cite> will always return an empty string and all
+stderr will be redirected to stdout.</p></li>
+<li><p><strong>redirect_output</strong> – <cite>True</cite> if you want to be able to get the standard
+output and the standard error of the subprocess, otherwise it
+will be redirected to /dev/null. If stdout or stderr are
+provided redirect_output will automatically be set to <cite>True</cite>.</p></li>
+<li><p><strong>working_dir</strong> – Set the working directory from which the process will
+be started.</p></li>
+<li><p><strong>encoding</strong> – Encoding to use to decode the standard output and
+standard error.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tea.process.Process.immutable">
+<em class="property">classmethod </em><code class="sig-name descname">immutable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pid</span></em>, <em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#Process.immutable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.immutable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an immutable process object used for listing processes.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="tea.process.base.Process.command">
-<code class="descname">command</code><a class="headerlink" href="#tea.process.base.Process.command" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.command">
+<em class="property">property </em><code class="sig-name descname">command</code><a class="headerlink" href="#tea.process.Process.command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="tea.process.base.Process.arguments">
-<code class="descname">arguments</code><a class="headerlink" href="#tea.process.base.Process.arguments" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.arguments">
+<em class="property">property </em><code class="sig-name descname">arguments</code><a class="headerlink" href="#tea.process.Process.arguments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Arguments.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="tea.process.base.Process.start">
-<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process.start" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.command_line">
+<em class="property">property </em><code class="sig-name descname">command_line</code><a class="headerlink" href="#tea.process.Process.command_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Full command line.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tea.process.Process.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#Process.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the process.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="tea.process.base.Process.kill">
-<code class="descname">kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process.kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process.kill" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.kill">
+<code class="sig-name descname">kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#Process.kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.kill" title="Permalink to this definition">¶</a></dt>
 <dd><p>Kill the process if it’s running.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="tea.process.base.Process.wait">
-<code class="descname">wait</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process.wait" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.wait">
+<code class="sig-name descname">wait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#Process.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for the process to finish.</p>
 <p>It will wait for the process to finish running. If the timeout is
-provided, the function will wait only <code class="docutils literal notranslate"><span class="pre">timeout</span></code> amount of seconds and
+provided, the function will wait only <cite>timeout</cite> amount of seconds and
 then return to it’s caller.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – <code class="docutils literal notranslate"><span class="pre">None</span></code> if you want to wait to wait until
-the process actually finishes, otherwise it will wait just the
-<code class="docutils literal notranslate"><span class="pre">timeout</span></code> number of seconds.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>Return value only makes sense if you provided the timeout</dt>
-<dd>parameter. It will indicate if the process actually finished in
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout</strong> – <cite>None</cite> if you want to wait to wait until the process
+actually finishes, otherwise it will wait just the <cite>timeout</cite>
+number of seconds.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Return value only makes sense if you provided the timeout</dt><dd><p>parameter. It will indicate if the process actually finished in
 the amount of time specified, i.e. if the we specify 3 seconds
 and the process actually stopped after 3 seconds it will return
-<code class="docutils literal notranslate"><span class="pre">True</span></code> otherwise it will return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</dd>
+<cite>True</cite> otherwise it will return <cite>False</cite>.</p>
+</dd>
 </dl>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="tea.process.base.Process.is_running">
-<code class="descname">is_running</code><a class="headerlink" href="#tea.process.base.Process.is_running" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.is_running">
+<em class="property">property </em><code class="sig-name descname">is_running</code><a class="headerlink" href="#tea.process.Process.is_running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate if the process is still running.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the process is still running <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><cite>True</cite> if the process is still running <cite>False</cite> otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="tea.process.base.Process.pid">
-<code class="descname">pid</code><a class="headerlink" href="#tea.process.base.Process.pid" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.pid">
+<em class="property">property </em><code class="sig-name descname">pid</code><a class="headerlink" href="#tea.process.Process.pid" title="Permalink to this definition">¶</a></dt>
 <dd><p>PID of the process if it is running.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Process id of the running process.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Process id of the running process.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="tea.process.base.Process.exit_code">
-<code class="descname">exit_code</code><a class="headerlink" href="#tea.process.base.Process.exit_code" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.exit_code">
+<em class="property">property </em><code class="sig-name descname">exit_code</code><a class="headerlink" href="#tea.process.Process.exit_code" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exit code if the process has finished running.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Exit code or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the process is still running.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)">None</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Exit code or <cite>None</cite> if the process is still running.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Optional[int]</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="tea.process.base.Process.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process.write" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#Process.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a string to the process standard input.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>string</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – String to write to the process standard input.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> – String to write to the process standard input.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="tea.process.base.Process.read">
-<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process.read" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/tea/process/process.html#Process.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from the process standard output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>The data process has written to the standard output if it has</dt>
-<dd>written anything. If it hasn’t or you already read all the data
-process wrote, it will return an empty string.</dd>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The data process has written to the standard output if it has</dt><dd><p>written anything. If it hasn’t or you already read all the data
+process wrote, it will return an empty string.</p>
+</dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="tea.process.base.Process.eread">
-<code class="descname">eread</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/base.html#Process.eread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.base.Process.eread" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="tea.process.Process.eread">
+<code class="sig-name descname">eread</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/tea/process/process.html#Process.eread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.Process.eread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from the process standard error.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>The data process has written to the standard error if it has</dt>
-<dd>written anything. If it hasn’t or you already read all the data
-process wrote, it will return an empty string.</dd>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The data process has written to the standard error if it has</dt><dd><p>written anything. If it hasn’t or you already read all the data
+process wrote, it will return an empty string.</p>
+</dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py exception">
+<dt id="tea.process.ExecutableNotFound">
+<em class="property">exception </em><code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">ExecutableNotFound</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#ExecutableNotFound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.ExecutableNotFound" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="tea.process.ExecutableNotFound.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#ExecutableNotFound.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.ExecutableNotFound.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="tea.process.kill">
+<code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">kill</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pid</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/process.html#kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.kill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kills a process by it’s process ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pid</strong> (<em>int</em>) – Process ID of the process to kill.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="tea.process.find">
+<code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">find</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">arg</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/wrappers.html#find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find process by name or by argument in command line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Process name to search for.</p></li>
+<li><p><strong>arg</strong> – Command line argument for a process to search for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Process object if found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tea.process.base.IProcess</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="tea.process.get_processes">
+<code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">get_processes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sort_by_name</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>tea.process.process.Process<span class="p">]</span><a class="reference internal" href="../_modules/tea/process/wrappers.html#get_processes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.get_processes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of processes sorted by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sort_by_name</strong> – Sort the list by name or by process ID’s.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of processes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#tea.process.Process" title="tea.process.Process">Process</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="tea.process.execute">
+<code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">env</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">working_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wait</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">, </span>str<span class="p">, </span>str<span class="p">]</span><span class="p">, </span>tea.process.process.Process<span class="p">]</span><a class="reference internal" href="../_modules/tea/process/wrappers.html#execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a command with arguments and wait for output.</p>
+<p>Arguments should not be quoted!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Keyword Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> – Command to execute.</p></li>
+<li><p><strong>env</strong> – Environment variables.</p></li>
+<li><p><strong>working_dir</strong> – Set the working dir.</p></li>
+<li><p><strong>wait</strong> – Wait for the process to finish.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>(exit_code, stdout, stderr) if wait is <cite>True</cite></dt><dd><p>else the process instance.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, str, str]</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;import sys; sys.stdout.write(&#39;</span><span class="n">out</span><span class="s1">&#39;); sys.exit(0)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">execute</span><span class="p">([</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;status: </span><span class="si">%s</span><span class="s1">, output: </span><span class="si">%s</span><span class="s1">, error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
+<span class="go">status: 0, output: out, error:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;import sys; sys.stderr.write(&#39;</span><span class="n">out</span><span class="s1">&#39;); sys.exit(1)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">execute</span><span class="p">([</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;status: </span><span class="si">%s</span><span class="s1">, output: </span><span class="si">%s</span><span class="s1">, error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
+<span class="go">status: 1, output: , error: err</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="tea.process.execute_no_demux">
+<code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">execute_no_demux</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">env</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">working_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wait</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">, </span>str<span class="p">]</span><span class="p">, </span>tea.process.process.Process<span class="p">]</span><a class="reference internal" href="../_modules/tea/process/wrappers.html#execute_no_demux"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.execute_no_demux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a command and return the exit code and output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> – Command to execute.</p></li>
+<li><p><strong>env</strong> – Environment variables.</p></li>
+<li><p><strong>working_dir</strong> – Set the working dir.</p></li>
+<li><p><strong>wait</strong> – Wait for the process to finish.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>(exit_code, stdout, stderr) if wait is <cite>True</cite></dt><dd><p>else the process instance.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="tea.process.execute_and_report">
+<code class="sig-prename descclassname">tea.process.</code><code class="sig-name descname">execute_and_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/process/wrappers.html#execute_and_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.process.execute_and_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a command with arguments and wait for output.</p>
+<p>If execution was successful function will return True,
+if not, it will log the output using standard logging and return False.</p>
 </dd></dl>
 
 </div>
@@ -490,7 +549,7 @@ process wrote, it will return an empty string.</dd>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="shell.html" class="btn btn-neutral float-right" title="tea.shell Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="serde.html" class="btn btn-neutral float-right" title="tea.serde Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="msg.html" class="btn btn-neutral float-left" title="tea.msg Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -502,11 +561,19 @@ process wrote, it will return an empty string.</dd>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -517,7 +584,6 @@ process wrote, it will return an empty string.</dd>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

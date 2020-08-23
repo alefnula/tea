@@ -1,42 +1,43 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tea.shell Module &mdash; tea 0.0.0 documentation</title>
+  <title>tea.shell Module &mdash; tea 0.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="tea.system Module" href="system.html" />
-    <link rel="prev" title="tea.process Module" href="process.html" /> 
+    <link rel="next" title="tea.timestamp Module" href="timestamp.html" />
+    <link rel="prev" title="tea.serde Module" href="serde.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tea
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> tea
           
 
           
@@ -58,10 +59,6 @@
 
           
             
-            
-              <div class="version">
-                0.0.0
-              </div>
             
           
 
@@ -77,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -85,17 +83,17 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">tea api documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="console.html"><code class="docutils literal notranslate"><span class="pre">tea.console</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">tea.system</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tea api documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serde.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.serde</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timestamp.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.timestamp</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -103,6 +101,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -141,17 +140,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">tea api documentation</a> &raquo;</li>
+          <li><a href="index.html">Tea api documentation</a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/shell.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/shell.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,87 +165,72 @@
             
   <div class="section" id="module-tea.shell">
 <span id="tea-shell-module"></span><h1><a class="reference internal" href="#module-tea.shell" title="tea.shell"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.shell</span></code></a> Module<a class="headerlink" href="#module-tea.shell" title="Permalink to this headline">¶</a></h1>
-<p>Module mimics some of the behaviors of the builtin <a class="reference external" href="https://docs.python.org/3/library/shutil.html#module-shutil" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">shutil</span></code></a>.</p>
+<p>Module mimics some of the behaviors of the builtin <code class="xref py py-mod docutils literal notranslate"><span class="pre">shutil</span></code>.</p>
 <p>It adds logging to all operations and abstracting some other useful shell
 commands (functions).</p>
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.split">
-<code class="descclassname">tea.shell.</code><code class="descname">split</code><span class="sig-paren">(</span><em>s</em>, <em>posix=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.split" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">split</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">posix</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split the string s using shell-like syntax.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – String to split</li>
-<li><strong>posix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Use posix split</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>str</em>) – String to split</p></li>
+<li><p><strong>posix</strong> (<em>bool</em>) – Use posix split</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of string parts</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of str</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of string parts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.search">
-<code class="descclassname">tea.shell.</code><code class="descname">search</code><span class="sig-paren">(</span><em>path</em>, <em>matcher='*'</em>, <em>dirs=False</em>, <em>files=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">matcher</span><span class="o">=</span><span class="default_value">'*'</span></em>, <em class="sig-param"><span class="n">dirs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursive search function.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to search recursively</li>
-<li><strong>matcher</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>callable</em>) – String pattern to search for or function
-that returns True/False for a file argument</li>
-<li><strong>dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if True returns directories that match the pattern</li>
-<li><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if True returns files that match the patter</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to search recursively</p></li>
+<li><p><strong>matcher</strong> (<em>str</em><em> or </em><em>callable</em>) – String pattern to search for or function
+that returns True/False for a file argument</p></li>
+<li><p><strong>dirs</strong> (<em>bool</em>) – if True returns directories that match the pattern</p></li>
+<li><p><strong>files</strong> (<em>bool</em>) – if True returns files that match the patter</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>str</em> – Found files and directories</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>str</em> – Found files and directories</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.chdir">
-<code class="descclassname">tea.shell.</code><code class="descname">chdir</code><span class="sig-paren">(</span><em>directory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#chdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.chdir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">chdir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#chdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.chdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the current working directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Directory to go to.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory</strong> (<em>str</em>) – Directory to go to.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.goto">
-<code class="descclassname">tea.shell.</code><code class="descname">goto</code><span class="sig-paren">(</span><em>directory</em>, <em>create=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#goto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.goto" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">goto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">create</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#goto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.goto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Context object for changing directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Directory to go to.</li>
-<li><strong>create</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Create directory if it doesn’t exists.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – Directory to go to.</p></li>
+<li><p><strong>create</strong> (<em>bool</em>) – Create directory if it doesn’t exists.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">goto</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="k">as</span> <span class="n">ok</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
@@ -257,218 +241,188 @@ that returns True/False for a file argument</li>
 </div>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.mkdir">
-<code class="descclassname">tea.shell.</code><code class="descname">mkdir</code><span class="sig-paren">(</span><em>path</em>, <em>mode=493</em>, <em>delete=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#mkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.mkdir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">mkdir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">493</span></em>, <em class="sig-param"><span class="n">delete</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#mkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.mkdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a directory.</p>
 <p>Create a leaf directory and all intermediate ones.
 Works like <code class="docutils literal notranslate"><span class="pre">mkdir</span></code>, except that any intermediate path segment (not just
 the rightmost) will be created if it does not exist. This is recursive.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Directory to create</li>
-<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Directory mode</li>
-<li><strong>delete</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Delete directory/file if exists</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Directory to create</p></li>
+<li><p><strong>mode</strong> (<em>int</em>) – Directory mode</p></li>
+<li><p><strong>delete</strong> (<em>bool</em>) – Delete directory/file if exists</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if succeeded else False</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if succeeded else False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.copy">
-<code class="descclassname">tea.shell.</code><code class="descname">copy</code><span class="sig-paren">(</span><em>source</em>, <em>destination</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.copy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">destination</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy file or directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Source file or directory</li>
-<li><strong>destination</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Destination file or directory (where to copy).</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>str</em>) – Source file or directory</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Destination file or directory (where to copy).</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the operation is successful, False otherwise.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the operation is successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.gcopy">
-<code class="descclassname">tea.shell.</code><code class="descname">gcopy</code><span class="sig-paren">(</span><em>pattern</em>, <em>destination</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#gcopy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.gcopy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">gcopy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">destination</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#gcopy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.gcopy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy all file found by glob.glob(pattern) to destination directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Glob pattern</li>
-<li><strong>destination</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the destination directory.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>str</em>) – Glob pattern</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Path to the destination directory.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the operation is successful, False otherwise.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the operation is successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.move">
-<code class="descclassname">tea.shell.</code><code class="descname">move</code><span class="sig-paren">(</span><em>source</em>, <em>destination</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.move" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">move</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">destination</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.move" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move a file or directory (recursively) to another location.</p>
 <p>If the destination is on our current file system, then simply use
 rename. Otherwise, copy source to the destination and then remove
 source.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Source file or directory (file or directory to move).</li>
-<li><strong>destination</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Destination file or directory (where to move).</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>str</em>) – Source file or directory (file or directory to move).</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Destination file or directory (where to move).</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the operation is successful, False otherwise.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the operation is successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.gmove">
-<code class="descclassname">tea.shell.</code><code class="descname">gmove</code><span class="sig-paren">(</span><em>pattern</em>, <em>destination</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#gmove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.gmove" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">gmove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">destination</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#gmove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.gmove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move all file found by glob.glob(pattern) to destination directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Glob pattern</li>
-<li><strong>destination</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the destination directory.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>str</em>) – Glob pattern</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Path to the destination directory.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the operation is successful, False otherwise.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the operation is successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.remove">
-<code class="descclassname">tea.shell.</code><code class="descname">remove</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.remove" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a file or directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the file or directory that needs to be deleted.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the operation is successful, False otherwise.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the file or directory that needs to be deleted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the operation is successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.gremove">
-<code class="descclassname">tea.shell.</code><code class="descname">gremove</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#gremove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.gremove" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">gremove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#gremove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.gremove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all file found by glob.glob(pattern).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Pattern of files to remove</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the operation is successful, False otherwise.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pattern</strong> (<em>str</em>) – Pattern of files to remove</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the operation is successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.read">
-<code class="descclassname">tea.shell.</code><code class="descname">read</code><span class="sig-paren">(</span><em>path</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.read" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf-8'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the content of the file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the file</li>
-<li><strong>encoding</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – File encoding. Default: utf-8</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the file</p></li>
+<li><p><strong>encoding</strong> (<em>str</em>) – File encoding. Default: utf-8</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">File content or empty string if there was an error</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>File content or empty string if there was an error</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.shell.touch">
-<code class="descclassname">tea.shell.</code><code class="descname">touch</code><span class="sig-paren">(</span><em>path</em>, <em>content=''</em>, <em>encoding='utf-8'</em>, <em>overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#touch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.touch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.shell.</code><code class="sig-name descname">touch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">content</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf-8'</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/shell.html#touch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.shell.touch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a file at the given path if it does not already exists.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the file.</li>
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Optional content that will be written in the file.</li>
-<li><strong>encoding</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Encoding in which to write the content.
-Default: <code class="docutils literal notranslate"><span class="pre">utf-8</span></code></li>
-<li><strong>overwrite</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Overwrite the file if exists.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the file.</p></li>
+<li><p><strong>content</strong> (<em>str</em>) – Optional content that will be written in the file.</p></li>
+<li><p><strong>encoding</strong> (<em>str</em>) – Encoding in which to write the content.
+Default: <code class="docutils literal notranslate"><span class="pre">utf-8</span></code></p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Overwrite the file if exists.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the operation is successful, False otherwise.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the operation is successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -481,10 +435,10 @@ Default: <code class="docutils literal notranslate"><span class="pre">utf-8</spa
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="system.html" class="btn btn-neutral float-right" title="tea.system Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="timestamp.html" class="btn btn-neutral float-right" title="tea.timestamp Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="process.html" class="btn btn-neutral float-left" title="tea.process Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="serde.html" class="btn btn-neutral float-left" title="tea.serde Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -493,11 +447,19 @@ Default: <code class="docutils literal notranslate"><span class="pre">utf-8</spa
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -508,7 +470,6 @@ Default: <code class="docutils literal notranslate"><span class="pre">utf-8</spa
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

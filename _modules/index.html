@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; tea 0.0.0 documentation</title>
+  <title>Overview: module code &mdash; tea 0.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tea
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> tea
           
 
           
@@ -56,10 +57,6 @@
 
           
             
-            
-              <div class="version">
-                0.0.0
-              </div>
             
           
 
@@ -75,6 +72,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -83,12 +81,13 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">tea api documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Tea api documentation</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -127,7 +126,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Overview: module code</li>
     
@@ -145,24 +144,21 @@
            <div itemprop="articleBody">
             
   <h1>All modules for which code is available</h1>
-<ul><li><a href="getpass.html">getpass</a></li>
-<li><a href="tea/console/color.html">tea.console.color</a></li>
-<li><a href="tea/console/format.html">tea.console.format</a></li>
-<li><a href="tea/console/utils.html">tea.console.utils</a></li>
-<li><a href="tea/ctx.html">tea.ctx</a></li>
+<ul><li><a href="tea/ctx.html">tea.ctx</a></li>
 <li><a href="tea/decorators.html">tea.decorators</a></li>
 <li><a href="tea/dsa/config.html">tea.dsa.config</a></li>
-<li><a href="tea/logger/log.html">tea.logger.log</a></li>
+<li><a href="tea/dsa/plugin.html">tea.dsa.plugin</a></li>
+<li><a href="tea/dsa/singleton.html">tea.dsa.singleton</a></li>
+<li><a href="tea/logger.html">tea.logger</a></li>
 <li><a href="tea/msg/mail.html">tea.msg.mail</a></li>
-<li><a href="tea/process/base.html">tea.process.base</a></li>
-<li><a href="tea/process/posix_process.html">tea.process.posix_process</a></li>
-<li><a href="tea/process/wrapper.html">tea.process.wrapper</a></li>
+<li><a href="tea/process/process.html">tea.process.process</a></li>
+<li><a href="tea/process/wrappers.html">tea.process.wrappers</a></li>
+<li><a href="tea/serde.html">tea.serde</a></li>
 <li><a href="tea/shell.html">tea.shell</a></li>
+<li><a href="tea/timestamp.html">tea.timestamp</a></li>
 <li><a href="tea/utils.html">tea.utils</a></li>
-<ul><li><a href="tea/utils/compress.html">tea.utils.compress</a></li>
-<li><a href="tea/utils/crypto.html">tea.utils.crypto</a></li>
-<li><a href="tea/utils/daemon.html">tea.utils.daemon</a></li>
-<li><a href="tea/utils/encoding.html">tea.utils.encoding</a></li>
+<ul><li><a href="tea/utils/encoding.html">tea.utils.encoding</a></li>
+<li><a href="tea/utils/html.html">tea.utils.html</a></li>
 </ul></ul>
 
            </div>
@@ -175,11 +171,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -190,7 +194,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tea.dsa.singleton &mdash; tea 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> tea
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">Tea api documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tea</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>tea.dsa.singleton</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tea.dsa.singleton</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="SingletonMetaclass"><a class="viewcode-back" href="../../../api/dsa.html#tea.dsa.singleton.SingletonMetaclass">[docs]</a><span></span><span class="k">class</span> <span class="nc">SingletonMetaclass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Singleton Metaclass.</span>
+
+<span class="sd">    This metaclass is used for creating singletons.</span>
+<span class="sd">    It changes the class __new__ method to maintain only one instance of the</span>
+<span class="sd">    class, and tweaks the __init__ method to be executed only once (when the</span>
+<span class="sd">    first instance of the class is created.</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        &gt;&gt;&gt; class MySingleton(object, metaclass=SingletonMetaclass):</span>
+<span class="sd">        ...     &#39;&#39;&#39;Real singleton class.</span>
+<span class="sd">        ...</span>
+<span class="sd">        ...     You have to set the metaclass to SingletonMetaclass,</span>
+<span class="sd">        ...     and define the __init__ function. Everything else will</span>
+<span class="sd">        ...     be done by metaclass.</span>
+<span class="sd">        ...     &#39;&#39;&#39;</span>
+<span class="sd">        ...     def __init__(self, data):</span>
+<span class="sd">        ...         print(&quot;Initializing&quot;)</span>
+<span class="sd">        ...         self.data = data</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; # Only this actually happen</span>
+<span class="sd">        &gt;&gt;&gt; first = MySingleton(&quot;First initialization&quot;)</span>
+<span class="sd">        Initializing</span>
+<span class="sd">        &gt;&gt;&gt; second = MySingleton(&quot;Second initialization&quot;) # This won&#39;t happen</span>
+<span class="sd">        &gt;&gt;&gt; first.data</span>
+<span class="sd">        &#39;First initialization&#39;</span>
+<span class="sd">        &gt;&gt;&gt; second.data</span>
+<span class="sd">        &#39;First initialization&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SingletonMetaclass.__init__"><a class="viewcode-back" href="../../../api/dsa.html#tea.dsa.singleton.SingletonMetaclass.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SingletonMetaclass</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SingletonMetaclass</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span></div>
+
+
+<div class="viewcode-block" id="Singleton"><a class="viewcode-back" href="../../../api/dsa.html#tea.dsa.singleton.Singleton">[docs]</a><span class="k">class</span> <span class="nc">Singleton</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">SingletonMetaclass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Singleton class.</span>
+
+<span class="sd">    Inherit from this class if you want to have a singleton class.</span>
+
+<span class="sd">    Never use SingletonMetaclass!</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        &gt;&gt;&gt; class EmptySingleton(Singleton):</span>
+<span class="sd">        ...     &#39;&#39;&#39;Singleton without __init__ method&#39;&#39;&#39;</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; first = EmptySingleton()</span>
+<span class="sd">        &gt;&gt;&gt; second = EmptySingleton()</span>
+<span class="sd">        &gt;&gt;&gt; assert id(first) == id(second)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; class InitSingleton(Singleton):</span>
+<span class="sd">        ...     &#39;&#39;&#39;Singleton with __init__ method&#39;&#39;&#39;</span>
+<span class="sd">        ...     def __init__(self, data):</span>
+<span class="sd">        ...         print(&quot;Initializing&quot;)</span>
+<span class="sd">        ...         self.data = data</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; # Only this actually happen</span>
+<span class="sd">        &gt;&gt;&gt; first = InitSingleton(&quot;First initialization&quot;)</span>
+<span class="sd">        Initializing</span>
+<span class="sd">        &gt;&gt;&gt; second = InitSingleton(&quot;Second initialization&quot;) # This won&#39;t happen</span>
+<span class="sd">        &gt;&gt;&gt; first.data</span>
+<span class="sd">        &#39;First initialization&#39;</span>
+<span class="sd">        &gt;&gt;&gt; assert first.data == second.data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

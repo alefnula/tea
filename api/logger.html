@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tea.logger Module &mdash; tea 0.0.0 documentation</title>
+  <title>tea.logger Module &mdash; tea 0.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="tea.msg Module" href="msg.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tea
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> tea
           
 
           
@@ -58,10 +59,6 @@
 
           
             
-            
-              <div class="version">
-                0.0.0
-              </div>
             
           
 
@@ -77,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -85,20 +83,17 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">tea api documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="console.html"><code class="docutils literal notranslate"><span class="pre">tea.console</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">tea.system</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tea api documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serde.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.serde</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timestamp.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.timestamp</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -106,6 +101,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -144,17 +140,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">tea api documentation</a> &raquo;</li>
+          <li><a href="index.html">Tea api documentation</a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/logger.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/logger.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,17 +166,16 @@
   <div class="section" id="module-tea.logger">
 <span id="tea-logger-module"></span><h1><a class="reference internal" href="#module-tea.logger" title="tea.logger"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.logger</span></code></a> Module<a class="headerlink" href="#module-tea.logger" title="Permalink to this headline">¶</a></h1>
 <p>Logging module.</p>
-<p>This logging module is designed as a wrapper around the python
-<span class="xref std std-ref">logging</span> module.</p>
+<p>This logging module is designed as a wrapper around the python <cite>logging</cite>
+module.</p>
 <p>When the module is loaded it configure the logging object with some
 default parameters (log to stderr with DEBUG level).
 After that, user can call the L{configure_logger} function and
 configure logging to file and stderr.</p>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<p># Usage</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tea.logger</span> <span class="k">import</span> <span class="n">configure_logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tea.logger</span> <span class="kn">import</span> <span class="n">configure_logging</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">configure_logging</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mktemp</span><span class="p">())</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Debug level log entry&#39;</span><span class="p">)</span>
@@ -201,71 +196,33 @@ configure logging to file and stderr.</p>
 <span class="gr">Exception</span>: <span class="n">Test exception</span>
 </pre></div>
 </div>
-<dl class="function">
+<dl class="py function">
 <dt id="tea.logger.configure_logging">
-<code class="descclassname">tea.logger.</code><code class="descname">configure_logging</code><span class="sig-paren">(</span><em>filename=None</em>, <em>filemode='a'</em>, <em>datefmt='%Y.%m.%d %H:%M:%S'</em>, <em>fmt='%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'</em>, <em>stdout_fmt='%(levelname)-11s - %(message)s [%(name)s:%(lineno)d]'</em>, <em>level=10</em>, <em>stdout_level=30</em>, <em>initial_file_message=''</em>, <em>max_size=1048576</em>, <em>rotations_number=5</em>, <em>remove_handlers=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/logger/log.html#configure_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.logger.configure_logging" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.logger.</code><code class="sig-name descname">configure_logging</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filemode</span><span class="o">=</span><span class="default_value">'a'</span></em>, <em class="sig-param"><span class="n">ts_fmt</span><span class="o">=</span><span class="default_value">'%Y.%m.%d %H:%M:%S'</span></em>, <em class="sig-param"><span class="n">fmt</span><span class="o">=</span><span class="default_value">'%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'</span></em>, <em class="sig-param"><span class="n">stdout_fmt</span><span class="o">=</span><span class="default_value">'%(levelname)-11s - %(message)s [%(name)s:%(lineno)d]'</span></em>, <em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">stdout_level</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">initial_file_message</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">max_size</span><span class="o">=</span><span class="default_value">1048576</span></em>, <em class="sig-param"><span class="n">rotations_number</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">remove_handlers</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/logger.html#configure_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.logger.configure_logging" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure logging module.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Specifies a filename to log to.</li>
-<li><strong>filemode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Specifies the mode to open the log file.
-Values: <code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'w'</span></code>. <em>Default:</em> <code class="docutils literal notranslate"><span class="pre">a</span></code>.</li>
-<li><strong>datefmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Use the specified date/time format.</li>
-<li><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Format string for the file handler.</li>
-<li><strong>stdout_fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Format string for the stdout handler.</li>
-<li><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Log level for the file handler. Log levels are the same
-as the log levels from the standard <a class="reference external" href="https://docs.python.org/3/library/logging.html#module-logging" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">logging</span></code></a> module.
-<em>Default:</em> <code class="docutils literal notranslate"><span class="pre">logging.DEBUG</span></code></li>
-<li><strong>stdout_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Log level for the stdout handler. Log levels are
-the same as the log levels from the standard <a class="reference external" href="https://docs.python.org/3/library/logging.html#module-logging" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">logging</span></code></a> module.
-<em>Default:</em> <code class="docutils literal notranslate"><span class="pre">logging.WARNING</span></code></li>
-<li><strong>initial_file_message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – First log entry written in file.</li>
-<li><strong>max_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Maximal size of the logfile. If the size of the file
-exceed the maximal size it will be rotated.</li>
-<li><strong>rotations_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of rotations to save.</li>
-<li><strong>remove_handlers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Remove all existing handlers.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Specifies a filename to log to.</p></li>
+<li><p><strong>filemode</strong> (<em>str</em>) – Specifies the mode to open the log file.
+Values: <code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'w'</span></code>. <em>Default:</em> <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p></li>
+<li><p><strong>ts_fmt</strong> (<em>str</em>) – Use the specified timestamp format.</p></li>
+<li><p><strong>fmt</strong> (<em>str</em>) – Format string for the file handler.</p></li>
+<li><p><strong>stdout_fmt</strong> (<em>str</em>) – Format string for the stdout handler.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – Log level for the file handler. Log levels are the same
+as the log levels from the standard <code class="xref py py-mod docutils literal notranslate"><span class="pre">logging</span></code> module.
+<em>Default:</em> <code class="docutils literal notranslate"><span class="pre">logging.DEBUG</span></code></p></li>
+<li><p><strong>stdout_level</strong> (<em>int</em>) – Log level for the stdout handler. Log levels are
+the same as the log levels from the standard <code class="xref py py-mod docutils literal notranslate"><span class="pre">logging</span></code> module.
+<em>Default:</em> <code class="docutils literal notranslate"><span class="pre">logging.WARNING</span></code></p></li>
+<li><p><strong>initial_file_message</strong> (<em>str</em>) – First log entry written in file.</p></li>
+<li><p><strong>max_size</strong> (<em>int</em>) – Maximal size of the logfile. If the size of the file
+exceed the maximal size it will be rotated.</p></li>
+<li><p><strong>rotations_number</strong> (<em>int</em>) – Number of rotations to save.</p></li>
+<li><p><strong>remove_handlers</strong> (<em>bool</em>) – Remove all existing handlers.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<span class="target" id="module-tea.logger.log"></span><dl class="function">
-<dt id="tea.logger.log.configure_logging">
-<code class="descclassname">tea.logger.log.</code><code class="descname">configure_logging</code><span class="sig-paren">(</span><em>filename=None</em>, <em>filemode='a'</em>, <em>datefmt='%Y.%m.%d %H:%M:%S'</em>, <em>fmt='%(asctime)s.%(msecs)03d   %(levelname)11s: %(message)s [%(name)s:%(lineno)d]'</em>, <em>stdout_fmt='%(levelname)-11s - %(message)s [%(name)s:%(lineno)d]'</em>, <em>level=10</em>, <em>stdout_level=30</em>, <em>initial_file_message=''</em>, <em>max_size=1048576</em>, <em>rotations_number=5</em>, <em>remove_handlers=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/logger/log.html#configure_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.logger.log.configure_logging" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure logging module.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Specifies a filename to log to.</li>
-<li><strong>filemode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Specifies the mode to open the log file.
-Values: <code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'w'</span></code>. <em>Default:</em> <code class="docutils literal notranslate"><span class="pre">a</span></code>.</li>
-<li><strong>datefmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Use the specified date/time format.</li>
-<li><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Format string for the file handler.</li>
-<li><strong>stdout_fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Format string for the stdout handler.</li>
-<li><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Log level for the file handler. Log levels are the same
-as the log levels from the standard <a class="reference external" href="https://docs.python.org/3/library/logging.html#module-logging" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">logging</span></code></a> module.
-<em>Default:</em> <code class="docutils literal notranslate"><span class="pre">logging.DEBUG</span></code></li>
-<li><strong>stdout_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Log level for the stdout handler. Log levels are
-the same as the log levels from the standard <a class="reference external" href="https://docs.python.org/3/library/logging.html#module-logging" title="(in Python v3.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">logging</span></code></a> module.
-<em>Default:</em> <code class="docutils literal notranslate"><span class="pre">logging.WARNING</span></code></li>
-<li><strong>initial_file_message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – First log entry written in file.</li>
-<li><strong>max_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Maximal size of the logfile. If the size of the file
-exceed the maximal size it will be rotated.</li>
-<li><strong>rotations_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of rotations to save.</li>
-<li><strong>remove_handlers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Remove all existing handlers.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -290,11 +247,19 @@ exceed the maximal size it will be rotated.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -305,7 +270,6 @@ exceed the maximal size it will be rotated.</li>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

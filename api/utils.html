@@ -1,41 +1,42 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tea.utils Module &mdash; tea 0.0.0 documentation</title>
+  <title>tea.utils Module &mdash; tea 0.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="tea.system Module" href="system.html" /> 
+    <link rel="prev" title="tea.timestamp Module" href="timestamp.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -49,7 +50,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tea
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> tea
           
 
           
@@ -57,10 +58,6 @@
 
           
             
-            
-              <div class="version">
-                0.0.0
-              </div>
             
           
 
@@ -76,6 +73,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -84,17 +82,17 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">tea api documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="console.html"><code class="docutils literal notranslate"><span class="pre">tea.console</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">tea.system</span></code> Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tea api documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ctx.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.ctx</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.decorators</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dsa.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.dsa</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.logger</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.msg</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="process.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.process</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serde.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.serde</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.shell</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timestamp.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.timestamp</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -102,6 +100,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -140,17 +139,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">tea api documentation</a> &raquo;</li>
+          <li><a href="index.html">Tea api documentation</a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.utils</span></code> Module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/utils.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/utils.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,31 +164,27 @@
             
   <div class="section" id="module-tea.utils">
 <span id="tea-utils-module"></span><h1><a class="reference internal" href="#module-tea.utils" title="tea.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tea.utils</span></code></a> Module<a class="headerlink" href="#module-tea.utils" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="tea.utils.get_object">
-<code class="descclassname">tea.utils.</code><code class="descname">get_object</code><span class="sig-paren">(</span><em>path=''</em>, <em>obj=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#get_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.get_object" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.utils.</code><code class="sig-name descname">get_object</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">obj</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#get_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.get_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an object from a dot path.</p>
 <p>Path can either be a full path, in which case the <cite>get_object</cite> function
 will try to import the modules in the path and follow it to the final
 object. Or it can be a path relative to the object passed in as the second
 argument.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Full or relative dot path to the desired object</li>
-<li><strong>obj</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><em>object</em></a>) – Starting object. Dot path is calculated relatively to
-this object.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Full or relative dot path to the desired object</p></li>
+<li><p><strong>obj</strong> (<em>object</em>) – Starting object. Dot path is calculated relatively to
+this object.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Object at the end of the path, or list of non hidden objects if we use
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object at the end of the path, or list of non hidden objects if we use
 the star query.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>Example for full paths:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_object</span><span class="p">(</span><span class="s1">&#39;os.path.join&#39;</span><span class="p">)</span>
 <span class="go">&lt;function join at 0x1002d9ed8&gt;</span>
@@ -217,9 +212,9 @@ of the path:</p>
 </div>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="tea.utils.Loader">
-<em class="property">class </em><code class="descclassname">tea.utils.</code><code class="descname">Loader</code><a class="reference internal" href="../_modules/tea/utils.html#Loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.Loader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tea.utils.</code><code class="sig-name descname">Loader</code><a class="reference internal" href="../_modules/tea/utils.html#Loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.Loader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Module loader class loads recursively a module and all it’s submodules.</p>
 <p>Loaded modules will be stored in the <code class="docutils literal notranslate"><span class="pre">modules</span></code> attribute of the loader as
 a dictionary of {module_path: module} key, value pairs.</p>
@@ -235,209 +230,78 @@ dictionary of {module_path: exception} key, value pairs.</p>
 <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">baz</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
+<dt id="tea.utils.Loader.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#Loader.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.Loader.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="tea.utils.Loader.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>*modules</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#Loader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.Loader.load" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">modules</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#Loader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.Loader.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load one or more modules.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>modules</strong> – Either a string full path to a module or an actual module
-object.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.utils.load_subclasses">
-<code class="descclassname">tea.utils.</code><code class="descname">load_subclasses</code><span class="sig-paren">(</span><em>klass</em>, <em>modules=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#load_subclasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.load_subclasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load recursively all all subclasses from a module.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>klass</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>list of str</em>) – Class whose subclasses we want to load.</li>
-<li><strong>modules</strong> – List of additional modules or module names that should be
-recursively imported in order to find all the subclasses of the
-desired class. Default: None</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>FIXME: This function is kept only for backward compatibility reasons, it</dt>
-<dd>should not be used. Deprecation warning should be raised and it should
-be replaces by the <code class="docutils literal notranslate"><span class="pre">Loader</span></code> class.</dd>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modules</strong> – Either a string full path to a module or an actual module
+object.</p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="py function">
+<dt id="tea.utils.load_subclasses">
+<code class="sig-prename descclassname">tea.utils.</code><code class="sig-name descname">load_subclasses</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">klass</span></em>, <em class="sig-param"><span class="n">modules</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#load_subclasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.load_subclasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load recursively all all subclasses from a module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>klass</strong> (<em>str</em><em> or </em><em>list of str</em>) – Class whose subclasses we want to load.</p></li>
+<li><p><strong>modules</strong> – List of additional modules or module names that should be
+recursively imported in order to find all the subclasses of the
+desired class. Default: None</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>FIXME: This function is kept only for backward compatibility reasons, it</dt><dd><p>should not be used. Deprecation warning should be raised and it should
+be replaces by the <code class="docutils literal notranslate"><span class="pre">Loader</span></code> class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="tea.utils.get_exception">
-<code class="descclassname">tea.utils.</code><code class="descname">get_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#get_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.get_exception" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.utils.</code><code class="sig-name descname">get_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#get_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.get_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return full formatted traceback as a string.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.utils.cmp">
-<code class="descclassname">tea.utils.</code><code class="descname">cmp</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#cmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.cmp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.utils.</code><code class="sig-name descname">cmp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils.html#cmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.cmp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare function from python2.</p>
 </dd></dl>
 
-<span class="target" id="module-tea.utils.compress"></span><dl class="function">
-<dt id="tea.utils.compress.unzip">
-<code class="descclassname">tea.utils.compress.</code><code class="descname">unzip</code><span class="sig-paren">(</span><em>archive</em>, <em>destination</em>, <em>filenames=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/compress.html#unzip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.compress.unzip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unzip a zip archive into destination directory.</p>
-<p>It unzips either the whole archive or specific file(s) from the archive.</p>
-<dl class="docutils">
-<dt>Usage:</dt>
-<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Archive can be an instance of a ZipFile class</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">archive</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="s1">&#39;test.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Or just a filename</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">archive</span> <span class="o">=</span> <span class="s1">&#39;test.zip&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extracts all files</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unzip</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract only one file</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unzip</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="s1">&#39;my_file.txt&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract a list of files</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unzip</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;my_file1.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;my_file2.txt&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unzip_file</span><span class="p">(</span><span class="s1">&#39;test.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;my_file.txt&#39;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>archive</strong> (<a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.ZipFile" title="(in Python v3.7)"><em>zipfile.ZipFile</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Zipfile object to extract from or
-path to the zip archive.</li>
-<li><strong>destination</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the output directory.</li>
-<li><strong>filenames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>list of str</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – Path(s) to the filename(s)
-inside the zip archive that you want to extract.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.utils.compress.mkzip">
-<code class="descclassname">tea.utils.compress.</code><code class="descname">mkzip</code><span class="sig-paren">(</span><em>archive</em>, <em>items</em>, <em>mode='w'</em>, <em>save_full_paths=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/compress.html#mkzip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.compress.mkzip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recursively zip a directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>archive</strong> (<a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.ZipFile" title="(in Python v3.7)"><em>zipfile.ZipFile</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – ZipFile object add to or path to the
-output zip archive.</li>
-<li><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>list of str</em>) – Single item or list of items (files and
-directories) to be added to zipfile.</li>
-<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – w for create new and write a for append to.</li>
-<li><strong>save_full_paths</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Preserve full paths.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.utils.compress.seven_zip">
-<code class="descclassname">tea.utils.compress.</code><code class="descname">seven_zip</code><span class="sig-paren">(</span><em>archive</em>, <em>items</em>, <em>self_extracting=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/compress.html#seven_zip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.compress.seven_zip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a 7z archive.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.utils.compress.seven_unzip">
-<code class="descclassname">tea.utils.compress.</code><code class="descname">seven_unzip</code><span class="sig-paren">(</span><em>archive</em>, <em>output</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/compress.html#seven_unzip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.compress.seven_unzip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract a 7z archive.</p>
-</dd></dl>
-
-<span class="target" id="module-tea.utils.crypto"></span><dl class="exception">
-<dt id="tea.utils.crypto.CryptError">
-<em class="property">exception </em><code class="descclassname">tea.utils.crypto.</code><code class="descname">CryptError</code><a class="reference internal" href="../_modules/tea/utils/crypto.html#CryptError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.crypto.CryptError" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="tea.utils.crypto.encrypt">
-<code class="descclassname">tea.utils.crypto.</code><code class="descname">encrypt</code><span class="sig-paren">(</span><em>data</em>, <em>digest=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/crypto.html#encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.crypto.encrypt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform encryption of provided data.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tea.utils.crypto.decrypt">
-<code class="descclassname">tea.utils.crypto.</code><code class="descname">decrypt</code><span class="sig-paren">(</span><em>data</em>, <em>digest=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/crypto.html#decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.crypto.decrypt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decrypt provided data.</p>
-</dd></dl>
-
-<span class="target" id="module-tea.utils.daemon"></span><dl class="class">
-<dt id="tea.utils.daemon.Daemon">
-<em class="property">class </em><code class="descclassname">tea.utils.daemon.</code><code class="descname">Daemon</code><span class="sig-paren">(</span><em>pidfile</em>, <em>stdin='/dev/null'</em>, <em>stdout='/dev/null'</em>, <em>stderr='/dev/null'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/daemon.html#Daemon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.daemon.Daemon" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generic daemon class.</p>
-<p>Usage: subclass the Daemon class and override the run() method</p>
-<dl class="method">
-<dt id="tea.utils.daemon.Daemon.daemonize">
-<code class="descname">daemonize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/daemon.html#Daemon.daemonize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.daemon.Daemon.daemonize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Do the UNIX double-fork magic.</p>
-<p>See Stevens’ “Advanced Programming in the UNIX Environment” for
-details (ISBN 0201563177)
-<a class="reference external" href="http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16">http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16</a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tea.utils.daemon.Daemon.start">
-<code class="descname">start</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/daemon.html#Daemon.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.daemon.Daemon.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start the daemon.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tea.utils.daemon.Daemon.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/daemon.html#Daemon.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.daemon.Daemon.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop the daemon.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tea.utils.daemon.Daemon.restart">
-<code class="descname">restart</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/daemon.html#Daemon.restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.daemon.Daemon.restart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Restart the daemon.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tea.utils.daemon.Daemon.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/daemon.html#Daemon.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.daemon.Daemon.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>You should override this method when you subclass Daemon.</p>
-<p>It will be called after the process has been daemonized by start()
-or restart().</p>
-</dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-tea.utils.encoding"></span><dl class="function">
+<span class="target" id="module-tea.utils.encoding"></span><dl class="py function">
 <dt id="tea.utils.encoding.smart_text">
-<code class="descclassname">tea.utils.encoding.</code><code class="descname">smart_text</code><span class="sig-paren">(</span><em>s</em>, <em>encoding='utf-8'</em>, <em>strings_only=False</em>, <em>errors='strict'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/encoding.html#smart_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.encoding.smart_text" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.utils.encoding.</code><code class="sig-name descname">smart_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf-8'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'strict'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/encoding.html#smart_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.encoding.smart_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a unicode object representing ‘s’.</p>
 <p>Treats bytes using the ‘encoding’ codec.</p>
-<p>If strings_only is True, don’t convert (some) non-string-like objects.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="tea.utils.encoding.smart_bytes">
-<code class="descclassname">tea.utils.encoding.</code><code class="descname">smart_bytes</code><span class="sig-paren">(</span><em>s</em>, <em>encoding='utf-8'</em>, <em>strings_only=False</em>, <em>errors='strict'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/encoding.html#smart_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.encoding.smart_bytes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tea.utils.encoding.</code><code class="sig-name descname">smart_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf-8'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'strict'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/encoding.html#smart_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.encoding.smart_bytes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a bytes version of ‘s’ encoded as specified in ‘encoding’.</p>
-<p>If strings_only is True, don’t convert (some) non-string-like objects.</p>
 </dd></dl>
 
-<span class="target" id="module-tea.utils.html"></span><span class="target" id="module-tea.utils.setup"></span></div>
+<span class="target" id="module-tea.utils.html"></span><dl class="py function">
+<dt id="tea.utils.html.strip_tags">
+<code class="sig-prename descclassname">tea.utils.html.</code><code class="sig-name descname">strip_tags</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">html</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tea/utils/html.html#strip_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tea.utils.html.strip_tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 
 
            </div>
@@ -448,7 +312,7 @@ or restart().</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="system.html" class="btn btn-neutral float-left" title="tea.system Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="timestamp.html" class="btn btn-neutral float-left" title="tea.timestamp Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -457,11 +321,19 @@ or restart().</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -472,7 +344,6 @@ or restart().</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

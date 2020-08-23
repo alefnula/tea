@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tea.decorators &mdash; tea 0.0.0 documentation</title>
+  <title>tea.decorators &mdash; tea 0.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> tea
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> tea
           
 
           
@@ -56,10 +57,6 @@
 
           
             
-            
-              <div class="version">
-                0.0.0
-              </div>
             
           
 
@@ -75,6 +72,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -83,12 +81,13 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">tea api documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Tea api documentation</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -127,7 +126,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -147,65 +146,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for tea.decorators</h1><div class="highlight"><pre>
-<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Viktor Kerkez &lt;alefnula@gmail.com&gt;&quot;</span>
-<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;06 October 2013&quot;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2013 Viktor Kerkez&quot;</span>
-
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;docstring&quot;</span><span class="p">,</span> <span class="s2">&quot;combomethod&quot;</span><span class="p">]</span>
+<span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;combomethod&quot;</span><span class="p">,</span> <span class="s2">&quot;ComboMethodError&quot;</span><span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">functools</span>
 
 
-<div class="viewcode-block" id="docstring"><a class="viewcode-back" href="../../api/decorators.html#tea.decorators.docstring">[docs]</a><span class="k">def</span> <span class="nf">docstring</span><span class="p">(</span><span class="n">documentation</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Prepend or append a string to the current documentation of the function.</span>
-
-<span class="sd">    This decorator should be robust even if ``func.__doc__`` is None</span>
-<span class="sd">    (for example, if -OO was passed to the interpreter).</span>
-
-<span class="sd">    Usage::</span>
-
-<span class="sd">        @docstring(&#39;Appended this line&#39;)</span>
-<span class="sd">        def func():</span>
-<span class="sd">            &quot;This docstring will have a line below.&quot;</span>
-<span class="sd">            pass</span>
-
-<span class="sd">        &gt;&gt;&gt; print(func.__doc__)</span>
-<span class="sd">        This docstring will have a line below.</span>
-
-<span class="sd">        Appended this line</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        documentation (str): Documentation string that should be added,</span>
-<span class="sd">            appended or prepended to the current documentation string.</span>
-<span class="sd">        prepend (bool): Prepend the documentation string to the current</span>
-<span class="sd">            documentation if ``True`` else append. default=``False``</span>
-<span class="sd">        join (str): String used to separate docstrings. default=&#39;\n&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="n">doc</span> <span class="o">=</span> <span class="n">documentation</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-        <span class="n">new</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">doc</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">current</span><span class="p">]</span> <span class="k">if</span> <span class="n">prepend</span> <span class="k">else</span> <span class="p">[</span><span class="n">current</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">doc</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">lines</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># If it&#39;s a one liner keep it that way and strip whitespace</span>
-            <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Else strip whitespace from the beginning and add a newline</span>
-            <span class="c1"># at the end</span>
-            <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">func</span>
-
-    <span class="k">return</span> <span class="n">decorator</span></div>
-
-
-<span class="k">class</span> <span class="nc">ComboMethodError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="ComboMethodError"><a class="viewcode-back" href="../../api/decorators.html#tea.decorators.ComboMethodError">[docs]</a><span class="k">class</span> <span class="nc">ComboMethodError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Inappropriate initialization of the combo method descriptor.&quot;&quot;&quot;</span>
 
-    <span class="k">pass</span>
+    <span class="k">pass</span></div>
 
 
 <span class="k">class</span> <span class="nc">ComboMethod</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -218,7 +167,7 @@
 <span class="sd">    This class should never be used. Use the ``combomethod`` function instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">classmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">classmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">staticmethod</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">classmethod</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ComboMethodError</span><span class="p">(</span>
                 <span class="s2">&quot;Either static method or class method has to be provided&quot;</span>
@@ -231,7 +180,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">instancemethod</span> <span class="o">=</span> <span class="n">instancemethod</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">staticmethod</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">staticmethod</span>
@@ -309,11 +258,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013, Viktor Kerkez &lt;alefnula@gmail.com&gt;
+        
+        &copy; Copyright 2020, Viktor Kerkez &lt;alefnula@gmail.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -324,7 +281,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
