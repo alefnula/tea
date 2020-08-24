@@ -7,6 +7,7 @@
    ctx.md
    decorators.md
    dsa.md
+   errors.md
    logger.md
    msg.md
    process.md

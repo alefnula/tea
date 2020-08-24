@@ -1,7 +1,14 @@
 # CHANGELOG
 
+## v0.1.2 (August 24, 2020)
 
-## v0.1.1 (August XX, 2020)
+- Added TeaError as a base class for all submodule errors.
+
+
+---
+
+
+## v0.1.1 (August 23, 2020)
 
 - Make singleton initialization thread safe.
 

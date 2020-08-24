@@ -9,17 +9,16 @@ import threading
 import subprocess
 from typing import Optional, Dict, Union, List
 
+from tea.errors import TeaError
+
+
 logger = logging.getLogger(__name__)
 
 
-class ExecutableNotFound(Exception):
+class ExecutableNotFound(TeaError):
     def __init__(self, command):
         self.command = command
-
-    def __str__(self):
-        return f"ExecutableNotFound(command={self.command})"
-
-    __repr__ = __str__
+        super().__init__(message=f"Executable not found: {command}")
 
 
 def _create_env(env):
