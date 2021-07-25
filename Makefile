@@ -11,7 +11,7 @@ test:                    ## Run tests.
 	py.test --cov "$(PROJECT)"
 
 
-fmt:                  ## Format the code.
+fmt:                     ## Format the code.
 	@black --target-version=py37 --safe --line-length 79 "$(PROJECT)"
 
 
@@ -28,10 +28,10 @@ docs-commit:             ## Build and commit documentation to gh-pages branch.
 	@rm -fr docs/_build/html
 	@cd docs && make html && ghp-import _build/html
 
-build:               ## Build the source and wheel distribution packages.
+build:                   ## Build the source and wheel distribution packages.
 	@python setup.py sdist bdist_wheel
 
 
-release: build       ## Build and upload the package to PyPI.
+release: build           ## Build and upload the package to PyPI.
 	@twine upload --skip-existing  dist/*
 	@rm -fr build dist "$(PROJECT).egg-info"
