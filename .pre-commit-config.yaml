@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/ambv/black
-  rev: 20.8b1
+  rev: 21.7b0
   hooks:
     - id: black
       name: Format Python Code
@@ -13,7 +13,7 @@ repos:
         - .
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.4.0
+  rev: v4.0.1
   hooks:
     - id: requirements-txt-fixer
       name: Requirements file fixer
@@ -23,7 +23,7 @@ repos:
         - requirements-dev.txt
 
 - repo: https://gitlab.com/pycqa/flake8
-  rev: 3.8.4
+  rev: 3.9.2
   hooks:
     - id: flake8
       name: Flake8 Check
@@ -33,7 +33,7 @@ repos:
         - tea
 
 - repo: https://github.com/pycqa/pydocstyle
-  rev: 5.1.1
+  rev: 6.1.1
   hooks:
     - id: pydocstyle
       name: Python Documentation Style Check
