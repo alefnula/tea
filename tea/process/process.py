@@ -4,9 +4,10 @@ import time
 import posix
 import signal
 import logging
-import tempfile
 import threading
 import subprocess
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import Optional, Dict, Union, List
 
 from tea.errors import TeaError
@@ -62,8 +63,8 @@ class Process:
         self,
         command: Union[str, List[str]],
         env: Optional[Dict[str, str]] = None,
-        stdout: Optional[str] = None,
-        stderr: Optional[str] = None,
+        stdout: Optional[Union[str, Path]] = None,
+        stderr: Optional[Union[str, Path]] = None,
         demux: bool = True,
         redirect_output: bool = True,
         working_dir: Optional[str] = None,
@@ -102,33 +103,80 @@ class Process:
         self._env = env
         self._process = None
         self._wait_thread = None
-        self._stdout = os.path.abspath(stdout) if stdout else None
-        self._stdout_reader = None
-        self._stdout_writer = None
-        self._stderr = os.path.abspath(stderr) if stderr else None
-        self._stderr_reader = None
-        self._stderr_writer = None
-        self._demux = demux
-        self._redirect_output = stdout or stderr or redirect_output
-        self._working_dir = working_dir
-        self._encoding = encoding
         self._pid = None
         self._immutable = False
+        self._working_dir = working_dir
+        # Demux, redirect and ecnoding
+        self._demux = demux
+        self._redirect_output = stdout or stderr or redirect_output
+        self._encoding = encoding
+        # stdin
+        self._stdin = None
+        # stdout
+        self._stdout_tmp = None
+        self._stdout = Path(stdout).absolute() if stdout else None
+        self._stdout_reader = None
+        self._stdout_writer = None
+        # stderr
+        self._stderr_tmp = None
+        self._stderr = Path(stderr).absolute() if stderr else None
+        self._stderr_reader = None
+        self._stderr_writer = None
+
+    def __open_files(self):
+        if self._redirect_output:
+            # stdin
+            self._stdin = subprocess.PIPE
+            # stdout
+            if self._stdout:
+                self._stdout_writer = io.open(self._stdout, "wb")
+                self._stdout_reader = io.open(self._stdout, "rb")
+            else:
+                self._stdout_tmp = NamedTemporaryFile(mode="wb")
+                self._stdout_writer = self._stdout_tmp.file
+                self._stdout_reader = io.open(self._stdout_tmp.name, "rb")
+            # stderr
+            if self._demux:
+                if self._stderr:
+                    self._stderr_writer = io.open(self._stderr, "wb")
+                    self._stderr_reader = io.open(self._stderr, "rb")
+                else:
+                    self._stderr_tmp = NamedTemporaryFile(mode="wb")
+                    self._stderr_writer = self._stderr_tmp.file
+                    self._stderr_reader = io.open(self._stderr_tmp.name, "rb")
+            else:
+                self._stderr_writer = subprocess.STDOUT
+        else:
+            self._stdout_writer = io.open(os.devnull, "wb")
+            self._stderr_writer = subprocess.STDOUT
+
+    def __is_open(self, f):
+        return f is not None and hasattr(f, "closed") and not f.closed
+
+    def __close_write_files(self):
+        # Close stdout
+        if self.__is_open(self._stdout_tmp):
+            self._stdout_tmp.close()
+        if self.__is_open(self._stderr_writer):
+            self._stdout_writer.close()
+        # Close stderr
+        if self.__is_open(self._stderr_tmp):
+            self._stderr_tmp.close()
+        if self._demux and self.__is_open(self._stderr_writer):
+            self._stderr_writer.close()
+
+    def __close_files(self):
+        # Close read files
+        if self.__is_open(self._stdout_reader):
+            self._stdout_reader.close()
+        if self._demux and self.__is_open(self._stderr_reader):
+            self._stderr_reader.close()
+        # Close write files
+        self.__close_write_files()
 
     def __process_wait(self):
         self._process.wait()
-        if self._stdout is not None:
-            if (
-                self._stdout_writer is not None
-                and not self._stdout_writer.closed
-            ):
-                self._stdout_writer.close()
-        if self._demux and self._stderr is not None:
-            if (
-                self._stderr_writer is not None
-                and not self._stderr_writer.closed
-            ):
-                self._stderr_writer.close()
+        self.__close_write_files()
 
     @classmethod
     def immutable(cls, pid, command):
@@ -158,58 +206,20 @@ class Process:
         if self._immutable:
             raise NotImplementedError
 
-        if self._redirect_output:
-            if self._stdout:
-                self._stdout_writer = io.open(self._stdout, "wb")
-                self._stdout_reader = io.open(self._stdout, "rb")
-            else:
-                self._stdout_writer = tempfile.NamedTemporaryFile()
-                self._stdout_reader = io.open(self._stdout_writer.name, "rb")
+        # Open all redirects
+        self.__open_files()
 
-            if self._demux:
-                if self._stderr:
-                    self._stderr_writer = io.open(self._stderr, "wb")
-                    self._stderr_reader = io.open(self._stderr, "rb")
-                else:
-                    self._stderr_writer = tempfile.NamedTemporaryFile()
-                    self._stderr_reader = io.open(
-                        self._stderr_writer.name, "rb"
-                    )
-            else:
-                self._stderr_writer = self._stdout_writer
-                self._stderr_reader = self._stdout_reader
-
-            try:
-                self._process = subprocess.Popen(
-                    self._commandline,
-                    stdin=subprocess.PIPE,
-                    stdout=(
-                        self._stdout_writer
-                        if self._stdout
-                        else self._stdout_writer.file
-                    ),
-                    stderr=(
-                        self._stderr_writer
-                        if self._stderr
-                        else self._stderr_writer.file
-                    ),
-                    env=_create_env(self._env),
-                    cwd=self._working_dir,
-                )
-            except OSError:
-                raise ExecutableNotFound(command=self.command)
-        else:
-            try:
-                self._process = subprocess.Popen(
-                    self._commandline,
-                    stdin=None,
-                    stdout=io.open(os.devnull, "wb"),
-                    stderr=subprocess.STDOUT,
-                    env=_create_env(self._env),
-                    cwd=self._working_dir,
-                )
-            except OSError:
-                raise ExecutableNotFound(command=self.command)
+        try:
+            self._process = subprocess.Popen(
+                self._commandline,
+                stdin=self._stdin,
+                stdout=self._stdout_writer,
+                stderr=self._stderr_writer,
+                env=_create_env(self._env),
+                cwd=self._working_dir,
+            )
+        except OSError:
+            raise ExecutableNotFound(command=self.command)
         self._wait_thread = threading.Thread(
             target=self.__process_wait, daemon=True
         )
@@ -348,18 +358,7 @@ class Process:
         return ""
 
     def __del__(self):
-        if self._stdout is not None:
-            if (
-                self._stdout_reader is not None
-                and not self._stdout_reader.closed
-            ):
-                self._stdout_reader.close()
-        if self._demux and self._stderr is not None:
-            if (
-                self._stderr_reader is not None
-                and not self._stderr_reader.closed
-            ):
-                self._stderr_reader.close()
+        self.__close_files()
 
     def __str__(self):
         return f"Process(pid={self.pid}, command={self.command})"

@@ -9,18 +9,17 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+
 import sys
 from pathlib import Path
 from datetime import datetime
-
-from recommonmark.transform import AutoStructify
 
 
 project_dir = str(Path(__file__).parents[1].absolute())
 sys.path.insert(0, project_dir)
 
 from tea.version import __version__
+
 
 # -- Project information -----------------------------------------------------
 
@@ -39,24 +38,19 @@ release = __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "myst_parser",
     "sphinx.ext.autodoc",
-    "sphinx.ext.todo",
-    "sphinx.ext.mathjax",
     "sphinx.ext.ifconfig",
-    "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
     "sphinx.ext.githubpages",
-    "recommonmark",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
 ]
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
-
-# The suffix(es) of source filenames.
-# You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
-source_suffix = ".md"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -80,7 +74,28 @@ html_static_path = ["_static"]
 # -- Extension configuration -------------------------------------------------
 
 
-# autodoc
+# -- Options for todo extension ----------------------------------------------
+
+# If true, `todo` and `todoList` produce output, else they produce nothing.
+todo_include_todos = True
+
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "markdown",
+}
+
+myst_enable_extensions = [
+    "amsmath",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "html_admonition",
+    "html_image",
+    "replacements",
+    "smartquotes",
+    "substitution",
+    "tasklist",
+]
 
 autoclass_content = "both"
 autodoc_default_options = {
@@ -88,21 +103,3 @@ autodoc_default_options = {
     "special-members": "__init__",
     "undoc-members": True,
 }
-
-
-# recommonmark
-
-
-def setup(app):
-    app.add_config_value(
-        "recommonmark_config",
-        {
-            "enable_auto_toc_tree": True,
-            "auto_toc_tree_section": True,
-            "enable_math": True,
-            "enable_inline_math": True,
-            "enable_eval_rst": True,
-        },
-        True,
-    )
-    app.add_transform(AutoStructify)
