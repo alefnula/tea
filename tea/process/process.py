@@ -16,7 +16,11 @@ from tea.errors import TeaError
 logger = logging.getLogger(__name__)
 
 
-class ExecutableNotFound(TeaError):
+class ProcessError(TeaError):
+    pass
+
+
+class ExecutableNotFound(ProcessError):
     def __init__(self, command):
         self.command = command
         super().__init__(message=f"Executable not found: {command}")
@@ -64,7 +68,9 @@ class Process:
         command: Union[str, List[str]],
         env: Optional[Dict[str, str]] = None,
         stdout: Optional[Union[str, Path]] = None,
+        stdout_mode: str = "w",
         stderr: Optional[Union[str, Path]] = None,
+        stderr_mode: str = "w",
         demux: bool = True,
         redirect_output: bool = True,
         working_dir: Optional[str] = None,
@@ -85,8 +91,10 @@ class Process:
                 environment variables.
             stdout: Path to the file to which standard output would be
                 redirected.
+            stdout_mode: Open stdout file in `w` write or `a` append mode.
             stderr: Path to the file to which standard error would be
                 redirected.
+            stderr_mode: Open stderr file in `w` write or `a` append mode.
             demux: Demux stdout and stderr. Default: `True`. If demux is set to
                 `False` `eread` will always return an empty string and all
                 stderr will be redirected to stdout.
@@ -113,11 +121,17 @@ class Process:
         # stdin
         self._stdin = None
         # stdout
+        if stdout_mode not in ("w", "a"):
+            raise ProcessError("stdout_mode can be either `w` or `a`")
+        self._stdout_mode = stdout_mode
         self._stdout_tmp = None
         self._stdout = Path(stdout).absolute() if stdout else None
         self._stdout_reader = None
         self._stdout_writer = None
         # stderr
+        if stderr_mode not in ("w", "a"):
+            raise ProcessError("stderr_mode can be either `w` or `a`")
+        self._stderr_mode = stderr_mode
         self._stderr_tmp = None
         self._stderr = Path(stderr).absolute() if stderr else None
         self._stderr_reader = None
@@ -129,7 +143,9 @@ class Process:
             self._stdin = subprocess.PIPE
             # stdout
             if self._stdout:
-                self._stdout_writer = io.open(self._stdout, "wb")
+                self._stdout_writer = io.open(
+                    self._stdout, self._stdout_mode + "b"
+                )
                 self._stdout_reader = io.open(self._stdout, "rb")
             else:
                 self._stdout_tmp = NamedTemporaryFile(mode="wb")
@@ -138,7 +154,9 @@ class Process:
             # stderr
             if self._demux:
                 if self._stderr:
-                    self._stderr_writer = io.open(self._stderr, "wb")
+                    self._stderr_writer = io.open(
+                        self._stderr, self._stderr_mode + "b"
+                    )
                     self._stderr_reader = io.open(self._stderr, "rb")
                 else:
                     self._stderr_tmp = NamedTemporaryFile(mode="wb")
