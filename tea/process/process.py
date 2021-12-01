@@ -284,7 +284,7 @@ class Process:
         if timeout is not None:
             current_time = time.time()
             while time.time() - current_time < (timeout * 1000):
-                if not self._process.is_running:
+                if not self.is_running:
                     return True
                 time.sleep(0.1)
             return False
